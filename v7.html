@@ -339,7 +339,7 @@ textarea.inp{padding:8px 10px;min-height:66px;resize:vertical;width:100%}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* v7: basado en el tablero original, mejorado */
-@media (min-width:1020px){.mando{grid-template-columns:minmax(0,1fr) clamp(500px,35vw,680px)!important}}
+@media (min-width:1020px){.mando{grid-template-columns:minmax(0,1fr) clamp(420px,35vw,680px)!important}}
 .modesw,.legend,#zLay{display:none!important}
 body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .side .counters{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px}
@@ -383,6 +383,7 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .pstrip #inprog{display:flex;gap:6px}
 .pstrip .urow{width:auto;flex:none;border:0;background:#fff;border-radius:999px;padding:6px 12px 6px 10px;box-shadow:0 4px 12px rgba(23,33,46,.18);gap:7px}
 .pstrip .urow .ut{display:none}.pstrip .urow .uid{width:auto}
+@media (max-width:1400px){.qpanel{width:290px}.acc{min-width:0;font-size:12px}.side .counters .kv{font-size:34px!important}}
 /* v6: pantalla completa, mapa ~78%, columna derecha con KPIs de color sólido */
 html,body{margin:0}body[data-tab="mando"]{padding:0}
 body[data-tab="mando"] .app{max-width:none;padding:0;gap:0}
