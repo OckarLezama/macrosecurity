@@ -414,6 +414,51 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .pstrip .urow{width:auto;flex:none;border:0;background:#fff;border-radius:999px;padding:6px 12px 6px 10px;box-shadow:0 4px 12px rgba(23,33,46,.18);gap:7px}
 .pstrip .urow .ut{display:none}.pstrip .urow .uid{width:auto}
 @media (max-width:1400px){.qpanel{width:290px}.acc{min-width:0;font-size:12px}.side .counters .kv{font-size:34px!important}}
+/* v9: gráficas dinámicas y paleta */
+.dcard{border-radius:12px;padding:12px 14px 10px;box-shadow:0 1px 3px rgba(23,33,46,.06)}
+.chln{position:relative;height:190px}.chln svg{display:block;width:100%;height:190px}
+.ln .ll{stroke-dasharray:1;stroke-dashoffset:1;animation:lnd 1.1s ease-out forwards}.ln .la{opacity:0;animation:lnf .9s .35s ease-out forwards}
+@keyframes lnd{to{stroke-dashoffset:0}}@keyframes lnf{to{opacity:1}}
+.ln .ld{transition:r .15s}.ln .ld.on{r:6}
+.ltip{position:absolute;z-index:3;background:#17212E;color:#fff;border-radius:10px;padding:8px 10px;font-size:12px;display:flex;flex-direction:column;gap:3px;min-width:140px;box-shadow:0 10px 24px rgba(23,33,46,.3);pointer-events:none}
+.ltip span{display:flex;align-items:center;gap:6px}.ltip span b{margin-left:auto}.ltip i{width:8px;height:8px;border-radius:50%}.ltip small{opacity:.6;font-size:10.5px}
+.lgd{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 4px}
+.lchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;color:#17212E;cursor:pointer;transition:opacity .2s}
+.lchip i{width:10px;height:10px;border-radius:50%}.lchip small{font-weight:500;color:var(--muted)}.lchip.off{opacity:.4}.lchip.off i{background:#B4BFCB!important}
+.bhead{display:flex;align-items:center;gap:12px;margin-bottom:8px}.dn{width:66px;height:66px;flex:none}.dn .dnv{transition:stroke-dashoffset 1.1s cubic-bezier(.3,1,.4,1)}
+.bht{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px}.bht b{color:var(--fg)}.bht>b{font-size:15px}
+.brow2{display:grid;grid-template-columns:18px minmax(0,1.15fr) minmax(0,2fr) 46px 44px;gap:8px;align-items:center;padding:4px 0;font-size:12.5px}
+.brow2 img{width:16px;height:16px;opacity:.8}.brow2 .bn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.bt2{position:relative;height:12px}.bt2 i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;transition:width 1s cubic-bezier(.3,1,.4,1)}
+.bt2 .tr{background:#E6EAF0}.bt2 .fl{background:linear-gradient(90deg,#0E9384,#2EC4A6)}
+.brow2 .bc{font-family:var(--f-num);font-weight:700;font-size:15px;text-align:right}.brow2 .bc small{font-size:11px;color:var(--muted);font-weight:500}
+.bp2{color:#fff;font-size:11px;font-weight:800;text-align:center;border-radius:999px;padding:3px 0}
+.rg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rgc{display:flex;flex-direction:column;align-items:center;padding:6px 4px 8px;border-radius:14px;border:1px solid transparent}
+.rgc.nx{background:linear-gradient(180deg,#F6F9FC,#fff);border-color:#DCE3EC}
+.rgs{width:100%;max-width:150px;height:auto}.rgv{transition:stroke-dashoffset 1.3s cubic-bezier(.3,1.1,.4,1)}
+.rgd{font-size:11.5px;color:var(--muted);margin-top:-2px}.rgt{font-size:11.5px;color:var(--muted)}.rgt b{color:var(--fg)}
+.hm{display:grid;gap:4px;align-items:center;font-size:12.5px}
+.hh{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:center}.hh small{display:block;font-weight:500;text-transform:none;letter-spacing:0}.hh.hl{text-align:left;padding-left:6px}.hh.nx{color:#17212E}
+.hs{display:flex;align-items:center;gap:7px;border:0;background:none;padding:0;font-weight:700;font-size:13px;color:var(--fg);text-align:left;cursor:pointer;min-height:34px}.hs i{width:8px;height:8px;border-radius:50%;flex:none}.hs.avg{color:var(--muted);font-weight:600;cursor:default}
+.hc{display:flex;align-items:baseline;justify-content:center;border-radius:8px;min-height:34px;align-items:center;font-family:var(--f-num);font-weight:700;font-size:16px;transition:transform .15s}.hc small{font-size:10px;margin-left:1px}
+.hc.nx{box-shadow:inset 0 0 0 2px rgba(23,33,46,.18)}.hc.avg{background:#F1F4F8;color:#5B6878}
+.ht{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);padding-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ht img{width:15px;height:15px;opacity:.7}
+.hscale{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted);margin-top:8px}.hscale i{flex:1;max-width:160px;height:6px;border-radius:3px;background:linear-gradient(90deg,rgb(226,245,238),rgb(247,217,120),rgb(242,140,60),rgb(214,48,66))}
+@media (max-width:1439px){.ht,.hh.hl{display:none}.hm{grid-template-columns:minmax(70px,1fr) repeat(3,minmax(0,1fr)) 0!important}}
+/* paleta KPIs armonizada */
+.side .counters .ks{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:0!important;display:block}
+.side .counters .krow .kd{margin-left:auto;align-self:center;font-size:10.5px;font-weight:800;background:rgba(255,255,255,.22);border-radius:999px;padding:2px 6px}
+.kviz.sev{flex-wrap:nowrap!important;gap:5px!important;font-size:10px!important;white-space:nowrap;overflow:hidden}
+.side .counters .kp{min-height:0!important;justify-content:flex-start!important;gap:3px!important}
+.side .counters .kl{min-height:26px}
+.side .counters .kp[data-k=rep]{--kc:linear-gradient(150deg,#D69A1C,#B97F0B);color:#fff}
+.side .counters .kp[data-k=att]{--kc:linear-gradient(150deg,#F1DDA6,#E3C77F);color:#3A2E00}
+.side .counters .kp[data-k=sin]{--kc:linear-gradient(150deg,#D5404C,#B42C38)}
+.side .counters .kp[data-k=sin].zero{--kc:linear-gradient(150deg,#2E9E78,#1E7F5F)}
+.side .counters .kp[data-k=pat]{--kc:linear-gradient(150deg,#1D8A7C,#136A5F)}
+.side .counters .kp[data-k=prox]{--kc:linear-gradient(150deg,#3466A8,#244C85)}
+.side .counters .kp{box-shadow:0 4px 12px rgba(23,33,46,.14);border-radius:10px}
 /* v8: llenar espacio y adaptarse a cualquier pantalla */
 body[data-tab="mando"] .side{display:flex;flex-direction:column}
 .dcard.grow{flex:1 1 200px;display:flex;flex-direction:column;min-height:190px}
@@ -562,7 +607,7 @@ body:not(.an) .anonly{display:none}
       <div class="side">
         <div class="counters" id="counters"></div>
         <div class="dcard"><div class="dh3"><h3>Reportados y atendidos</h3><span>últimos 30 días</span></div><div id="chBars"></div></div>
-        <div class="dcard grow"><div class="dh3"><h3>Delitos por día y turno</h3><span>promedio · últimas 4 semanas</span></div><div id="chLine" class="chfill"></div></div>
+        <div class="dcard"><div class="dh3"><h3>Delitos por día y turno</h3><span>promedio · últimas 4 semanas</span></div><div class="lgd" id="lnLeg"></div><div id="chLine" class="chln"></div></div>
         <div class="dcard"><div class="dh3"><h3>Riesgo de delito</h3><div class="vsw" id="riskSw" role="group" aria-label="Vista del riesgo"><span class="knob"></span><button data-v="g" aria-pressed="true">Velocímetro</button><button data-v="t" aria-pressed="false">Por sector</button></div></div><div id="chGauge"></div><div class="rnote" id="riskNote"></div></div>
       </div>
     </div>
@@ -810,7 +855,7 @@ const fc=f=>({type:'FeatureCollection',features:f});
 /* iconos como imagen */
 const ICON={homicidio:'alert',cuentahabiente:'box',arma:'alert',privacion:'person',violacion:'shield',narcomenudeo:'eye',transeunte:'person',transporte:'bus',repartidor:'box',casa:'house',vehiculo:'car',rina:'alert',acoso:'shield',sospechosa:'eye',accidente:'warn',servicio:'bulb',sos:'sos',apoyo:'siren',noid:'badge',horario:'badge',qr:'badge',conducta:'badge'};
 const iconCache={};
-function iconURL(kind){if(iconCache[kind])return iconCache[kind];const c=document.createElement('canvas');c.width=c.height=48;const g=c.getContext('2d');drawIcon(g,kind,24,24,20);return iconCache[kind]=c.toDataURL();}
+function iconURL(kind,col){const ck=kind+(col||'');if(iconCache[ck])return iconCache[ck];const c=document.createElement('canvas');c.width=c.height=48;const g=c.getContext('2d');drawIcon(g,kind,24,24,20);if(col){g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,48,48);}return iconCache[ck]=c.toDataURL();}
 function drawIcon(g,kind,x,y,r){g.save();g.translate(x,y);const u=r/10;g.strokeStyle='#fff';g.fillStyle='#fff';g.lineWidth=Math.max(1.4,1.7*u);g.lineCap='round';g.lineJoin='round';
   const P=(...pts)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0]*u,p[1]*u):g.moveTo(p[0]*u,p[1]*u));};
   switch(kind){
@@ -1139,19 +1184,19 @@ function counters(){
   const prox=[...S.contactos.values()].filter(k=>k.t>=T0).length;
   const H=(S.historial&&S.historial.entries)||[];const nm=new Date().getHours()*60+new Date().getMinutes();
   const yRep=H.filter(e=>e[0]===1&&e[1]*60+e[2]<=nm&&!['oficial','sistema'].includes(cat(e[4]).grupo));const yAtt=yRep.filter(e=>e[5]).length;
-  const delta=(a,b,inv)=>{if(!b)return '';const d=Math.round((a-b)/b*100);if(!d)return '<span class="kd">= que ayer</span>';const up=d>0;return '<span class="kd '+((up!==!!inv)?'up':'dn')+'">'+(up?'▲':'▼')+' '+Math.abs(d)+'% vs ayer</span>';};
+  const delta=(a,b,inv)=>{if(!b)return '';const d=Math.round((a-b)/b*100);if(!d)return '<span class="kd" title="Igual que ayer a esta hora">= ayer</span>';const up=d>0;return '<span class="kd '+((up!==!!inv)?'up':'dn')+'" title="Comparado con ayer a esta misma hora">'+(up?'▲':'▼')+Math.abs(d)+'%</span>';};
   const hb=Array(12).fill(0);rep.forEach(e=>{const i=11-Math.floor((now-e.creado)/36e5);if(i>=0&&i<12)hb[i]++;});const hm=Math.max(1,...hb);
   const spark='<span class="kviz bars">'+hb.map(v=>'<i style="height:'+(8+v/hm*92)+'%"></i>').join('')+'</span>';
   const ap=rep.length?att.length/rep.length:0;const prog='<span class="kviz prog"><i style="width:'+Math.round(ap*100)+'%"></i></span>';
   const pc=k=>pend.filter(e=>(e.sos||e.cid==='apoyo'?'u':(PRI[e.prioridad]>=3?'u':(PRI[e.prioridad]===2?'i':'e')))===k).length;
-  const sev='<span class="kviz sev"><span><i style="background:#fff"></i>'+pc('u')+' urg.</span><span><i style="background:#FFD9DC"></i>'+pc('i')+' imp.</span><span><i style="background:#FFB3BA"></i>'+pc('e')+' esp.</span></span>';
+  const sev='<span class="kviz sev" title="Urgentes · importantes · pueden esperar"><span><i style="background:#fff"></i>'+pc('u')+' urg</span><span><i style="background:#FFC7CC"></i>'+pc('i')+' imp</span><span><i style="background:#FF97A2"></i>'+pc('e')+'</span></span>';
   const usS=us.slice().sort((a,b)=>a.id.localeCompare(b.id)).map(u=>uState(u,hh0));
   const cars='<span class="kviz cars2">'+usS.map(st=>'<i class="c-'+st.k+'" title="'+st.t+'"></i>').join('')+'</span>';
   const pAvg=(()=>{const hp=S.historial&&S.historial.prox;if(!hp)return 0;const tot=Object.values(hp).reduce((a,b)=>a+b,0);return Math.round(tot/((S.historial.dias)||90));})();
-  const tile=(k,l,v,sub,viz,cls)=>'<button class="kp'+(cls?' '+cls:'')+'" data-k="'+k+'"><span class="kl">'+l+'</span><span class="krow"><b class="kv" data-n="'+v+'">'+v+'</b>'+(k==='att'?'<span class="kpct">'+Math.round(ap*100)+'%</span>':'')+'</span>'+viz+'<span class="ks">'+sub+'</span></button>';
-  const html=tile('rep','Reportes hoy',rep.length,wa+' por WhatsApp '+delta(rep.length,yRep.length,true),spark)+
-    tile('att','Atendidos',att.length,'de '+rep.length+' reportes '+delta(ap,yRep.length?yAtt/yRep.length:0),prog)+
-    tile('sin','Sin atender',pend.length,pend.length?'el más antiguo: '+ago(oldest):'todo al día',sev,pend.length?'':'zero')+
+  const tile=(k,l,v,sub,viz,cls,dl)=>'<button class="kp'+(cls?' '+cls:'')+'" data-k="'+k+'" title="'+esc(l)+'"><span class="kl">'+l+'</span><span class="krow"><b class="kv" data-n="'+v+'">'+v+'</b>'+(dl||'')+'</span>'+viz+'<span class="ks">'+sub+'</span></button>';
+  const html=tile('rep','Reportes hoy',rep.length,wa+' por WhatsApp',spark,'',delta(rep.length,yRep.length,true))+
+    tile('att','Atendidos',att.length,Math.round(ap*100)+'% de '+rep.length+' reportes',prog,'',delta(ap,yRep.length?yAtt/yRep.length:0))+
+    tile('sin','Sin atender',pend.length,pend.length?'espera '+ago(oldest):'todo al día',sev,pend.length?'':'zero')+
     tile('pat','Patrullas libres',libres,'de '+enT+' en turno',cars)+
     tile('prox','Proximidad',prox,'verificaciones QR'+(pAvg?' · prom. '+pAvg+'/día':''),'<span class="kviz qr"></span>');
   const box=$('#counters');if(box._h===html)return;box._h=html;box.innerHTML=html;
@@ -1159,56 +1204,82 @@ function counters(){
   const A={sin:()=>{const e=pend.find(x=>x.creado===oldest);if(e){UI.sel=e.id;flyTo(e.x,e.y,2.1);renderSide();renderPop();}},rep:()=>setTab('anal'),att:()=>setTab('anal'),pat:()=>setTab('unid'),prox:()=>setTab('anal')};
   box.querySelectorAll('.kp').forEach(el=>{el.onclick=A[el.dataset.k];});
 }
-let dashT=0;
+const TCOL=['#F5A524','#EF6C3B','#4361C2','#8B5CF6'];
+function heat(p){const st=[[0,[226,245,238]],[.25,[247,217,120]],[.45,[242,140,60]],[.7,[214,48,66]]];p=Math.max(0,Math.min(.7,p));for(let i=1;i<st.length;i++){if(p<=st[i][0]){const [a0,c0]=st[i-1],[a1,c1]=st[i];const f=(p-a0)/(a1-a0);const c=c0.map((v,j)=>Math.round(v+(c1[j]-v)*f));return 'rgb('+c.join(',')+')';}}return 'rgb(214,48,66)';}
+function smooth(pts){if(pts.length<2)return '';let d='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];d+=' C'+c1[0].toFixed(1)+' '+c1[1].toFixed(1)+' '+c2[0].toFixed(1)+' '+c2[1].toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}return d;}
+let dashT=0;const DK={};
 function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;dashT=Date.now();
-  // barras: reportados vs atendidos (30 días)
+  /* ---------- Reportados y atendidos ---------- */
   const p0=UI.analP,s0=UI.analS;UI.analP=30;UI.analS='all';const A=analysis();UI.analP=p0;UI.analS=s0;
-  const rows=A.crimes.map(c=>({n:c.nombre,r:A.by[c.id].r,a:A.by[c.id].a})).filter(x=>x.r).sort((x,y)=>y.r-x.r).slice(0,6);const mx=Math.max(1,...rows.map(x=>x.r));
-  $('#chBars').innerHTML=rows.length?rows.map(x=>{const k=x.a/x.r;const col=k<.7?'#EDB021':'#0E8F7E';return '<div class="brow"><span class="bn" title="'+esc(x.n)+'">'+esc(x.n)+'</span><span class="bt"><i style="width:'+(x.r/mx*100).toFixed(1)+'%;background:#C9D2DD"></i><i style="width:'+(x.a/mx*100).toFixed(1)+'%;background:'+col+'"></i></span><span class="bv"><b>'+Math.round(k*100)+'%</b> · '+x.a+'/'+x.r+'</span></div>';}).join('')+'<div class="blg"><span><i style="background:#C9D2DD"></i>Reportados</span><span><i style="background:#0E8F7E"></i>Atendidos</span><span><i style="background:#EDB021"></i>Menos de 70% atendido</span></div>':'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
-  // líneas: delitos por día de semana y turno (28 días)
+  const rows=A.crimes.map(c=>({id:c.id,n:c.nombre,r:A.by[c.id].r,a:A.by[c.id].a})).filter(x=>x.r).sort((x,y)=>y.r-x.r).slice(0,6);const mx=Math.max(1,...rows.map(x=>x.r));
+  const R0=rows.reduce((q,x)=>q+x.r,0),A0=rows.reduce((q,x)=>q+x.a,0);const pc=R0?A0/R0:0;
+  const kB=JSON.stringify([rows,A.lleg]);
+  if(DK.b!==kB){DK.b=kB;const dc=2*Math.PI*30;const pcol=v=>v>=.9?'#12A06A':(v>=.7?'#E9A116':'#E0364C');
+    $('#chBars').innerHTML=rows.length?'<div class="bhead"><svg viewBox="0 0 80 80" class="dn"><circle cx="40" cy="40" r="30" stroke="#EEF1F5" stroke-width="10" fill="none"/><circle class="dnv" cx="40" cy="40" r="30" stroke="'+pcol(pc)+'" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="'+dc.toFixed(1)+'" stroke-dashoffset="'+dc.toFixed(1)+'" data-o="'+(dc*(1-pc)).toFixed(1)+'" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="#17212E">'+Math.round(pc*100)+'%</text></svg>'+
+      '<div class="bht"><b>'+A0+' de '+R0+'</b> reportes de delito atendidos<span>'+(A.lleg!=null?'Llegada típica: <b>'+A.lleg+' min</b>':'')+'</span></div></div>'+
+      rows.map(x=>{const k=x.a/x.r;return '<div class="brow2" title="'+esc(x.n)+': '+x.a+' de '+x.r+' atendidos"><img src="'+iconURL(ICON[x.id]||'alert','#5B6878')+'" alt=""><span class="bn">'+esc(x.n)+'</span><span class="bt2"><i class="tr" data-w="'+(x.r/mx*100).toFixed(1)+'"></i><i class="fl" data-w="'+(x.a/mx*100).toFixed(1)+'"></i></span><span class="bc">'+x.a+'<small>/'+x.r+'</small></span><span class="bp2" style="background:'+pcol(k)+'">'+Math.round(k*100)+'%</span></div>';}).join(''):'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('#chBars [data-w]').forEach(i=>i.style.width=i.dataset.w+'%');const d=$('#chBars .dnv');if(d)d.style.strokeDashoffset=d.dataset.o;}));}
+  /* ---------- Línea: promedio por día y turno ---------- */
   const tt=T();const nT=tt.length;const C=Array.from({length:7},()=>Array(nT).fill(0));const now=new Date();
   for(const e of (S.historial&&S.historial.entries)||[]){if(e[0]<1||e[0]>28||cat(e[4]).grupo!=='delito')continue;const d=new Date(now);d.setDate(d.getDate()-e[0]);C[d.getDay()][turnoIdx(e[1])]+=.25;}
   const TD=Array(nT).fill(0);for(const ev of S.eventos.values()){if(ev.creado<new Date().setHours(0,0,0,0)||cat(ev.cid).grupo!=='delito'||ev.estado==='descartado')continue;TD[turnoIdx(new Date(ev.creado).getHours())]++;}
-  const host=$('#chLine');const W=Math.max(260,host.clientWidth||420),H=Math.max(140,host.clientHeight||170);
-  const ord=[1,2,3,4,5,6,0],lab=['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];const pl=26,pr=10,pt=12,pb=24;const my=Math.max(1,...C.flat())*1.15;const X=i=>pl+i*(W-pl-pr)/6,Y=v=>pt+(H-pt-pb)*(1-Math.min(v,my)/my);
-  const TC=['#EDB021','#E07A2E','#2D6CB4','#7E62D9'];const td=ord.indexOf(now.getDay());
-  let svg='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Delitos promedio por día de la semana y turno"><rect x="'+(X(td)-20)+'" y="'+pt+'" width="40" height="'+(H-pt-pb)+'" rx="6" fill="#EEF3FA"/>';
-  for(let g=0;g<=3;g++){const v=my*g/3;svg+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="#E6EAF0"/><text x="'+(pl-6)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" font-size="11" fill="#8994A3">'+(Math.round(v*10)/10)+'</text>';}
-  ord.forEach((dw,i)=>{svg+='<text x="'+X(i).toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle" font-size="11" font-weight="'+(i===td?800:500)+'" fill="'+(i===td?'#17212E':'#8994A3')+'">'+(i===td?'HOY':lab[i])+'</text>';});
-  for(let j=0;j<nT;j++){const pts=ord.map((dw,i)=>[X(i),Y(C[dw][j])]);const ar='M'+pts.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L')+' L'+pts[6][0].toFixed(1)+' '+Y(0).toFixed(1)+' L'+pts[0][0].toFixed(1)+' '+Y(0).toFixed(1)+'Z';
-    svg+='<path d="'+ar+'" fill="'+TC[j%4]+'" opacity=".07"/><polyline fill="none" stroke="'+TC[j%4]+'" stroke-width="2.6" stroke-linejoin="round" points="'+pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')+'"/>'+pts.map((q,i)=>'<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+(i===td?4.5:3)+'" fill="'+(i===td?TC[j%4]:'#fff')+'" stroke="'+TC[j%4]+'" stroke-width="2"><title>'+esc(tt[j].nombre)+' · '+lab[i]+': '+(Math.round(C[ord[i]][j]*10)/10)+' delitos en promedio</title></circle>').join('');}
-  svg+='</svg>';host.innerHTML=svg;
-  const lg=host.parentNode.querySelector('.blg')||host.parentNode.appendChild(Object.assign(document.createElement('div'),{className:'blg'}));
-  lg.innerHTML=tt.map((t,j)=>'<span><i style="background:'+TC[j%4]+'"></i>'+esc(t.nombre)+' · hoy '+TD[j]+'</span>').join('');
-  // medidores: riesgo promedio por sector en los próximos 3 turnos (Markov)
+  const host=$('#chLine');const W=Math.max(280,host.clientWidth||420),H=190;UI.lnHide=UI.lnHide||{};
+  const kL=JSON.stringify([C,TD,W,UI.lnHide]);
+  if(DK.l!==kL){DK.l=kL;
+    const ord=[1,2,3,4,5,6,0],lab=['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'],full=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];const pl=30,pr=14,pt=14,pb=28;
+    const vis=[...Array(nT).keys()].filter(j=>!UI.lnHide[j]);const my=Math.max(1,...vis.flatMap(j=>ord.map(dw=>C[dw][j])))*1.2;
+    const X=i=>pl+i*(W-pl-pr)/6,Y=v=>pt+(H-pt-pb)*(1-v/my);const td=ord.indexOf(now.getDay());
+    let g='<svg class="ln" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Delitos promedio por día y turno"><defs>'+tt.map((t,j)=>'<linearGradient id="lg'+j+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+TCOL[j%4]+'" stop-opacity=".28"/><stop offset="1" stop-color="'+TCOL[j%4]+'" stop-opacity="0"/></linearGradient>').join('')+'</defs>';
+    g+='<rect x="'+(X(td)-22).toFixed(1)+'" y="'+pt+'" width="44" height="'+(H-pt-pb)+'" rx="10" fill="#EEF3FA"/>';
+    for(let q=0;q<=4;q++){const v=my*q/4;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="#EDF0F4" stroke-dasharray="'+(q?'3 4':'0')+'"/>'+(q?'<text x="'+(pl-8)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#9AA5B4">'+(Math.round(v*10)/10)+'</text>':'');}
+    ord.forEach((dw,i)=>{g+='<text x="'+X(i).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="11" font-weight="'+(i===td?800:600)+'" fill="'+(i===td?'#17212E':'#9AA5B4')+'">'+(i===td?'HOY':lab[i])+'</text>';});
+    vis.forEach(j=>{const pts=ord.map((dw,i)=>[X(i),Y(C[dw][j])]);const d=smooth(pts);
+      g+='<path class="la" d="'+d+' L'+pts[6][0].toFixed(1)+' '+Y(0).toFixed(1)+' L'+pts[0][0].toFixed(1)+' '+Y(0).toFixed(1)+'Z" fill="url(#lg'+j+')"/>';
+      g+='<path class="ll" d="'+d+'" fill="none" stroke="'+TCOL[j%4]+'" stroke-width="3" stroke-linecap="round" pathLength="1"/>';
+      g+=pts.map((q,i)=>'<circle class="ld" data-i="'+i+'" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+(i===td?5:3.2)+'" fill="'+(i===td?TCOL[j%4]:'#fff')+'" stroke="'+TCOL[j%4]+'" stroke-width="2.2"/>').join('');});
+    g+='<line class="lx" x1="0" x2="0" y1="'+pt+'" y2="'+(H-pb)+'" stroke="#17212E" stroke-opacity=".25" stroke-dasharray="3 3" style="display:none"/><rect class="lh" x="'+pl+'" y="0" width="'+(W-pl-pr)+'" height="'+H+'" fill="transparent"/></svg><div class="ltip" hidden></div>';
+    host.innerHTML=g;
+    $('#lnLeg').innerHTML=tt.map((t,j)=>'<button class="lchip'+(UI.lnHide[j]?' off':'')+'" data-j="'+j+'"><i style="background:'+TCOL[j%4]+'"></i>'+esc(t.nombre)+'<small>hoy '+TD[j]+'</small></button>').join('');
+    $('#lnLeg').querySelectorAll('.lchip').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;if(!UI.lnHide[j]&&vis.length===1)return;UI.lnHide[j]=!UI.lnHide[j];renderDash(true);});
+    const tip=host.querySelector('.ltip'),lx=host.querySelector('.lx');
+    const showAt=cx=>{const i=Math.max(0,Math.min(6,Math.round((cx-pl)/((W-pl-pr)/6))));lx.setAttribute('x1',X(i));lx.setAttribute('x2',X(i));lx.style.display='';
+      host.querySelectorAll('.ld').forEach(c=>c.classList.toggle('on',+c.dataset.i===i));const dw=ord[i];
+      tip.innerHTML='<b>'+(i===td?'Hoy, ':'')+full[i]+'</b>'+vis.map(j=>'<span><i style="background:'+TCOL[j%4]+'"></i>'+esc(tt[j].nombre)+'<b>'+(Math.round(C[dw][j]*10)/10)+'</b></span>').join('')+'<small>delitos promedio</small>';
+      tip.hidden=false;const tx=X(i)+(X(i)>W*.6?-tip.offsetWidth-12:12);tip.style.left=tx+'px';tip.style.top='18px';};
+    const hr=host.querySelector('.lh');const loc=e=>{const r=host.querySelector('svg').getBoundingClientRect();const p=e.touches?e.touches[0]:e;return (p.clientX-r.left)*W/r.width;};
+    hr.addEventListener('mousemove',e=>showAt(loc(e)));hr.addEventListener('touchstart',e=>showAt(loc(e)),{passive:true});hr.addEventListener('touchmove',e=>showAt(loc(e)),{passive:true});
+    hr.addEventListener('mouseleave',()=>{tip.hidden=true;lx.style.display='none';host.querySelectorAll('.ld.on').forEach(c=>c.classList.remove('on'));});}
+  /* ---------- Riesgo ---------- */
   const md=getModel();const secs=S.config.sectores;const cur=md.sr.cur;
-  const slots=[1,2,3].map(k=>{const sl=cur+k;const dd=Math.floor(sl/nT)-Math.floor(cur/nT);return {t:tt[mod(sl,nT)].nombre,d:dd===0?'hoy':(dd===1?DOW[(new Date().getDay()+1)%7]:DOW[(new Date().getDay()+dd)%7])};});
-  const rowsR=secs.map(sc=>{const o=md.out[sc.id];return {sc,ps:o?o.fc.map(f=>f.p):[0,0,0],tp:o&&o.tipos[0]&&o.tipos[0][0]?o.tipos[0][0].c.nombre:'',conf:o?o.conf:'Baja'};}).sort((a,b)=>b.ps[0]-a.ps[0]);
-  const cell=p=>{const lv=level(p);const bg=lv==='alto'?'#E0364C':(lv==='medio'?'#F3B23A':'#DDF3E8');const fg=lv==='alto'?'#fff':(lv==='medio'?'#2E2200':'#0F6B4A');return '<td><span class="rc" style="background:'+bg+';color:'+fg+'">'+Math.round(p*100)+'%</span></td>';};
+  const slots=[1,2,3].map(k=>{const sl=cur+k;const dd=Math.floor(sl/nT)-Math.floor(cur/nT);return {t:tt[mod(sl,nT)].nombre,d:dd===0?'hoy':DOW[(new Date().getDay()+dd)%7]};});
+  const rowsR=secs.map(sc=>{const o=md.out[sc.id];const t0=o&&o.tipos[0]&&o.tipos[0][0];return {sc,ps:o?o.fc.map(f=>f.p):[0,0,0],tp:t0?t0.c.nombre:'',tid:t0?t0.c.id:null,conf:o?o.conf:'Baja'};}).sort((a,b)=>b.ps[0]-a.ps[0]);
   const avg=[0,1,2].map(k=>rowsR.reduce((a,r)=>a+r.ps[k],0)/Math.max(1,rowsR.length));
   const RV=lsGet('ms8.rv','g');document.querySelectorAll('#riskSw button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===RV)));$('#riskSw').dataset.v=RV;
-  if(RV==='t'){
-  $('#chGauge').innerHTML='<table class="rtab"><thead><tr><th>Sector</th>'+slots.map((x,i)=>'<th>'+esc(x.t)+'<small>'+(i===0?'próximo':esc(x.d))+'</small></th>').join('')+'<th class="rtp">Delito más probable</th></tr></thead><tbody>'+
-    rowsR.map(r=>'<tr data-s="'+r.sc.id+'"><td class="rs">'+esc(r.sc.nombre)+'</td>'+r.ps.map(cell).join('')+'<td class="rtp">'+esc(r.tp)+'</td></tr>').join('')+
-    '</tbody><tfoot><tr><td class="rs">Promedio</td>'+avg.map(cell).join('')+'<td class="rtp"></td></tr></tfoot></table>';
-  $('#chGauge').querySelectorAll('tr[data-s]').forEach(tr=>tr.onclick=()=>{const c=centroid(sec(tr.dataset.s).poly);flyTo(c.x,c.y,1.7);});
-  }else{
-    const gs=[0,1,2].map(k=>{const p=avg[k];const top=rowsR.slice().sort((a,b)=>b.ps[k]-a.ps[k])[0];return {p,top,hi:rowsR.filter(r=>r.ps[k]>=.45).length,t:slots[k].t,d:k===0?'próximo turno':slots[k].d};});
-    const gk=gs.map(g=>Math.round(g.p*100)+(g.top?g.top.sc.id+Math.round(g.top.ps[0]*100):'')).join('|');
-    if(renderDash.gk!==gk||!$('#chGauge .gg2')){const prevA=renderDash.ga||[-90,-90,-90];renderDash.gk=gk;
-      $('#chGauge').innerHTML='<div class="gg2">'+gs.map((g,i)=>{const lv=level(g.p);const col=lv==='alto'?'#E0364C':(lv==='medio'?'#E9A116':'#12A06A');const cx=80,cy=78,r=60;
-        let ticks='';for(let j=0;j<=10;j++){const a=Math.PI*(1-j/10);const r1=r+9,r2=r+(j%5?13:16);ticks+='<line x1="'+(cx+r1*Math.cos(a)).toFixed(1)+'" y1="'+(cy-r1*Math.sin(a)).toFixed(1)+'" x2="'+(cx+r2*Math.cos(a)).toFixed(1)+'" y2="'+(cy-r2*Math.sin(a)).toFixed(1)+'" stroke="#B4BFCB" stroke-width="'+(j%5?1:1.6)+'"/>';}
-        const arc=(f0,f1,c,w)=>{const a0=Math.PI*(1-f0),a1=Math.PI*(1-f1);return '<path d="M'+(cx+r*Math.cos(a0)).toFixed(1)+' '+(cy-r*Math.sin(a0)).toFixed(1)+' A'+r+' '+r+' 0 '+(f1-f0>.5?1:0)+' 1 '+(cx+r*Math.cos(a1)).toFixed(1)+' '+(cy-r*Math.sin(a1)).toFixed(1)+'" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" fill="none"/>';};
-        const v=Math.min(1,g.p);const ang=-90+v*180;
-        return '<div class="gcell'+(i===0?' now':'')+'"><svg viewBox="0 0 160 96" aria-hidden="true"><defs><linearGradient id="gg'+i+'" gradientUnits="userSpaceOnUse" x1="'+(cx-r)+'" y1="0" x2="'+(cx+r)+'" y2="0"><stop offset="0" stop-color="#12A06A"/><stop offset=".45" stop-color="#E9C116"/><stop offset=".7" stop-color="#F08A24"/><stop offset="1" stop-color="#E0364C"/></linearGradient></defs>'+ticks+
-          arc(0,1,'#EEF1F5',14)+arc(0,1,'url(#gg'+i+')',14).replace('stroke-width="14"','stroke-width="14" opacity=".28"')+(v>0.005?arc(0,v,'url(#gg'+i+')',14):'')+
-          '<g class="ndl" data-a="'+ang.toFixed(1)+'" style="transform:rotate('+prevA[i]+'deg);transform-origin:'+cx+'px '+cy+'px"><path d="M'+(cx-4)+' '+cy+' L'+cx+' '+(cy-r+8)+' L'+(cx+4)+' '+cy+' Z" fill="#17212E"/></g><circle cx="'+cx+'" cy="'+cy+'" r="7" fill="#17212E"/><circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#fff"/></svg>'+
-          '<div class="gval" style="color:'+col+'">'+Math.round(g.p*100)+'<small>%</small></div><div class="glv" style="background:'+col+'">RIESGO '+lv.toUpperCase()+'</div><div class="gname">'+esc(g.t)+' <small>· '+esc(g.d)+'</small></div>'+
-          (g.top?'<div class="gtop">Más alto: <b>'+esc(g.top.sc.nombre)+'</b> '+Math.round(g.top.ps[i]*100)+'%</div>':'')+'</div>';}).join('')+'</div>';
-      renderDash.ga=gs.map(g=>-90+Math.min(1,g.p)*180);
-      requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#chGauge .ndl').forEach(n=>{n.style.transform='rotate('+n.dataset.a+'deg)';})));}
-  }
-  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito por sector, calculada con el modelo de Markov por turno'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
+  const kR=JSON.stringify([RV,rowsR.map(r=>[r.sc.id,r.ps.map(p=>Math.round(p*100))])]);
+  if(DK.r!==kR){DK.r=kR;
+    if(RV==='t'){
+      $('#chGauge').innerHTML='<div class="hm" style="grid-template-columns:minmax(80px,1.1fr) repeat(3,minmax(0,1fr)) minmax(0,1.4fr)"><span class="hh"></span>'+slots.map((x,i)=>'<span class="hh'+(i===0?' nx':'')+'">'+esc(x.t)+'<small>'+(i===0?'próximo':esc(x.d))+'</small></span>').join('')+'<span class="hh hl">Delito más probable</span>'+
+        rowsR.map(r=>{const lv=level(r.ps[0]);return '<button class="hs" data-s="'+r.sc.id+'"><i style="background:'+(lv==='alto'?'#E0364C':(lv==='medio'?'#F0A21C':'#12A06A'))+'"></i>'+esc(r.sc.nombre)+'</button>'+r.ps.map((p,i)=>'<span class="hc'+(i===0?' nx':'')+'" style="background:'+heat(p)+';color:'+(p>=.4?'#fff':'#17212E')+'">'+Math.round(p*100)+'<small>%</small></span>').join('')+'<span class="ht">'+(r.tid?'<img src="'+iconURL(ICON[r.tid]||'alert','#5B6878')+'" alt="">':'')+esc(r.tp)+'</span>';}).join('')+
+        '<span class="hs avg">Promedio</span>'+avg.map((p,i)=>'<span class="hc avg'+(i===0?' nx':'')+'">'+Math.round(p*100)+'<small>%</small></span>').join('')+'<span></span></div>'+
+        '<div class="hscale"><span>Bajo</span><i></i><span>Alto</span></div>';
+      $('#chGauge').querySelectorAll('.hs[data-s]').forEach(b=>b.onclick=()=>{const c=centroid(sec(b.dataset.s).poly);flyTo(c.x,c.y,1.7);});
+    }else{
+      const gs=[0,1,2].map(k=>{const top=rowsR.slice().sort((a,b)=>b.ps[k]-a.ps[k])[0];return {p:avg[k],top,k,t:slots[k].t,d:k===0?'próximo turno':slots[k].d};});
+      const prevV=DK.gv||[0,0,0];
+      $('#chGauge').innerHTML='<div class="rg">'+gs.map((g,i)=>{const lv=level(g.p);const col=lv==='alto'?'#E0364C':(lv==='medio'?'#F08A24':'#12A06A');const col2=lv==='alto'?'#FF7A85':(lv==='medio'?'#FFC24B':'#4FD1A1');
+        const cx=70,cy=70,r=54,a0=150,a1=390;const pt=a=>[cx+r*Math.cos(a*Math.PI/180),cy+r*Math.sin(a*Math.PI/180)];const s0=pt(a0),s1=pt(a1);const arcD='M'+s0[0].toFixed(1)+' '+s0[1].toFixed(1)+' A'+r+' '+r+' 0 1 1 '+s1[0].toFixed(1)+' '+s1[1].toFixed(1);
+        const v=Math.min(1,g.p/.7);const mk=f=>{const q=pt(a0+(a1-a0)*f);return '<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="2" fill="#B4BFCB"/>';};
+        return '<div class="rgc'+(i===0?' nx':'')+'"><svg viewBox="0 0 140 128" class="rgs"><defs><linearGradient id="rgg'+i+'" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="'+col2+'"/><stop offset="1" stop-color="'+col+'"/></linearGradient><filter id="rgf'+i+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="'+col+'" flood-opacity=".45"/></filter></defs>'+
+          '<path d="'+arcD+'" stroke="#EEF1F5" stroke-width="13" fill="none" stroke-linecap="round"/>'+
+          '<path class="rgv" d="'+arcD+'" stroke="url(#rgg'+i+')" stroke-width="13" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="'+(100-prevV[i]*100).toFixed(1)+'" data-o="'+(100-v*100).toFixed(1)+'" filter="url(#rgf'+i+')"/>'+mk(.25/.7)+mk(.45/.7)+
+          '<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="36" font-weight="700" fill="'+col+'">'+Math.round(g.p*100)+'<tspan font-size="18">%</tspan></text>'+
+          '<text x="'+cx+'" y="'+(cy+22)+'" text-anchor="middle" font-size="9.5" font-weight="800" letter-spacing=".08em" fill="'+col+'">RIESGO '+lv.toUpperCase()+'</text>'+
+          '<text x="'+cx+'" y="122" text-anchor="middle" font-size="13" font-weight="800" fill="#17212E">'+esc(g.t)+'</text></svg>'+
+          '<div class="rgd">'+esc(g.d)+'</div>'+(g.top?'<div class="rgt">Más alto: <b>'+esc(g.top.sc.nombre)+'</b> '+Math.round(g.top.ps[i]*100)+'%</div>':'')+'</div>';}).join('')+'</div>';
+      DK.gv=gs.map(g=>Math.min(1,g.p/.7));
+      requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#chGauge .rgv').forEach(n=>{n.style.strokeDashoffset=n.dataset.o;})));
+    }}
+  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito, calculada con el modelo de Markov por turno'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
 }
 function renderAcc(){const box=$('#acc');if(!box)return;const min=lsGet('ms7.accmin',false);
   const L=[['patrullas','Patrullas','#1B2431'],['zonas','Zonas seguras','#12A06A'],['botones','Botones de pánico','#E0364C'],['vigiladas','Zonas vigiladas','#0E9384'],['riesgo','Riesgo por sector','#F0A21C'],['calor','Mapa de calor','#F58A4A']];
@@ -1640,7 +1711,7 @@ function wire(){
   $('#zZone').addEventListener('click',()=>setZoneMode(!ZONE.mode));
   const placeQ=()=>{const q=$('#qpanel');const narrow=matchMedia('(max-width:1019px)').matches;const side=document.querySelector('#v-mando .side');if(narrow&&q.parentNode!==side)side.insertBefore(q,side.children[1]||null);if(!narrow&&q.parentNode!==$('#mapwrap'))$('#mapwrap').append(q);};placeQ();
   if(lsGet('ms7.accmin',null)===null&&innerWidth<1020)lsSet('ms7.accmin',true);
-  document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;renderDash.gk='';renderDash(true);}));
+  document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;DK.r='';renderDash(true);}));
   renderAcc();setTimeout(()=>renderDash(true),300);let rsT=0;
   try{new ResizeObserver(()=>{clearTimeout(rsT);rsT=setTimeout(()=>{placeQ();renderDash(true);if(map)map.resize();},150);}).observe(document.querySelector('#v-mando .side'));}catch(e){}
   addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{placeQ();renderDash(true);if(map)map.resize();},150);});
