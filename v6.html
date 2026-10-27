@@ -339,7 +339,7 @@ textarea.inp{padding:8px 10px;min-height:66px;resize:vertical;width:100%}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* v6: pantalla completa, mapa ~78%, columna derecha con KPIs de color sólido */
-body[data-tab="mando"]{padding:0}
+html,body{margin:0}body[data-tab="mando"]{padding:0}
 body[data-tab="mando"] .app{max-width:none;padding:0;gap:0}
 .top{background:#2B3138;color:#fff;padding:8px 16px;margin:0}
 body:not([data-tab="mando"]) .top{border-radius:12px}
@@ -740,7 +740,7 @@ const SAT={version:8,glyphs:'https://tiles.openfreemap.org/fonts/{fontstack}/{ra
    {id:'roadlbl',type:'symbol',source:'openmaptiles','source-layer':'transportation_name',minzoom:13,layout:{'symbol-placement':'line','text-field':['coalesce',['get','name:es'],['get','name']],'text-font':['Noto Sans Regular'],'text-size':12},paint:{'text-color':'#FFFFFF','text-halo-color':'rgba(10,16,24,.85)','text-halo-width':1.6}},
    {id:'placelbl',type:'symbol',source:'openmaptiles','source-layer':'place',layout:{'text-field':['coalesce',['get','name:es'],['get','name']],'text-font':['Noto Sans Bold'],'text-size':['interpolate',['linear'],['zoom'],10,12,16,17]},paint:{'text-color':'#FFFFFF','text-halo-color':'rgba(10,16,24,.85)','text-halo-width':1.8}}]};
 const STYLES={calles:'https://tiles.openfreemap.org/styles/liberty',claro:'https://tiles.openfreemap.org/styles/positron',satelite:SAT};
-UI.base=lsGet('ms5b.base','satelite');if(!STYLES[UI.base])UI.base='satelite';
+UI.base=lsGet('ms6.base','calles');if(!STYLES[UI.base])UI.base='calles';
 function initMap(){
   if(map)return;
   if(!window.maplibregl){mapMsg('No se pudo descargar el motor de mapas. Revisa que tengas internet y que abriste el archivo descargado directamente en Chrome o Edge (la vista previa dentro de Claude bloquea los mapas).');return;}
@@ -782,7 +782,7 @@ function initMap(){
   map.on('mousedown',start);map.on('touchstart',start);map.on('mousemove',move);map.on('touchmove',move);map.on('mouseup',end);map.on('touchend',end);
 }
 function intro(){if(!map||!S.config)return;const b=worldBounds();const c=[(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];map.jumpTo({center:c,zoom:map.getZoom()-2.2,pitch:0,bearing:30});setTimeout(()=>{const cam2=map.cameraForBounds(b,{padding:{top:150,bottom:70,left:40,right:80}});if(cam2)map.flyTo({center:cam2.center,zoom:cam2.zoom,pitch:UI.flat?0:60,bearing:UI.flat?0:-18,duration:4200,curve:1.2,essential:true});},400);}
-function setBase(b){if(!STYLES[b])return;UI.base=b;lsSet('ms5b.base',b);if(map)map.setStyle(STYLES[b]);renderLayers();}
+function setBase(b){if(!STYLES[b])return;UI.base=b;lsSet('ms6.base',b);if(map)map.setStyle(STYLES[b]);renderLayers();}
 let hexT=0;
 function syncHex(grow){if(!mapReady)return;const R=Math.max(.4,420/M);const w=Math.sqrt(3)*R,hg=1.5*R;const bins=new Map();const now=Date.now();
   const add=(x,y)=>{const row=Math.round(y/hg);const col=Math.round((x-(row&1?w/2:0))/w);const k=row+','+col;const o=bins.get(k)||{row,col,n:0};o.n++;bins.set(k,o);};
@@ -1020,7 +1020,7 @@ function counters(){
      '<span class="kcol"><b class="kv sm">'+(med==null?'—':Math.round(med)+' min')+'</b><span class="ks">'+(ok==null?'Sin llegadas todavía':'llegó en menos de '+meta+' min')+'</span></span></span></button>'+
    '<button class="kp lv-idle" data-k="del"><span class="kl"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 19h16M6 16l4-5 3 3 5-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Delitos hoy</span>'+
      '<span class="kmain"><b class="kv" data-n="'+del.length+'">'+del.length+'</b><svg class="spk" viewBox="0 0 '+W+' '+Hh+'" width="'+W+'" height="'+Hh+'" aria-hidden="true"><defs><linearGradient id="spg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#E0364C" stop-opacity=".35"/><stop offset="1" stop-color="#E0364C" stop-opacity="0"/></linearGradient></defs>'+(bk.some(v=>v)?'<path d="'+area+'" fill="url(#spg)"/><path d="'+line+'" fill="none" stroke="#E0364C" stroke-width="2" stroke-linejoin="round"/><circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="3" fill="#E0364C"/>':'<path d="M0 '+(Hh-2)+' H'+W+'" stroke="var(--line2)" stroke-width="2" stroke-dasharray="3 3"/>')+'</svg></span>'+
-     '<span class="ks">'+(top?'Más en <b>'+esc(secName(top[0]))+'</b> ('+top[1]+') · gráfica: últimas 3 h':'Sin delitos registrados hoy')+'</span></button>'+
+     '<span class="ks">'+(top?'Más en <b>'+esc(secName(top[0]))+'</b> ('+top[1]+')':'Sin delitos registrados hoy')+'</span></button>'+
    '<button class="kp lv-'+lvP+'" data-k="pat"><span class="kl"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 16h14v-3l-2-5H7l-2 5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Patrullas libres</span>'+
      '<span class="kmain"><b class="kv" data-n="'+libres+'">'+libres+'</b><span class="kof">libres de '+enT+' en turno</span></span>'+
      '<span class="cars">'+cars+'</span><span class="ks">'+(enc?enc+' en camino a un reporte':'Ninguna en camino')+'</span></button>';
