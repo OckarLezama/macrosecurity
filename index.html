@@ -655,14 +655,15 @@ let CITY=null;
 function buildCity(){const r=mulberry(7);const minor=[],major=[],river=[];for(let x=-20;x<120;x+=3+r()*1.5)for(let y=-10;y<80;y+=3)if(r()<.85)minor.push([x,y,x,y+3]);for(let y=-10;y<80;y+=2.8+r()*1.4)for(let x=-20;x<120;x+=3)if(r()<.85)minor.push([x,y,x+3,y]);
   major.push({n:'a',p:[[-20,25],[60,20],[120,13]]});major.push({n:'b',p:[[47,-20],[50,45],[53,92]]});for(let x=-20;x<=120;x+=2)river.push([x,63+Math.sin(x/11)*3.2]);return {minor,major,river,parks:[],bld:[]};}
 /* inicialización del mapa */
-const RASTER={version:8,sources:{carto:{type:'raster',tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png','https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'],tileSize:256,attribution:'© OpenStreetMap · © CARTO'}},layers:[{id:'carto',type:'raster',source:'carto'}]};
+const RASTER={version:8,sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'© OpenStreetMap'}},layers:[{id:'osm',type:'raster',source:'osm'}]};
 function mapMsg(txt){let m=$('#mapMsg');if(!txt){if(m)m.remove();return;}if(!m){m=h('div',{id:'mapMsg',class:'mapmsg'});$('#mapwrap').append(m);}m.replaceChildren(h('b',{},'El mapa no pudo cargar'),h('span',{},txt));}
 let mapTry=0;
 const SAT={version:8,glyphs:'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',sources:{
   sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imágenes © Esri, Maxar, Earthstar Geographics'},
-  lbl:{type:'raster',tiles:['https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png','https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png'],tileSize:256,attribution:'© OpenStreetMap · © CARTO'},
   openmaptiles:{type:'vector',url:'https://tiles.openfreemap.org/planet'}},
-  layers:[{id:'sat',type:'raster',source:'sat',paint:{'raster-saturation':-.12,'raster-contrast':.08,'raster-brightness-max':.9}},{id:'lbl',type:'raster',source:'lbl'}]};
+  layers:[{id:'sat',type:'raster',source:'sat',paint:{'raster-saturation':-.12,'raster-contrast':.08,'raster-brightness-max':.9}},
+   {id:'roadlbl',type:'symbol',source:'openmaptiles','source-layer':'transportation_name',minzoom:13,layout:{'symbol-placement':'line','text-field':['coalesce',['get','name:es'],['get','name']],'text-font':['Noto Sans Regular'],'text-size':12},paint:{'text-color':'#FFFFFF','text-halo-color':'rgba(10,16,24,.85)','text-halo-width':1.6}},
+   {id:'placelbl',type:'symbol',source:'openmaptiles','source-layer':'place',layout:{'text-field':['coalesce',['get','name:es'],['get','name']],'text-font':['Noto Sans Bold'],'text-size':['interpolate',['linear'],['zoom'],10,12,16,17]},paint:{'text-color':'#FFFFFF','text-halo-color':'rgba(10,16,24,.85)','text-halo-width':1.8}}]};
 const STYLES={calles:'https://tiles.openfreemap.org/styles/liberty',claro:'https://tiles.openfreemap.org/styles/positron',satelite:SAT};
 UI.base=lsGet('ms3.base','calles');if(!STYLES[UI.base])UI.base='calles';
 function initMap(){
@@ -671,7 +672,7 @@ function initMap(){
   const styles=[STYLES[UI.base],RASTER];const style=styles[Math.min(mapTry,1)];
   try{map=new maplibregl.Map({container:'map',style,center:geo(50,35),zoom:12,pitch:55,bearing:-12,attributionControl:false,maxPitch:70});map.addControl(new maplibregl.AttributionControl({compact:true}),'top-right');}
   catch(e){mapMsg('Tu navegador no permite mostrar mapas en 3D (WebGL desactivado). Prueba con Chrome o Edge actualizados.');return;}
-  const tm=setTimeout(()=>{if(mapReady)return;if(mapTry===0){mapTry=1;try{map.remove();}catch(e){}map=null;initMap();}else mapMsg('No se pudieron descargar los mapas. Revisa tu conexión a internet o si tu red bloquea sitios de mapas.');},8000);
+  const tm=setTimeout(()=>{if(mapReady)return;if(mapTry===0){mapTry=1;try{map.remove();}catch(e){}map=null;initMap();}else mapMsg('No se pudieron descargar los mapas. Revisa tu conexión a internet o si tu red bloquea sitios de mapas.');},20000);
   map.on('load',()=>clearTimeout(tm));
   map.on('style.load',()=>{
     const src=map.getSource('openmaptiles')?'openmaptiles':Object.keys(map.getStyle().sources).find(k=>map.getStyle().sources[k].type==='vector');
