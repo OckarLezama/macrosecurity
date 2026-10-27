@@ -414,6 +414,22 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .pstrip .urow{width:auto;flex:none;border:0;background:#fff;border-radius:999px;padding:6px 12px 6px 10px;box-shadow:0 4px 12px rgba(23,33,46,.18);gap:7px}
 .pstrip .urow .ut{display:none}.pstrip .urow .uid{width:auto}
 @media (max-width:1400px){.qpanel{width:290px}.acc{min-width:0;font-size:12px}.side .counters .kv{font-size:34px!important}}
+/* v12: análisis de zona con el mismo estilo del panel */
+.acard{background:var(--panel)!important;border:1px solid #E6EAF0!important;border-radius:12px!important;padding:10px 12px 10px!important}
+.acard h3{font-size:12.5px!important;font-weight:700}
+.agrid div{background:var(--panel)!important;border:1px solid #E6EAF0!important;border-radius:10px!important}
+.agrid b{font-size:24px!important}
+.aread{background:#EEF6F4!important;border:1px solid #CFE7E1!important;color:#1F3B36}.aread b{color:#0E7A6C!important}
+.ahd small{color:#0E7A6C!important}
+.apanel .row{gap:6px;flex-wrap:wrap}.apanel .btn{min-height:34px;font-size:12.5px}
+.apanel .zhelp{padding:0 2px}
+body.dark .acard,body.dark .agrid div{background:#1A2028!important;border-color:#2A323D!important}body.dark .aread{background:rgba(14,147,132,.12)!important;border-color:rgba(14,147,132,.35)!important;color:#CFEFE7}
+.zpick{position:absolute;right:66px;bottom:60px;z-index:8;width:240px;background:var(--panel);border:1px solid #DDE3EA;border-radius:14px;box-shadow:0 14px 34px rgba(23,33,46,.2);padding:10px;display:flex;flex-direction:column;gap:4px;animation:pop .18s ease-out}
+.zpick b{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:2px 4px 4px}
+.zpick button{display:flex;align-items:center;gap:10px;border:0;background:none;border-radius:10px;padding:8px;text-align:left;font-size:13px;font-weight:700;color:var(--fg);cursor:pointer}
+.zpick button:hover{background:#F1F5F9}.zpick small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.zi{width:30px;height:30px;flex:none;border:2px dashed #0E9384;background:rgba(14,147,132,.1)}.zc0{border-radius:50%}.zr0{border-radius:4px}
+body.dark .zpick{background:#1A2028;border-color:#2A323D}body.dark .zpick button:hover{background:#232B35}
 /* v11: KPIs en la barra, área A-B-C-D, puntos por tipo, sala de mando */
 .hk{display:flex;align-items:center;min-width:0;flex:1 1 auto;overflow:hidden}
 .hk .counters{position:static!important;display:flex!important;gap:2px!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;flex-wrap:nowrap!important;overflow:visible}
@@ -436,15 +452,15 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 @media (max-width:1500px){#hk .kp[data-k=prox]{display:none!important}}@media (max-width:1400px){#hk .kp[data-k=att]{display:none!important}}
 .dkbtn,.dbtn,.pill{white-space:nowrap}
 .dkbtn{display:inline-flex;align-items:center;gap:6px;background:#3A424C;border:1px solid #4A535E;color:#DCE2E8;border-radius:999px;min-height:34px;padding:0 12px;font-size:12px;font-weight:600;cursor:pointer}
-.dkbtn[aria-pressed=true]{background:#2EC4D6;border-color:#2EC4D6;color:#0B1A20}
+.dkbtn[aria-pressed=true]{background:#0E9384;border-color:#0E9384;color:#fff}
 @media (max-width:1400px){.dkbtn span{display:none}}
-.mapctl button[aria-pressed="true"]#zRect{background:#2EC4D6;color:#0B1A20;border-color:#2EC4D6}
-.ah{width:30px;height:30px;border-radius:50%;background:rgba(14,30,38,.85);border:2.5px solid #2EC4D6;color:#E9FBFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;box-shadow:0 0 0 4px rgba(46,196,214,.25),0 4px 12px rgba(0,0,0,.35);cursor:grab;touch-action:none}
+.mapctl button[aria-pressed="true"]#zRect{background:#0E9384;color:#fff;border-color:#0E9384}
+.ah{width:30px;height:30px;border-radius:50%;background:rgba(14,30,38,.85);border:2.5px solid #0E9384;color:#E9FBFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;box-shadow:0 0 0 4px rgba(14,147,132,.25),0 4px 12px rgba(0,0,0,.35);cursor:grab;touch-action:none}
 @media (pointer:coarse){.ah{width:40px;height:40px;font-size:15px}}
 /* panel de área */
 body.areaon #v-mando .side>:not(#areaPanel){display:none!important}
 .apanel{display:flex;flex-direction:column;gap:8px;min-height:0}
-.ahd{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 4px 0}.ahd small{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;color:#0E9AAE}.ahd b{font-size:15px}
+.ahd{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 4px 0}.ahd small{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;color:#0E7A6C}.ahd b{font-size:15px}
 .agrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.agrid div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.agrid b{display:block;font-family:var(--f-num);font-size:26px;line-height:1}.agrid span{font-size:10.5px;color:var(--muted)}
 .agrid em{font-style:normal;font-weight:800}.agrid em.up{color:#E0364C}.agrid em.dn{color:#1E8A63}
 .acard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.acard h3{margin:0 0 6px;font-size:12.5px}
@@ -456,7 +472,7 @@ body.areaon #v-mando .side>:not(#areaPanel){display:none!important}
 .atu{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;margin-top:6px}.atu span{display:inline-flex;align-items:center;gap:5px}.atu i{width:9px;height:9px;border-radius:50%}
 .aat{display:flex;align-items:center;gap:8px}.abar{flex:1;height:8px;border-radius:999px;background:var(--line);overflow:hidden}.abar i{display:block;height:100%;background:linear-gradient(90deg,#0E9384,#2EC4A6);border-radius:999px}.aat b{font-family:var(--f-num);font-size:18px}
 .asub{font-size:11px;color:var(--muted);margin-top:3px}
-.aread{background:rgba(46,196,214,.08);border:1px solid rgba(46,196,214,.35);border-radius:12px;padding:9px 11px;font-size:12px;line-height:1.4;display:flex;flex-direction:column;gap:3px}.aread b{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#0E9AAE}
+.aread{background:rgba(14,147,132,.08);border:1px solid rgba(14,147,132,.35);border-radius:12px;padding:9px 11px;font-size:12px;line-height:1.4;display:flex;flex-direction:column;gap:3px}.aread b{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#0E7A6C}
 /* ===== modo sala de mando ===== */
 body.dark{--bg:#10141A;--panel:#1A2028;--panel2:#212833;--line:#2A323D;--line2:#36404C;--fg:#E6EBF0;--muted:#97A3B2;--dim:#768292;color-scheme:dark;background:#10141A}
 body.dark[data-tab="mando"] .side{background:#12171E!important;border-left-color:#222A33!important}
@@ -465,11 +481,11 @@ body.dark .srch input{color:#E6EBF0}body.dark .sres button:hover,body.dark .sres
 body.dark .card .meta .chip,body.dark .chip{background:#252D38;color:#C9D1DA}
 body.dark .sgrid div,body.dark .zgrid div{background:#212833}
 body.dark .zread{background:rgba(46,196,166,.1);border-color:rgba(46,196,166,.3);color:#CFEFE7}
-body.dark .vsw .knob{background:linear-gradient(135deg,#2EC4D6,#1C8FA0)}body.dark .vsw button[aria-pressed=true]{color:#0B1A20}
+body.dark .vsw .knob{background:linear-gradient(135deg,#0E9384,#1C8FA0)}body.dark .vsw button[aria-pressed=true]{color:#fff}
 body.dark svg text[fill="#17212E"]{fill:#E6EBF0}body.dark .ln line[stroke="#EDF0F4"]{stroke:#26303B}body.dark .ln rect[fill="#EEF3FA"]{fill:#1F2833}
 body.dark path[stroke="#EEF1F5"],body.dark circle[stroke="#EEF1F5"]{stroke:#26303B}body.dark .bt2 .tr{background:#26303B}body.dark .ld[fill="#fff"]{fill:#1A2028}
 body.dark .hc.avg{background:#212833;color:#97A3B2}body.dark .rgc.nx{background:linear-gradient(180deg,#1F2731,#1A2028);border-color:#2E3844}
-body.dark .lbase button{color:#C9D1DA}body.dark .lrow input{background:#36404C}body.dark .lrow input:checked{background:#2EC4D6}
+body.dark .lbase button{color:#C9D1DA}body.dark .lrow input{background:#36404C}body.dark .lrow input:checked{background:#0E9384}
 body.dark .mapwrap{background:#0E1217}body.dark .slab b{color:#E6EBF0;text-shadow:0 0 6px #000,0 0 3px #000}body.dark .slab span{background:#1A2028;color:#C9D1DA;border-color:#36404C}
 body.dark .pstrip .psh{background:rgba(26,32,40,.95)}body.dark .side .counters .kp{--t:#1A2028!important}
 body.dark .btn{background:#212833;color:#E6EBF0;border-color:#36404C}body.dark .x{color:#C9D1DA}
@@ -715,7 +731,6 @@ body:not(.an) .anonly{display:none}
       <button role="tab" data-tab="pron" aria-selected="false">Pronóstico</button>
       <button role="tab" data-tab="anal" aria-selected="false">Análisis</button>
     </nav>
-    <div class="hk" id="hk"></div>
     <span class="sp"></span>
     <button class="dkbtn" id="dkbtn" aria-pressed="false" title="Modo sala de mando (oscuro con relieve)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg><span>Sala de mando</span></button>
     <span class="pill" id="turnoNow"><i></i>Turno</span>
@@ -758,7 +773,7 @@ body:not(.an) .anonly{display:none}
         <div class="lpop" id="acc" hidden></div>
         <div class="qpanel panel sec" id="qpanel"><div class="sechead"><h2>Necesitan atención</h2><span class="seg" style="display:none"><button id="qAll"></button><button id="qUrg"></button></span></div><div class="cards" id="needs"></div></div>
         <div class="pstrip" id="pstrip"><span class="psh">Patrullas <b id="enCount"></b></span><div id="inprog"></div></div>
-        <div class="mapctl"><button id="zIn" aria-label="Acercar">+</button><button id="zOut" aria-label="Alejar">−</button><button id="zHome" aria-label="Vista general"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg></button><button id="z3d" aria-pressed="true" aria-label="Cambiar vista 3D o 2D">3D</button><button id="zZone" aria-pressed="false" aria-label="Analizar zona" title="Analizar zona: arrastra para dibujar un círculo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle></svg></button><button id="zRect" aria-pressed="false" aria-label="Seleccionar un área" title="Seleccionar área (A-B-C-D)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="6" width="16" height="12" stroke-dasharray="3 2.5"/><circle cx="4" cy="6" r="2" fill="currentColor"/><circle cx="20" cy="18" r="2" fill="currentColor"/></svg></button><button id="zLay" aria-expanded="false" aria-label="Capas del mapa" title="Capas del mapa" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"></path><path d="M3 13l9 5 9-5"></path></svg></button><div class="laymenu" id="layers" hidden></div></div>
+        <div class="mapctl"><button id="zIn" aria-label="Acercar">+</button><button id="zOut" aria-label="Alejar">−</button><button id="zHome" aria-label="Vista general"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg></button><button id="z3d" aria-pressed="true" aria-label="Cambiar vista 3D o 2D">3D</button><button id="zZone" aria-pressed="false" aria-label="Analizar zona" title="Analizar zona: arrastra para dibujar un círculo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle></svg></button><button id="zRect" hidden aria-pressed="false" aria-label="Seleccionar un área" title="Seleccionar área (A-B-C-D)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="6" width="16" height="12" stroke-dasharray="3 2.5"/><circle cx="4" cy="6" r="2" fill="currentColor"/><circle cx="20" cy="18" r="2" fill="currentColor"/></svg></button><button id="zLay" aria-expanded="false" aria-label="Capas del mapa" title="Capas del mapa" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"></path><path d="M3 13l9 5 9-5"></path></svg></button><div class="laymenu" id="layers" hidden></div></div>
       </div>
       <div class="side">
         <div id="areaPanel" class="apanel" hidden></div>
@@ -1003,9 +1018,9 @@ function xy(lng,lat){const g=G();return {x:50+(lng-g.lng0)*g.kx/M,y:(g.lat0-lat)
 function proj(x,y){if(!map)return [0,0,1];const p=map.project(geo(x,y));return [p.x,p.y,1];}
 function sectorLevels(){const md=getModel();const L={};for(const sc of S.config.sectores){const o=md.out[sc.id];L[sc.id]=o?level(o.fc[0].p):'bajo';}return L;}
 const ZONE={mode:false,draft:null,vig:null};
-function circlePts(z){const out=[];for(let a=0;a<=Math.PI*2+.01;a+=Math.PI/36)out.push([z.x+z.r*Math.cos(a),z.y+z.r*Math.sin(a)]);return out;}
+function circlePts(z){if(z.poly)return z.poly.slice();const out=[];for(let a=0;a<=Math.PI*2+.01;a+=Math.PI/36)out.push([z.x+z.r*Math.cos(a),z.y+z.r*Math.sin(a)]);return out;}
 const fmtR=r=>{const m=r*M;return m>=1000?(m/1000).toFixed(1)+' km':Math.round(m/10)*10+' m';};
-const inZone=(z,o)=>Math.hypot(o.x-z.x,o.y-z.y)<=z.r;
+const inZone=(z,o)=>z.poly?inPoly(o.x,o.y,z.poly):Math.hypot(o.x-z.x,o.y-z.y)<=z.r;
 function vigOf(ev){for(const v of S.vigiladas.values())if(inZone(v,ev))return v;return null;}
 const ring=pts=>{const r=pts.map(q=>geo(q[0],q[1]));if(r.length&&(r[0][0]!==r[r.length-1][0]||r[0][1]!==r[r.length-1][1]))r.push(r[0]);return r;};
 const fc=f=>({type:'FeatureCollection',features:f});
@@ -1075,7 +1090,7 @@ function initMap(){
     map.addLayer({id:'sect-line',type:'line',source:'sect',paint:{'line-color':sat?'#FFFFFF':'#2B3A4F','line-width':['interpolate',['linear'],['zoom'],10,1.4,15,3],'line-dasharray':[3,1.6],'line-opacity':.9}},firstSym);
     add('limite',{id:'limite-line',type:'line',paint:{'line-color':sat?'#2EE6D1':'#17212E','line-width':3,'line-opacity':.9}},firstSym);
     add('pts',{id:'pts',type:'circle',paint:{'circle-radius':['interpolate',['linear'],['zoom'],10,1.8,14,3.6,17,6],'circle-color':['get','c'],'circle-opacity':0,'circle-stroke-color':'rgba(0,0,0,.25)','circle-stroke-width':.5,'circle-pitch-alignment':'map'}});
-    add('area',{id:'area-fill',type:'fill',paint:{'fill-color':'#2EC4D6','fill-opacity':.08}});map.addLayer({id:'area-line',type:'line',source:'area',paint:{'line-color':'#2EC4D6','line-width':2.4,'line-dasharray':[2,1.6]}});
+    add('area',{id:'area-fill',type:'fill',paint:{'fill-color':'#0E9384','fill-opacity':.08}});map.addLayer({id:'area-line',type:'line',source:'area',paint:{'line-color':'#0E9384','line-width':2.4,'line-dasharray':[2,1.6]}});
     add('heat',{id:'heat',type:'heatmap',paint:{'heatmap-weight':['get','w'],'heatmap-intensity':['interpolate',['linear'],['zoom'],10,.7,16,1.6],'heatmap-radius':['interpolate',['linear'],['zoom'],10,18,16,60],'heatmap-opacity':.55,'heatmap-color':['interpolate',['linear'],['heatmap-density'],0,'rgba(255,255,255,0)',.3,'#FFD59A',.6,'#F58A4A',1,'#E0364C']}},firstSym);
     const ownB=map.getStyle().layers.find(l=>l.type==='fill-extrusion'&&l.id!=='hex'&&l.id!=='b3d');if(ownB){bldLayer=ownB.id;map.setLayoutProperty(ownB.id,'visibility',UI.flat?'none':'visible');}
     else if(src){bldLayer='b3d';map.addLayer({id:'b3d',type:'fill-extrusion',source:src,'source-layer':'building',minzoom:13,layout:{visibility:UI.flat?'none':'visible'},paint:{'fill-extrusion-color':sat?['interpolate',['linear'],['coalesce',['get','render_height'],6],0,'#DCE6F2',40,'#F4F8FC']:['interpolate',['linear'],['coalesce',['get','render_height'],6],0,'#E4E9F0',30,'#CBD4E0',80,'#B4C0CF'],'fill-extrusion-height':['coalesce',['get','render_height'],6],'fill-extrusion-base':['coalesce',['get','render_min_height'],0],'fill-extrusion-opacity':sat?.72:.9}},firstSym);}
@@ -1102,7 +1117,7 @@ function initMap(){
   const zpop=new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'zpop',offset:12});let zpk='';
   const zhov=(id,get)=>{map.on('mousemove',id,e=>{if(ZONE.mode||ZH.drag)return;const z=get(e);if(!z){zpop.remove();return;}const k=z.id||'d';if(k!==zpk){zpk=k;const st=zoneStats(z);zpop.setHTML('<b>'+(z.nombre?esc(z.nombre):'Zona de '+fmtR(z.r))+'</b><br>'+st.d30+' delitos en 30 días'+(st.ratio!=null?' · '+(Math.round(st.ratio*10)/10)+'× el promedio':'')+(st.turno?'<br>Más en la '+st.turno.n:''));}zpop.setLngLat(e.lngLat).addTo(map);map.getCanvas().style.cursor='pointer';});
     map.on('mouseleave',id,()=>{zpop.remove();zpk='';map.getCanvas().style.cursor='';});};
-  zhov('zd-fill',()=>ZONE.draft);zhov('vig-fill',e=>{const p=xy(e.lngLat.lng,e.lngLat.lat);return [...S.vigiladas.values()].find(v=>Math.hypot(v.x-p.x,v.y-p.y)<=v.r)||null;});
+  zhov('zd-fill',()=>ZONE.draft);zhov('vig-fill',e=>{const p=xy(e.lngLat.lng,e.lngLat.lat);return [...S.vigiladas.values()].find(v=>inZone(v,p))||null;});
   map.on('mousedown',start);map.on('touchstart',start);map.on('mousemove',move);map.on('touchmove',move);map.on('mouseup',end);map.on('touchend',end);
 }
 function intro(){if(!map||!S.config)return;const b=worldBounds();const c=[(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];map.jumpTo({center:c,zoom:map.getZoom()-2.2,pitch:0,bearing:30});setTimeout(()=>{const cam2=map.cameraForBounds(b,{padding:{top:150,bottom:70,left:40,right:80}});if(cam2)map.flyTo({center:cam2.center,zoom:cam2.zoom,pitch:UI.flat?0:60,bearing:UI.flat?0:-18,duration:4200,curve:1.2,essential:true});},400);}
@@ -1172,13 +1187,13 @@ function typeRank(){const H=(S.historial&&S.historial.entries)||[];const n={};fo
 let TRK=null;function typeColor(cid){if(!TRK)TRK=typeRank();const i=TRK.indexOf(cid);return TPAL[i>=0&&i<8?i:8];}
 function crimePts(days){const out=[];const now=Date.now();for(const e of (S.historial&&S.historial.entries)||[]){if(e[7]==null||e[0]>days||cat(e[4]).grupo!=='delito')continue;out.push({x:e[7],y:e[8],cid:e[4],h:e[1],d:e[0],att:!!e[5]});}
   for(const ev of S.eventos.values()){if(cat(ev.cid).grupo!=='delito'||ev.estado==='descartado'||now-ev.creado>days*864e5)continue;const dt=new Date(ev.creado);out.push({x:ev.x,y:ev.y,cid:ev.cid,h:dt.getHours(),d:Math.floor((now-ev.creado)/864e5),att:!!(ev.llegada||ev.estado==='cerrado'),live:abierto(ev)});}return out;}
-function syncPts(){if(!mapReady||!map.getLayer('pts'))return;const on=UI.layers.puntos||!!AREA.p;const key=on+'|'+(AREA.p?AREA.p.map(q=>q.join()).join(';'):'')+'|'+S.eventos.size;if(key===ptsKey)return;ptsKey=key;
-  if(!on){setData('pts',fc([]));return;}let P=crimePts(90);if(AREA.p)P=P.filter(q=>inPoly(q.x,q.y,AREA.p));
+function syncPts(){if(!mapReady||!map.getLayer('pts'))return;const sh=curShape();const on=UI.layers.puntos||!!sh;const key=on+'|'+(sh?JSON.stringify(sh.poly||[sh.x,sh.y,sh.r]):'')+'|'+S.eventos.size;if(key===ptsKey)return;ptsKey=key;
+  if(!on){setData('pts',fc([]));return;}let P=crimePts(90);if(sh)P=P.filter(q=>inShape(sh,q.x,q.y));
   setData('pts',fc(P.map(q=>({type:'Feature',properties:{c:typeColor(q.cid)},geometry:{type:'Point',coordinates:geo(q.x,q.y)}}))));
   const t0=performance.now();const step=t=>{const f=Math.min(1,(t-t0)/700);try{map.setPaintProperty('pts','circle-opacity',.88*f);}catch(e){}if(f<1)requestAnimationFrame(step);};map.setPaintProperty('pts','circle-opacity',0);requestAnimationFrame(step);}
 /* ===== área A-B-C-D ===== */
 const AREA={mode:false,p:null,mk:[],drag:null};
-function setRectMode(on){AREA.mode=on;ORB.last=Date.now();$('#zRect').setAttribute('aria-pressed',String(on));$('#mapwrap').classList.toggle('zonemode',on);if(!map)return;
+function setRectMode(on){AREA.mode=on;ORB.last=Date.now();$('#zRect').setAttribute('aria-pressed',String(on));$('#zZone').setAttribute('aria-pressed',String(on||ZONE.mode));$('#mapwrap').classList.toggle('zonemode',on);if(!map)return;
   if(on){if(ZONE.mode)setZoneMode(false);map.dragPan.disable();map.touchZoomRotate.disable();map.dragRotate.disable();map.easeTo({pitch:0,bearing:0,duration:500});toast('Arrastra sobre el mapa para marcar el área');}
   else{map.dragPan.enable();map.touchZoomRotate.enable();map.dragRotate.enable();}}
 function syncArea(){if(!mapReady)return;const p=AREA.p;setData('area',fc(p?[{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(p)]}}]:[]));
@@ -1187,12 +1202,16 @@ function syncArea(){if(!mapReady)return;const p=AREA.p;setData('area',fc(p?[{typ
       m.on('dragstart',()=>{ORB.last=Date.now();});m.on('drag',()=>{const ll=m.getLngLat();const q=xy(ll.lng,ll.lat);AREA.p[i]=[q.x,q.y];setData('area',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(AREA.p)]}}]));});
       m.on('dragend',()=>{ptsKey='';syncPts();renderArea();});return m;});}
   else AREA.mk.forEach((m,i)=>m.setLngLat(geo(p[i][0],p[i][1])));}
-function clearArea(){AREA.p=null;syncArea();ptsKey='';syncPts();renderArea();}
-function renderArea(){const box=$('#areaPanel');const on=!!AREA.p;document.body.classList.toggle('areaon',on);box.hidden=!on;if(!on){box.replaceChildren();renderDash(true);return;}
+function curShape(){if(AREA.p)return {poly:AREA.p,kind:'area'};const z=zoneCur();if(z&&(z.poly||z.r>0))return z;return null;}
+const inShape=(sh,x,y)=>sh.poly?inPoly(x,y,sh.poly):Math.hypot(x-sh.x,y-sh.y)<=sh.r;
+function shapeKm2(sh){return sh.poly?Math.abs(area(sh.poly))*M*M/1e6:Math.PI*Math.pow(sh.r*M/1000,2);}
+function shapeCenter(sh){if(!sh.poly)return {x:sh.x,y:sh.y};const c=centroid(sh.poly);return c;}
+function clearArea(){AREA.p=null;ZONE.draft=null;ZONE.vig=null;ZONE.vedit=null;syncArea();syncZones();ptsKey='';syncPts();renderArea();}
+function renderArea(){const box=$('#areaPanel');const sh=curShape();const on=!!sh;document.body.classList.toggle('areaon',on);box.hidden=!on;if(!on){box.replaceChildren();renderDash(true);return;}
   if(document.body.classList.contains('sidehide')){document.body.classList.remove('sidehide');setTimeout(()=>map&&map.resize(),320);}
-  const P=crimePts(90).filter(q=>inPoly(q.x,q.y,AREA.p));const d30=P.filter(q=>q.d<=30).length,prev=crimePts(60).filter(q=>q.d>30&&inPoly(q.x,q.y,AREA.p)).length;
-  const km2=Math.abs(area(AREA.p))*M*M/1e6;const city=crimePts(90).length;const cityKm2=S.config.sectores.reduce((a,sc)=>a+Math.abs(area(sc.poly)),0)*M*M/1e6;const ratio=city&&km2?(P.length/km2)/(city/cityKm2):null;
-  const open=[...S.eventos.values()].filter(e=>abierto(e)&&inPoly(e.x,e.y,AREA.p)).length;
+  const P=crimePts(90).filter(q=>inShape(sh,q.x,q.y));const d30=P.filter(q=>q.d<=30).length,prev=crimePts(60).filter(q=>q.d>30&&inShape(sh,q.x,q.y)).length;
+  const km2=shapeKm2(sh);const city=crimePts(90).length;const cityKm2=S.config.sectores.reduce((a,sc)=>a+Math.abs(area(sc.poly)),0)*M*M/1e6;const ratio=city&&km2?(P.length/km2)/(city/cityKm2):null;
+  const open=[...S.eventos.values()].filter(e=>abierto(e)&&inShape(sh,e.x,e.y)).length;const ctr=shapeCenter(sh);const isVig=!!(ZONE.vig&&!AREA.p);const vg=isVig?zoneCur():null;
   const by={};P.forEach(q=>by[q.cid]=(by[q.cid]||0)+1);const types=Object.entries(by).sort((a,b)=>b[1]-a[1]);const top=types.slice(0,6);const otros=types.slice(6).reduce((a,x)=>a+x[1],0);
   const tt=T();const tu=Array(tt.length).fill(0);P.forEach(q=>tu[turnoIdx(q.h)]++);const hr=Array(24).fill(0);P.forEach(q=>hr[q.h]++);const hm=Math.max(1,...hr);
   const att=P.filter(q=>q.att).length;const ti=tu.indexOf(Math.max(...tu));
@@ -1203,17 +1222,21 @@ function renderArea(){const box=$('#areaPanel');const on=!!AREA.p;document.body.
   const sug=(()=>{if(!P.length)return 'Sin delitos registrados en esta área en los últimos 90 días.';const a=[];if(ratio!=null)a.push(ratio>=1.3?'Concentra '+(Math.round(ratio*10)/10)+' veces más delitos por km² que el promedio del municipio.':(ratio<=.75?'Está por debajo del promedio del municipio.':'Está en el promedio del municipio.'));
     if(trend!=null)a.push(Math.abs(trend)<10?'Estable contra el mes anterior.':(trend>0?'Subió '+trend+'% contra el mes anterior.':'Bajó '+(-trend)+'% contra el mes anterior.'));
     if(top[0])a.push('Conviene reforzar la '+tt[ti].nombre.toLowerCase()+', sobre todo contra '+cat(top[0][0]).nombre.toLowerCase()+'.');return a.join(' ');})();
-  box.innerHTML='<div class="ahd"><div><small>ÁREA SELECCIONADA</small><b>'+(km2<1?Math.round(km2*100)+' ha':(Math.round(km2*10)/10)+' km²')+' · '+esc(secName(sectorAt((AREA.p[0][0]+AREA.p[2][0])/2,(AREA.p[0][1]+AREA.p[2][1])/2)))+'</b></div><button class="x" id="arX" aria-label="Cerrar área">✕</button></div>'+
+  box.innerHTML='<div class="ahd"><div><small>'+(isVig?'ZONA CON AVISO':'ANÁLISIS DE ZONA')+'</small><b>'+(isVig?esc(vg.nombre):((sh.poly?'Área de ':'Círculo de ')+(km2<1?Math.round(km2*100)+' ha':(Math.round(km2*10)/10)+' km²')+' · '+esc(secName(sectorAt(ctr.x,ctr.y)))))+'</b></div><button class="x" id="arX" aria-label="Cerrar análisis">✕</button></div>'+
     '<div class="agrid"><div><b>'+P.length+'</b><span>Delitos 90 días</span></div><div><b>'+d30+'</b><span>Últimos 30 días'+(trend!=null?' <em class="'+(trend>0?'up':'dn')+'">'+(trend>0?'▲':'▼')+Math.abs(trend)+'%</em>':'')+'</span></div><div><b>'+open+'</b><span>Abiertos ahora</span></div><div><b>'+(ratio!=null?(Math.round(ratio*10)/10)+'×':'—')+'</b><span>vs. promedio municipal</span></div></div>'+
     '<div class="acard"><h3>Delitos por tipo</h3><div class="adn"><svg viewBox="0 0 100 100">'+seg+'<text x="50" y="50" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="22" font-weight="700" class="adt">'+P.length+'</text><text x="50" y="64" text-anchor="middle" font-size="8" class="ads">delitos</text></svg><div class="alg">'+
       top.map(([c,n])=>'<span><i style="background:'+typeColor(c)+'"></i>'+esc(cat(c).nombre)+'<b>'+n+'</b></span>').join('')+(otros?'<span><i style="background:#9AA5B4"></i>Otros<b>'+otros+'</b></span>':'')+'</div></div></div>'+
     '<div class="acard"><h3>¿A qué hora ocurren?</h3><div class="ahr">'+hr.map((v,i)=>'<i style="height:'+(6+v/hm*94)+'%;background:'+TCOL[turnoIdx(i)%4]+'" title="'+pad(i)+':00 · '+v+' delitos"></i>').join('')+'</div><div class="ahx"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span></div>'+
       '<div class="atu">'+tt.map((t,j)=>'<span><i style="background:'+TCOL[j%4]+'"></i>'+esc(t.nombre)+' <b>'+Math.round(tu[j]/tot*100)+'%</b></span>').join('')+'</div></div>'+
     '<div class="acard"><h3>Atención</h3><div class="aat"><div class="abar"><i style="width:'+Math.round(att/tot*100)+'%"></i></div><b>'+Math.round(att/tot*100)+'%</b></div><div class="asub">'+att+' de '+P.length+' delitos recibieron patrulla</div></div>'+
-    '<div class="aread"><b>Lectura del área</b><span>'+esc(sug)+'</span></div>'+
-    '<div class="row"><button class="btn" id="arZoom">Acercar</button><button class="btn" id="arClr">Borrar área</button></div>';
-  $('#arX').onclick=clearArea;$('#arClr').onclick=clearArea;
-  $('#arZoom').onclick=()=>{const g=AREA.p.map(q=>geo(q[0],q[1]));const xs=g.map(q=>q[0]),ys=g.map(q=>q[1]);map.fitBounds([[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],{padding:80,duration:900,maxZoom:16.5});};}
+    '<div class="aread"><b>Lectura de la zona</b><span>'+esc(sug)+'</span></div>'+
+    '<div class="row">'+(isVig?'<button class="btn dan" id="arDel">Borrar zona</button>':'<button class="btn pri" id="arVig" title="Guarda la zona para todos los operadores: cada reporte nuevo dentro lanza un aviso">Avisarme de reportes aquí</button>')+'<button class="btn" id="arZoom">Acercar</button>'+(isVig?'':'<button class="btn" id="arClr">Borrar</button>')+'</div>'+'<div class="zhelp">'+(sh.poly&&!isVig?'Arrastra las esquinas A, B, C y D para ajustar el área.':(isVig?'Avisa a todos cuando entra un reporte en esta zona.':'Mueve el círculo con ✥ y cambia su tamaño con ⇔.'))+'</div>';
+  $('#arX').onclick=clearArea;if($('#arClr'))$('#arClr').onclick=clearArea;
+  if($('#arDel'))$('#arDel').onclick=()=>{write(()=>api.del('vigiladas/'+vg.id));S.vigiladas.delete(vg.id);clearArea();toast('Zona borrada');};
+  if($('#arVig'))$('#arVig').onclick=()=>{const id='v'+Date.now().toString(36);const n=S.vigiladas.size+1;const c=shapeCenter(sh);const d={id,nombre:'Zona '+n+' · '+secName(sectorAt(c.x,c.y)),x:+c.x.toFixed(2),y:+c.y.toFixed(2),creada:Date.now()};
+    if(sh.poly){d.poly=sh.poly.map(q=>[+q[0].toFixed(2),+q[1].toFixed(2)]);d.r=+Math.max(...sh.poly.map(q=>Math.hypot(q[0]-c.x,q[1]-c.y))).toFixed(2);}else d.r=+sh.r.toFixed(2);
+    write(()=>api.set('vigiladas/'+id,d));S.vigiladas.set(id,d);AREA.p=null;syncArea();ZONE.draft=null;ZONE.vig=id;ZONE.vedit=null;renderZone();toast('Listo: te avisaremos cuando entre un reporte en esta zona');};
+  $('#arZoom').onclick=()=>{const g=(sh.poly||circlePts(sh)).map(q=>geo(q[0],q[1]));const xs=g.map(q=>q[0]),ys=g.map(q=>q[1]);map.fitBounds([[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],{padding:80,duration:900,maxZoom:16.5});};}
 let bcKey='';
 function syncBeacons(){if(!mapReady||!S.config)return;const ev=[...S.eventos.values()].filter(e=>e.estado==='nuevo'||((e.sos||e.cid==='apoyo')&&abierto(e)));
   const key=ev.map(e=>e.id+e.estado+e.x+e.y).join();if(key===bcKey)return;bcKey=key;
@@ -1243,7 +1266,7 @@ const ZH={c:null,r:null,k:'',drag:false};
 function zoneGeom(){const z=zoneCur();if(!z)return;if(ZONE.vig){const vs=[...S.vigiladas.values()].map(v=>v.id===z.id?z:v);setData('vig',fc(vs.map(v=>({type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(v))]}}))));}
   else setData('zd',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(z))]}}]));
   if(zdMark){zdMark.setLngLat(geo(z.x,z.y-z.r));zdMark.getElement().textContent=fmtR(z.r);}}
-function syncHandles(){if(!mapReady)return;const z=zoneCur();const k=z&&z.r>0&&!dragZone?(ZONE.vig||'d'):'';
+function syncHandles(){if(!mapReady)return;const z=zoneCur();const k=z&&z.r>0&&!dragZone&&!z.poly?(ZONE.vig||'d'):'';
   if(k!==ZH.k){if(ZH.c){ZH.c.remove();ZH.r.remove();ZH.c=ZH.r=null;}ZH.k=k;if(!k)return;
     const ce=h('div',{class:'zh zc',title:'Arrastra para mover la zona'},'✥');const re=h('div',{class:'zh zr',title:'Arrastra para cambiar el tamaño'},'⇔');
     ZH.c=new maplibregl.Marker({element:ce,draggable:true}).setLngLat(geo(z.x,z.y)).addTo(map);
@@ -1273,7 +1296,7 @@ function tick(t){requestAnimationFrame(tick);if(!mapReady||UI.tab!=='mando')retu
 const DASH=[[0,4,3],[.5,4,2.5],[1,4,2],[1.5,4,1.5],[2,4,1],[2.5,4,.5],[3,4,0],[0,.5,3,3.5],[0,1,3,3],[0,1.5,3,2.5],[0,2,3,2],[0,2.5,3,1.5],[0,3,3,1],[0,3.5,3,.5]];
 function wireMap(){
   if(map){let a0=null;
-    const rs=e=>{if(!AREA.mode)return;e.preventDefault&&e.preventDefault();const p=xy(e.lngLat.lng,e.lngLat.lat);a0=p;AREA.drawing=true;AREA.p=[[p.x,p.y],[p.x,p.y],[p.x,p.y],[p.x,p.y]];syncArea();};
+    const rs=e=>{if(!AREA.mode)return;e.preventDefault&&e.preventDefault();ZONE.draft=null;ZONE.vig=null;ZONE.vedit=null;syncZones();const p=xy(e.lngLat.lng,e.lngLat.lat);a0=p;AREA.drawing=true;AREA.p=[[p.x,p.y],[p.x,p.y],[p.x,p.y],[p.x,p.y]];syncArea();};
     const rm=e=>{if(!AREA.mode||!a0)return;const p=xy(e.lngLat.lng,e.lngLat.lat);AREA.p=[[a0.x,a0.y],[p.x,a0.y],[p.x,p.y],[a0.x,p.y]];syncArea();};
     const re=()=>{if(!AREA.mode||!a0)return;a0=null;AREA.drawing=false;const p=AREA.p;if(Math.abs(p[2][0]-p[0][0])*M<120||Math.abs(p[2][1]-p[0][1])*M<120){const c=p[0],r=600/M;AREA.p=[[c[0]-r,c[1]-r],[c[0]+r,c[1]-r],[c[0]+r,c[1]+r],[c[0]-r,c[1]+r]];}
       setRectMode(false);syncArea();ptsKey='';syncPts();renderArea();};
@@ -1306,25 +1329,7 @@ function zoneStats(z){const now=Date.now();const km2=Math.PI*Math.pow(z.r*M/1000
   const cityKm2=S.config.sectores.reduce((a,sc)=>a+Math.abs(area(sc.poly)),0)*M*M/1e6;const ratio=(city&&km2&&cityKm2)?(d30/km2)/(city/cityKm2):null;
   return {km2,prev,ratio,abiertos,hoy,d30,top,turno:d30?{n:T()[ti].nombre.toLowerCase(),p:turn[ti]/d30}:null,sid,lv:L[sid],u,hasXY};}
 function zoneCur(){if(ZONE.vig){const v=S.vigiladas.get(ZONE.vig);if(!v)return null;if(!ZONE.vedit||ZONE.vedit.id!==v.id)ZONE.vedit={...v};return ZONE.vedit;}return ZONE.draft;}
-function renderZone(){syncZones();const host=$('#zoneHost');const v=ZONE.vig?zoneCur():null;const z=v||ZONE.draft;$('#mapwrap').classList.toggle('zoneopen',!!(z&&(v||z.r>0)));
-  if(!z||(!v&&drag_zone_active()))return host.replaceChildren();
-  const st=zoneStats(z);const rm=fmtR(z.r);
-  const key=JSON.stringify([v?v.id:'d',z.x,z.y,z.r,st.abiertos,st.hoy,st.d30,st.top,st.turno,st.u&&st.u.id,st.lv]);if(key===renderZone.k&&host.firstChild)return;renderZone.k=key;
-  const box=h('div',{class:'zcard'},
-    h('div',{class:'row',style:'justify-content:space-between'},h('b',{style:'font-size:15px'},v?v.nombre:'Zona de '+rm+' · '+secName(st.sid)),h('button',{class:'x','aria-label':'Cerrar',onclick:()=>{ZONE.draft=null;ZONE.vig=null;renderZone();}},'✕')),
-    v?h('span',{class:'chip c5',style:'align-self:flex-start'},'Vigilada · avisa cuando entra un reporte · '+rm):null,
-    h('div',{class:'zgrid'},h('div',{},h('b',{},String(st.abiertos)),h('span',{},'Abiertos ahora')),h('div',{},h('b',{},String(st.hoy)),h('span',{},'Delitos hoy')),h('div',{},h('b',{},String(st.d30)),h('span',{},'Últimos 30 días'))),
-    st.top.length?h('div',{class:'zrow'},'Más comunes: ',h('b',{},st.top.map(([c,n])=>cat(c).nombre.toLowerCase()+' ('+n+')').join(', '))):h('div',{class:'zrow'},'Sin delitos registrados en los últimos 30 días.'),
-    st.turno?h('div',{class:'zrow'},'Turno con más delitos: ',h('b',{},st.turno.n+' ('+pct(st.turno.p)+')')):null,
-    h('div',{class:'zread'},h('b',{},'Lectura de la zona'),h('span',{},zoneRead(st))),
-    h('div',{class:'zrow'},'Patrulla libre sugerida: ',h('b',{},st.u?st.u.id+' · '+secName(st.u.sector):'ninguna en turno')),
-    h('div',{class:'zrow'},'Riesgo del próximo turno: ',h('b',{},(st.lv||'bajo')+' ('+secName(st.sid)+')')),
-    !st.hasXY?h('div',{class:'zrow',style:'color:var(--dim)'},'El histórico de este cliente no trae coordenadas; solo se cuentan los reportes recibidos aquí.'):null,
-    h('div',{class:'row'},v?h('button',{class:'btn dan',onclick:()=>{write(()=>api.del('vigiladas/'+v.id));S.vigiladas.delete(v.id);ZONE.vig=null;ZONE.vedit=null;renderZone();toast('Zona borrada');}},'Borrar zona')
-      :h('button',{class:'btn pri',title:'Guarda la zona para todos. Cada reporte nuevo que caiga dentro dispara un aviso y queda marcado con el nombre de la zona.',onclick:()=>{const id='v'+Date.now().toString(36);const n=S.vigiladas.size+1;const d={id,nombre:'Zona '+n+' · '+secName(st.sid),x:+z.x.toFixed(2),y:+z.y.toFixed(2),r:+z.r.toFixed(2),creada:Date.now()};write(()=>api.set('vigiladas/'+id,d));ZONE.draft=null;ZONE.vig=id;S.vigiladas.set(id,d);renderZone();toast('Listo: te avisaremos cuando entre un reporte en esta zona');}},'Avisarme de reportes aquí'),
-      !v?h('button',{class:'btn',onclick:()=>{ZONE.draft=null;renderZone();}},'Borrar círculo'):null),
-    !v?h('div',{class:'zhelp'},'"Avisarme" guarda el círculo para todos los operadores: cada reporte nuevo dentro de él lanza un aviso y se marca con el nombre de la zona. Mueve el círculo con ✥ y cambia su tamaño con ⇔.'):h('div',{class:'zhelp'},'Zona guardada: avisa cuando entra un reporte. Puedes moverla con ✥ o cambiar su tamaño con ⇔.'));
-  host.replaceChildren(box);}
+function renderZone(){syncZones();$('#zoneHost').replaceChildren();const z=zoneCur();$('#mapwrap').classList.toggle('zoneopen',!!z);if(dragZone)return;if(z&&!ZONE.vig)AREA.p=null;renderArea();ptsKey='';syncPts();}
 let dragZone=false;function drag_zone_active(){return dragZone;}
 /* alerta en pantalla */
 const ALERT={id:null};
@@ -1442,7 +1447,7 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
   if(DK.b!==kB){DK.b=kB;const dc=2*Math.PI*30;const pcol=v=>v>=.9?'#12A06A':(v>=.7?'#E9A116':'#E0364C');
     $('#chBars').innerHTML=rows.length?'<div class="bhead"><svg viewBox="0 0 80 80" class="bdn"><circle cx="40" cy="40" r="30" stroke="#EEF1F5" stroke-width="10" fill="none"/><circle class="dnv" cx="40" cy="40" r="30" stroke="'+pcol(pc)+'" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="'+dc.toFixed(1)+'" stroke-dashoffset="'+dc.toFixed(1)+'" data-o="'+(dc*(1-pc)).toFixed(1)+'" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="#17212E">'+Math.round(pc*100)+'%</text></svg>'+
       '<div class="bht"><b>'+A0+' de '+R0+'</b> reportes de delito atendidos<span>'+(A.lleg!=null?'Llegada típica: <b>'+A.lleg+' min</b>':'')+'</span></div></div>'+
-      rows.map(x=>{const k=x.a/x.r;return '<div class="brow2" title="'+esc(x.n)+': '+x.a+' de '+x.r+' atendidos"><img src="'+iconURL(ICON[x.id]||'alert','#5B6878')+'" alt=""><span class="bn">'+esc(x.n)+'</span><span class="bt2"><i class="tr" data-w="'+(x.r/mx*100).toFixed(1)+'"></i><i class="fl" data-w="'+(x.a/mx*100).toFixed(1)+'"></i></span><span class="bc">'+x.a+'<small>/'+x.r+'</small></span><span class="bp2" style="background:'+pcol(k)+'">'+Math.round(k*100)+'%</span></div>';}).join(''):'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
+      rows.map(x=>{const k=x.a/x.r;return '<div class="brow2" title="'+esc(x.n)+': '+x.a+' de '+x.r+' atendidos"><img src="'+iconURL(ICON[x.id]||'alert',typeColor(x.id))+'" alt=""><span class="bn">'+esc(x.n)+'</span><span class="bt2"><i class="tr" data-w="'+(x.r/mx*100).toFixed(1)+'"></i><i class="fl" data-w="'+(x.a/mx*100).toFixed(1)+'"></i></span><span class="bc">'+x.a+'<small>/'+x.r+'</small></span><span class="bp2" style="background:'+pcol(k)+'">'+Math.round(k*100)+'%</span></div>';}).join(''):'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('#chBars [data-w]').forEach(i=>i.style.width=i.dataset.w+'%');const d=$('#chBars .dnv');if(d)d.style.strokeDashoffset=d.dataset.o;}));}
   /* ---------- Línea: promedio por día y turno ---------- */
   const tt=T();const nT=tt.length;const C=Array.from({length:7},()=>Array(nT).fill(0));const now=new Date();
@@ -1954,7 +1959,12 @@ function wire(){
   $('#waReset').addEventListener('click',()=>{chat=[];lsSet('ms2.chatlog',[]);stopSOS(false);menu(true);});
   window.addEventListener('resize',()=>{if(UI.tab==='mando')fitView($('#map'));});
   $('#zIn').addEventListener('click',()=>{map&&map.zoomIn();});$('#zOut').addEventListener('click',()=>{map&&map.zoomOut();});$('#zHome').addEventListener('click',()=>{if(ALERT.id)endAlert();UI.sel=null;renderPop();flyHome();});
-  $('#zZone').addEventListener('click',()=>setZoneMode(!ZONE.mode));
+  const zp=h('div',{class:'zpick',id:'zpick',hidden:''},h('b',{},'Analizar zona'),
+    h('button',{onclick:()=>{zp.hidden=true;if(AREA.mode)setRectMode(false);setZoneMode(true);}},h('i',{class:'zi zc0'}),h('span',{},'Círculo',h('small',{},'arrastra desde el centro'))),
+    h('button',{onclick:()=>{zp.hidden=true;if(ZONE.mode)setZoneMode(false);setRectMode(true);}},h('i',{class:'zi zr0'}),h('span',{},'Área A-B-C-D',h('small',{},'arrastra de esquina a esquina'))));
+  $('#mapwrap').append(zp);
+  $('#zZone').addEventListener('click',e=>{e.stopPropagation();if(ZONE.mode||AREA.mode){setZoneMode(false);setRectMode(false);zp.hidden=true;return;}zp.hidden=!zp.hidden;});
+  document.addEventListener('click',e=>{if(!e.target.closest('#zpick,#zZone'))zp.hidden=true;});
   const placeQ=()=>{const q=$('#qpanel');const narrow=matchMedia('(max-width:1019px)').matches;const side=document.querySelector('#v-mando .side');if(narrow&&q.parentNode!==side)side.insertBefore(q,side.children[1]||null);if(!narrow&&q.parentNode!==$('#mapwrap'))$('#mapwrap').append(q);};placeQ();
   if(lsGet('ms7.accmin',null)===null&&innerWidth<1020)lsSet('ms7.accmin',true);
   document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;DK.r='';renderDash(true);}));
@@ -1962,7 +1972,7 @@ function wire(){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(AREA.mode)setRectMode(false);else if(AREA.p)clearArea();}});
   $('#dkbtn').onclick=()=>{const on=UI.base!=='oscuro';if(on)lsSet('ms12.prevBase',UI.base);setBase(on?'oscuro':lsGet('ms12.prevBase','calles'));renderAcc();};
   document.body.classList.toggle('dark',UI.base==='oscuro');$('#dkbtn').setAttribute('aria-pressed',String(UI.base==='oscuro'));
-  const placeK=()=>{const c=$('#counters');const wide=matchMedia('(min-width:1180px)').matches;const side=document.querySelector('#v-mando .side');if(wide&&c.parentNode!==$('#hk'))$('#hk').append(c);if(!wide&&c.parentNode!==side)side.insertBefore(c,side.children[1]||null);};placeK();addEventListener('resize',placeK);
+  const placeK=()=>{const c=$('#counters');const wide=false;const side=document.querySelector('#v-mando .side');if(wide&&c.parentNode!==$('#hk'))$('#hk').append(c);if(!wide&&c.parentNode!==side)side.insertBefore(c,side.children[1]||null);};placeK();addEventListener('resize',placeK);
   if(lsGet('ms10.side',true)===false)document.body.classList.add('sidehide');
   $('#sidetg').onclick=()=>{const h=!document.body.classList.contains('sidehide');document.body.classList.toggle('sidehide',h);lsSet('ms10.side',!h);setTimeout(()=>{if(map)map.resize();renderDash(true);},320);};
   if(lsGet('ms10.q',false))document.body.classList.add('qopen');
