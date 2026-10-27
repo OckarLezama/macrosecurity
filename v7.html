@@ -76,6 +76,12 @@ body[data-tab="mando"] #v-mando,body[data-tab="pron"] #v-pron,body[data-tab="ana
 .zgrid b{display:block;font-family:var(--f-num);font-size:24px;line-height:1}
 .zgrid span{font-size:11px;color:var(--muted)}
 .zrow{font-size:12.5px;color:#3C4858}
+.zread{background:#EEF6F4;border:1px solid #CFE7E1;border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.4;color:#1F3B36;display:flex;flex-direction:column;gap:2px}.zread b{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#0E7A6C}
+.zhelp{font-size:11.5px;color:var(--muted);line-height:1.35}
+.zh{width:30px;height:30px;border-radius:50%;background:#0E9384;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;box-shadow:0 3px 10px rgba(14,147,132,.45);cursor:grab;border:2px solid #fff;touch-action:none}
+.zh.zr{background:#fff;color:#0E9384;border-color:#0E9384}
+@media (pointer:coarse){.zh{width:40px;height:40px;font-size:20px}}
+.zpop .maplibregl-popup-content{font-size:12.5px;line-height:1.4;padding:8px 10px;border-radius:10px;box-shadow:0 8px 22px rgba(23,33,46,.2)}
 .zrow b{color:var(--fg)}
 .mapwrap.zoneopen .legend{display:none}
 .mapwrap.alerting::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;box-shadow:inset 0 0 0 4px #E0364C,inset 0 0 60px rgba(224,54,76,.35);animation:alertpulse 1.1s ease-in-out infinite;z-index:4}
@@ -359,6 +365,22 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .brow .bt i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
 .brow .bv{font-family:var(--f-mono);font-size:11.5px;text-align:right;color:var(--muted)}.brow .bv b{color:var(--fg)}
 .blg{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:4px}.blg span{display:inline-flex;align-items:center;gap:5px}.blg i{width:12px;height:8px;border-radius:2px;display:block}
+.vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;background:#E9EDF2;border-radius:999px;padding:3px;box-shadow:inset 0 1px 2px rgba(23,33,46,.12)}
+.vsw button{position:relative;z-index:1;border:0;background:none;border-radius:999px;min-height:30px;padding:0 14px;font-size:12px;font-weight:700;color:#5B6878;transition:color .25s}
+.vsw button[aria-pressed=true]{color:#fff}
+.vsw .knob{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:linear-gradient(135deg,#2B3138,#46505C);box-shadow:0 3px 8px rgba(23,33,46,.3);transition:transform .35s cubic-bezier(.4,1.4,.5,1)}
+.vsw[data-v=t] .knob{transform:translateX(100%)}
+@media (pointer:coarse){.vsw button{min-height:40px}}
+.gg2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.gcell{display:flex;flex-direction:column;align-items:center;text-align:center;padding:6px 4px 10px;border-radius:12px;border:1px solid transparent}
+.gcell.now{background:#F5F8FC;border-color:#DCE3EC}
+.gcell svg{width:100%;max-width:200px;overflow:visible}
+.gcell .ndl{transition:transform 1.2s cubic-bezier(.3,1.35,.5,1)}
+.gval{font-family:var(--f-num);font-weight:700;font-size:34px;line-height:1;margin-top:-8px}.gval small{font-size:18px}
+.glv{color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:3px 9px;margin:5px 0 4px}
+.gname{font-size:13px;font-weight:700}.gname small{font-weight:500;color:var(--muted)}
+.gtop{font-size:11.5px;color:var(--muted);margin-top:2px}.gtop b{color:var(--fg)}
+.rnote{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.35}
 .rtab{width:100%;border-collapse:separate;border-spacing:0 3px;font-size:12.5px}
 .rtab th{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:center;padding:0 2px 2px}
 .rtab th small{display:block;font-weight:500;text-transform:none;letter-spacing:0;font-size:10.5px}
@@ -541,7 +563,7 @@ body:not(.an) .anonly{display:none}
         <div class="counters" id="counters"></div>
         <div class="dcard"><div class="dh3"><h3>Reportados y atendidos</h3><span>últimos 30 días</span></div><div id="chBars"></div></div>
         <div class="dcard grow"><div class="dh3"><h3>Delitos por día y turno</h3><span>promedio · últimas 4 semanas</span></div><div id="chLine" class="chfill"></div></div>
-        <div class="dcard"><div class="dh3"><h3>Riesgo de delito por sector</h3><span id="riskNote">modelo de Markov · próximos 3 turnos</span></div><div id="chGauge"></div></div>
+        <div class="dcard"><div class="dh3"><h3>Riesgo de delito</h3><div class="vsw" id="riskSw" role="group" aria-label="Vista del riesgo"><span class="knob"></span><button data-v="g" aria-pressed="true">Velocímetro</button><button data-v="t" aria-pressed="false">Por sector</button></div></div><div id="chGauge"></div><div class="rnote" id="riskNote"></div></div>
       </div>
     </div>
   </section>
@@ -850,9 +872,6 @@ function initMap(){
     map.addLayer({id:'asig',type:'line',source:'asig',layout:{'line-cap':'round'},paint:{'line-color':'#E08A00','line-width':4,'line-dasharray':[0,4,3]}});
     add('pillar',{id:'pillar',type:'fill-extrusion',paint:{'fill-extrusion-color':['get','c'],'fill-extrusion-height':['get','h'],'fill-extrusion-base':0,'fill-extrusion-opacity':.8}});
     add('beacon',{id:'bglow',type:'circle',paint:{'circle-radius':['*',['get','s'],22],'circle-color':['get','c'],'circle-opacity':.22,'circle-blur':.7,'circle-pitch-alignment':'map'}});
-    add('sosb',{id:'sos-glow',type:'circle',paint:{'circle-radius':60,'circle-color':'#E0364C','circle-opacity':.18,'circle-blur':.8,'circle-pitch-alignment':'map'}});
-    for(const k of [1,2,3])map.addLayer({id:'sosr'+k,type:'circle',source:'sosb',paint:{'circle-radius':10,'circle-color':'#E0364C','circle-opacity':.15,'circle-stroke-color':'#E0364C','circle-stroke-width':3,'circle-stroke-opacity':.9,'circle-pitch-alignment':'map'}});
-    map.addLayer({id:'sos-core',type:'circle',source:'sosb',paint:{'circle-radius':9,'circle-color':'#FFFFFF','circle-stroke-color':'#E0364C','circle-stroke-width':4,'circle-pitch-alignment':'map'}});
     map.addLayer({id:'ring1',type:'circle',source:'beacon',paint:{'circle-radius':10,'circle-color':'rgba(0,0,0,0)','circle-stroke-color':['get','c'],'circle-stroke-width':3,'circle-stroke-opacity':.8,'circle-pitch-alignment':'map'}});
     map.addLayer({id:'ring2',type:'circle',source:'beacon',paint:{'circle-radius':10,'circle-color':'rgba(0,0,0,0)','circle-stroke-color':['get','c'],'circle-stroke-width':3,'circle-stroke-opacity':.8,'circle-pitch-alignment':'map'}});
     const first=!mapReady;mapReady=true;mapMsg(null);staticKey='';syncAll();syncHex(true);if(first){wireMap();intro();}
@@ -864,6 +883,10 @@ function initMap(){
   const start=e=>{if(!ZONE.mode)return;e.preventDefault&&e.preventDefault();map.dragPan.disable();const p=xy(e.lngLat.lng,e.lngLat.lat);ZONE.draft={x:p.x,y:p.y,r:0};ZONE.vig=null;zdrag=true;dragZone=true;renderZone();};
   const move=e=>{if(!zdrag||!ZONE.draft)return;const p=xy(e.lngLat.lng,e.lngLat.lat);ZONE.draft.r=Math.hypot(p.x-ZONE.draft.x,p.y-ZONE.draft.y);syncZones();};
   const end=()=>{if(!zdrag)return;zdrag=false;dragZone=false;if(ZONE.draft&&ZONE.draft.r<150/M)ZONE.draft.r=500/M;setZoneMode(false);syncZones();renderZone();if(ZONE.draft){const z=ZONE.draft;const a=geo(z.x-z.r,z.y+z.r),b=geo(z.x+z.r,z.y-z.r);map.fitBounds([[Math.min(a[0],b[0]),Math.min(a[1],b[1])],[Math.max(a[0],b[0]),Math.max(a[1],b[1])]],{padding:{top:80,bottom:260,left:380,right:80},pitch:0,bearing:0,duration:800,maxZoom:16.5});}};
+  const zpop=new maplibregl.Popup({closeButton:false,closeOnClick:false,className:'zpop',offset:12});let zpk='';
+  const zhov=(id,get)=>{map.on('mousemove',id,e=>{if(ZONE.mode||ZH.drag)return;const z=get(e);if(!z){zpop.remove();return;}const k=z.id||'d';if(k!==zpk){zpk=k;const st=zoneStats(z);zpop.setHTML('<b>'+(z.nombre?esc(z.nombre):'Zona de '+fmtR(z.r))+'</b><br>'+st.d30+' delitos en 30 días'+(st.ratio!=null?' · '+(Math.round(st.ratio*10)/10)+'× el promedio':'')+(st.turno?'<br>Más en la '+st.turno.n:''));}zpop.setLngLat(e.lngLat).addTo(map);map.getCanvas().style.cursor='pointer';});
+    map.on('mouseleave',id,()=>{zpop.remove();zpk='';map.getCanvas().style.cursor='';});};
+  zhov('zd-fill',()=>ZONE.draft);zhov('vig-fill',e=>{const p=xy(e.lngLat.lng,e.lngLat.lat);return [...S.vigiladas.values()].find(v=>Math.hypot(v.x-p.x,v.y-p.y)<=v.r)||null;});
   map.on('mousedown',start);map.on('touchstart',start);map.on('mousemove',move);map.on('touchmove',move);map.on('mouseup',end);map.on('touchend',end);
 }
 function intro(){if(!map||!S.config)return;const b=worldBounds();const c=[(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];map.jumpTo({center:c,zoom:map.getZoom()-2.2,pitch:0,bearing:30});setTimeout(()=>{const cam2=map.cameraForBounds(b,{padding:{top:150,bottom:70,left:40,right:80}});if(cam2)map.flyTo({center:cam2.center,zoom:cam2.zoom,pitch:UI.flat?0:60,bearing:UI.flat?0:-18,duration:4200,curve:1.2,essential:true});},400);}
@@ -930,8 +953,7 @@ function syncUnits(){if(!mapReady)return;for(const u of S.unidades.values()){let
 let bcKey='';
 function syncBeacons(){if(!mapReady||!S.config)return;const ev=[...S.eventos.values()].filter(e=>e.estado==='nuevo'||((e.sos||e.cid==='apoyo')&&abierto(e)));
   const key=ev.map(e=>e.id+e.estado+e.x+e.y).join();if(key===bcKey)return;bcKey=key;
-  const sosP=ev.filter(e=>e.sos||e.cid==='apoyo').map(e=>({type:'Feature',properties:{},geometry:{type:'Point',coordinates:geo(e.x,e.y)}}));setData('sosb',fc(sosP));
-  const pts=[],pil=[];for(const e of ev.filter(x=>!(x.sos||x.cid==='apoyo')||true)){const urg=e.sos||e.cid==='apoyo';if(urg){const r=5/M;const ring6=[];for(let i=0;i<7;i++){const a=Math.PI/3*i;ring6.push(geo(e.x+r*Math.cos(a),e.y+r*Math.sin(a)));}pil.push({type:'Feature',properties:{c:'#E0364C',h:420},geometry:{type:'Polygon',coordinates:[ring6]}});continue;}const p=PRI[e.prioridad]||1;const c=urg?'#E0364C':colorOf(e);const s=urg?1.6:(p>=3?1.2:.85);
+  const pts=[],pil=[];for(const e of ev){const urg=e.sos||e.cid==='apoyo';const p=PRI[e.prioridad]||1;const c=urg?'#E0364C':colorOf(e);const s=urg?1.6:(p>=3?1.2:.85);
     pts.push({type:'Feature',properties:{c,s},geometry:{type:'Point',coordinates:geo(e.x,e.y)}});
     const r=(urg?5:3.5)/M;const ring6=[];for(let i=0;i<7;i++){const a=Math.PI/3*i;ring6.push(geo(e.x+r*Math.cos(a),e.y+r*Math.sin(a)));}
     pil.push({type:'Feature',properties:{c,h:urg?380:(p>=3?220:120)},geometry:{type:'Polygon',coordinates:[ring6]}});}
@@ -947,11 +969,27 @@ function syncBotones(){if(!mapReady||!S.config)return;const bs=botones();const o
   for(const b of bs){const el=h('div',{class:'bp'+(on.has(b.id)?' on':''),title:b.nombre},'!');el.addEventListener('click',e=>{e.stopPropagation();toast(b.nombre+(on.has(b.id)?' · ACTIVADO':' · sin activar'));});bpMarks.push(new maplibregl.Marker({element:el}).setLngLat(geo(b.x,b.y)).addTo(map));}}
 async function panic(){const bs=botones();if(!bs.length)return;const b=pick(bs);const ev=await crearEvento({cid:'sos',sos:true,x:b.x,y:b.y,origen:'Botón de pánico',nota:'Se activó '+b.nombre,tracking:false});write(()=>api.update('eventos/'+ev.id,{tracking:false,boton:b.id}));}
 let vMarks=[];let zdMark=null;
-function syncZones(){if(!mapReady)return;const vs=[...S.vigiladas.values()];const vis=UI.layers.vigiladas!==false;
+function syncZones(){if(!mapReady)return;const vs=[...S.vigiladas.values()].map(v=>ZONE.vedit&&ZONE.vedit.id===v.id&&ZONE.vig===v.id?ZONE.vedit:v);const vis=UI.layers.vigiladas!==false;
   setData('vig',fc(vis?vs.map(v=>({type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(v))]}})):[]));
   vMarks.forEach(m=>m.remove());vMarks=[];if(vis)for(const v of vs){const el=h('div',{class:'vlab'},'Vigilada · '+v.nombre);el.addEventListener('click',e=>{e.stopPropagation();ZONE.draft=null;ZONE.vig=v.id;renderZone();});vMarks.push(new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat(geo(v.x,v.y-v.r)).addTo(map));}
   const z=ZONE.draft;setData('zd',fc(z&&z.r>0?[{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(z))]}}]:[]));
-  if(zdMark){zdMark.remove();zdMark=null;}if(z&&z.r>0){zdMark=new maplibregl.Marker({element:h('div',{class:'vlab draft'},fmtR(z.r)),anchor:'bottom'}).setLngLat(geo(z.x,z.y-z.r)).addTo(map);}}
+  if(zdMark){zdMark.remove();zdMark=null;}if(z&&z.r>0){zdMark=new maplibregl.Marker({element:h('div',{class:'vlab draft'},fmtR(z.r)),anchor:'bottom'}).setLngLat(geo(z.x,z.y-z.r)).addTo(map);}
+  syncHandles();}
+const ZH={c:null,r:null,k:'',drag:false};
+function zoneGeom(){const z=zoneCur();if(!z)return;if(ZONE.vig){const vs=[...S.vigiladas.values()].map(v=>v.id===z.id?z:v);setData('vig',fc(vs.map(v=>({type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(v))]}}))));}
+  else setData('zd',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(circlePts(z))]}}]));
+  if(zdMark){zdMark.setLngLat(geo(z.x,z.y-z.r));zdMark.getElement().textContent=fmtR(z.r);}}
+function syncHandles(){if(!mapReady)return;const z=zoneCur();const k=z&&z.r>0&&!dragZone?(ZONE.vig||'d'):'';
+  if(k!==ZH.k){if(ZH.c){ZH.c.remove();ZH.r.remove();ZH.c=ZH.r=null;}ZH.k=k;if(!k)return;
+    const ce=h('div',{class:'zh zc',title:'Arrastra para mover la zona'},'✥');const re=h('div',{class:'zh zr',title:'Arrastra para cambiar el tamaño'},'⇔');
+    ZH.c=new maplibregl.Marker({element:ce,draggable:true}).setLngLat(geo(z.x,z.y)).addTo(map);
+    ZH.r=new maplibregl.Marker({element:re,draggable:true}).setLngLat(geo(z.x+z.r,z.y)).addTo(map);
+    ZH.c.on('dragstart',()=>{ZH.drag=true;ORB.last=Date.now();});ZH.r.on('dragstart',()=>{ZH.drag=true;ORB.last=Date.now();});
+    ZH.c.on('drag',()=>{const q=zoneCur();if(!q)return;const ll=ZH.c.getLngLat();const p=xy(ll.lng,ll.lat);q.x=p.x;q.y=p.y;ZH.r.setLngLat(geo(q.x+q.r,q.y));zoneGeom();});
+    ZH.r.on('drag',()=>{const q=zoneCur();if(!q)return;const ll=ZH.r.getLngLat();const p=xy(ll.lng,ll.lat);q.r=Math.max(120/M,Math.hypot(p.x-q.x,p.y-q.y));zoneGeom();});
+    const done=()=>{ZH.drag=false;const q=zoneCur();if(!q)return;ZH.r.setLngLat(geo(q.x+q.r,q.y));if(ZONE.vig){const d={x:+q.x.toFixed(2),y:+q.y.toFixed(2),r:+q.r.toFixed(2)};write(()=>api.update('vigiladas/'+q.id,d));S.vigiladas.set(q.id,{...S.vigiladas.get(q.id),...d});}renderZone.k='';renderZone();};
+    ZH.c.on('dragend',done);ZH.r.on('dragend',done);return;}
+  if(k&&!ZH.drag){ZH.c.setLngLat(geo(z.x,z.y));ZH.r.setLngLat(geo(z.x+z.r,z.y));}}
 function syncAll(){if(!mapReady)return;bpKey='';syncBeacons();syncBotones();syncStatic();syncEvents();syncHeat();syncUnits();syncZones();}
 /* animación ligera: patrullas, seguimiento, globo */
 let lastAsig=0;
@@ -961,12 +999,8 @@ function tick(t){requestAnimationFrame(tick);if(!mapReady||UI.tab!=='mando')retu
     m.getElement().classList.toggle('flash',!!(UI.flash&&Date.now()<UI.flash&&u.estado==='disponible'));}
   if(t-lastAsig>400){lastAsig=t;const ls=[];for(const u of S.unidades.values()){if(!u.evento)continue;const ev=S.eventos.get(u.evento);const d=disp.get(u.id);if(ev&&d&&ev.estado==='asignado')ls.push({type:'Feature',properties:{},geometry:{type:'LineString',coordinates:[geo(d.x,d.y),geo(ev.x,ev.y)]}});}setData('asig',fc(ls));}
   if(ALERT.id&&!ALERT.free){const ae=S.eventos.get(ALERT.id);if(ae&&!map.isMoving()){const c=map.getCenter();const tg=geo(ae.x,ae.y);if(Math.abs(c.lng-tg[0])+Math.abs(c.lat-tg[1])>.0015)map.easeTo({center:tg,duration:900});}}
-  if(map.getLayer('ring1')){const ph=(t%2200)/2200,ph2=((t+1100)%2200)/2200;
-    map.setPaintProperty('ring1','circle-radius',['*',['get','s'],8+ph*46]);map.setPaintProperty('ring1','circle-stroke-opacity',(1-ph)*.85);
-    map.setPaintProperty('ring2','circle-radius',['*',['get','s'],8+ph2*46]);map.setPaintProperty('ring2','circle-stroke-opacity',(1-ph2)*.85);
-    if(map.getLayer('sosr1')){const zf=Math.pow(2,map.getZoom()-14);for(const k of [1,2,3]){const q=((t+(k-1)*500)%1500)/1500;const e=1-Math.pow(1-q,2);map.setPaintProperty('sosr'+k,'circle-radius',Math.min(140,(10+e*70)*Math.max(.6,Math.min(1.8,zf))));map.setPaintProperty('sosr'+k,'circle-stroke-opacity',(1-q)*.95);map.setPaintProperty('sosr'+k,'circle-opacity',(1-q)*.16);}
-      const b=.5+.5*Math.sin(t/180);map.setPaintProperty('sos-core','circle-stroke-width',3+b*4);map.setPaintProperty('sos-glow','circle-opacity',.1+b*.18);
-      if(map.getLayer('pillar'))map.setPaintProperty('pillar','fill-extrusion-opacity',.55+b*.35);}
+  if(map.getLayer('ring1')&&t-(ORB.rt||0)>32){ORB.rt=t;const P=2600;for(const [id,off] of [['ring1',0],['ring2',P/2]]){const q=((t+off)%P)/P;const e=1-Math.pow(1-q,3);
+      map.setPaintProperty(id,'circle-radius',['*',['get','s'],8+e*44]);map.setPaintProperty(id,'circle-stroke-opacity',Math.pow(1-q,1.6)*.9);map.setPaintProperty(id,'circle-stroke-width',3-1.6*q);}
     const k=Math.floor(t/70)%DASH.length;if(k!==ORB.k){ORB.k=k;map.setPaintProperty('asig','line-dasharray',DASH[k]);}}
   if(Date.now()-ORB.last>25000&&!ALERT.id&&!UI.sel&&!ZONE.mode&&!map.isMoving()&&t-ORB.t>60){ORB.t=t;ORB.spin=true;map.setBearing(map.getBearing()+.12);ORB.spin=false;}
   if(t-(ORB.bt||0)>400){ORB.bt=t;syncBeacons();}
@@ -981,7 +1015,12 @@ function wireMap(){
 
 /* analizar zona */
 function setZoneMode(on){ZONE.mode=on;ORB.last=Date.now();if(map){if(on){map.dragPan.disable();map.touchZoomRotate.disable();map.dragRotate.disable();map.easeTo({pitch:0,bearing:0,duration:500});}else{map.dragPan.enable();map.touchZoomRotate.enable();map.dragRotate.enable();}}$('#zZone').setAttribute('aria-pressed',String(on));$('#mapwrap').classList.toggle('zonemode',on);if(on)toast('Arrastra sobre el mapa para dibujar un círculo');}
-function zoneStats(z){const now=Date.now();const today=new Date();today.setHours(0,0,0,0);const crime=c=>cat(c).grupo==='delito';
+function zoneRead(st){if(!st.d30)return 'Sin delitos en los últimos 30 días. Zona tranquila para este periodo.';const p=[];
+  if(st.ratio!=null)p.push(st.ratio>=1.3?'Tiene '+(Math.round(st.ratio*10)/10)+' veces más delitos por km² que el promedio del municipio.':(st.ratio<=.75?'Tiene menos delitos por km² que el promedio del municipio.':'Está en el promedio del municipio.'));
+  if(st.prev){const d=Math.round((st.d30-st.prev)/st.prev*100);p.push(Math.abs(d)<10?'Se mantiene igual que el mes anterior.':(d>0?'Subió '+d+'% contra los 30 días anteriores.':'Bajó '+(-d)+'% contra los 30 días anteriores.'));}
+  if(st.top.length&&st.turno)p.push('Conviene patrullaje preventivo en la '+st.turno.n+', enfocado en '+cat(st.top[0][0]).nombre.toLowerCase()+'.');
+  return p.join(' ');}
+function zoneStats(z){const now=Date.now();const km2=Math.PI*Math.pow(z.r*M/1000,2);const today=new Date();today.setHours(0,0,0,0);const crime=c=>cat(c).grupo==='delito';
   const live=[...S.eventos.values()].filter(e=>inZone(z,e)&&e.estado!=='descartado');
   const abiertos=live.filter(abierto).length;const hoy=live.filter(e=>crime(e.cid)&&e.creado>=today.getTime()).length;
   const H=(S.historial&&S.historial.entries)||[];const hasXY=H.some(e=>e[7]!=null);
@@ -992,8 +1031,12 @@ function zoneStats(z){const now=Date.now();const today=new Date();today.setHours
   const d30=Object.values(tipos).reduce((a,b)=>a+b,0);const top=Object.entries(tipos).sort((a,b)=>b[1]-a[1]).slice(0,3);
   const ti=turn.indexOf(Math.max(...turn));const sid=sectorAt(z.x,z.y);const L=sectorLevels();
   const u=freeUnits({x:z.x,y:z.y,sector:sectorAt(z.x,z.y)})[0];
-  return {abiertos,hoy,d30,top,turno:d30?{n:T()[ti].nombre.toLowerCase(),p:turn[ti]/d30}:null,sid,lv:L[sid],u,hasXY};}
-function renderZone(){syncZones();const host=$('#zoneHost');const v=ZONE.vig&&S.vigiladas.get(ZONE.vig);const z=v||ZONE.draft;$('#mapwrap').classList.toggle('zoneopen',!!(z&&(v||z.r>0)));
+  const prev=H.filter(e=>e[7]!=null&&e[0]>30&&e[0]<=60&&Math.hypot(e[7]-z.x,e[8]-z.y)<=z.r&&crime(e[4])).length;
+  let city=H.filter(e=>e[0]<=30&&crime(e[4])).length+[...S.eventos.values()].filter(e=>crime(e.cid)&&e.estado!=='descartado'&&now-e.creado<30*864e5).length;
+  const cityKm2=S.config.sectores.reduce((a,sc)=>a+Math.abs(area(sc.poly)),0)*M*M/1e6;const ratio=(city&&km2&&cityKm2)?(d30/km2)/(city/cityKm2):null;
+  return {km2,prev,ratio,abiertos,hoy,d30,top,turno:d30?{n:T()[ti].nombre.toLowerCase(),p:turn[ti]/d30}:null,sid,lv:L[sid],u,hasXY};}
+function zoneCur(){if(ZONE.vig){const v=S.vigiladas.get(ZONE.vig);if(!v)return null;if(!ZONE.vedit||ZONE.vedit.id!==v.id)ZONE.vedit={...v};return ZONE.vedit;}return ZONE.draft;}
+function renderZone(){syncZones();const host=$('#zoneHost');const v=ZONE.vig?zoneCur():null;const z=v||ZONE.draft;$('#mapwrap').classList.toggle('zoneopen',!!(z&&(v||z.r>0)));
   if(!z||(!v&&drag_zone_active()))return host.replaceChildren();
   const st=zoneStats(z);const rm=fmtR(z.r);
   const key=JSON.stringify([v?v.id:'d',z.x,z.y,z.r,st.abiertos,st.hoy,st.d30,st.top,st.turno,st.u&&st.u.id,st.lv]);if(key===renderZone.k&&host.firstChild)return;renderZone.k=key;
@@ -1003,12 +1046,14 @@ function renderZone(){syncZones();const host=$('#zoneHost');const v=ZONE.vig&&S.
     h('div',{class:'zgrid'},h('div',{},h('b',{},String(st.abiertos)),h('span',{},'Abiertos ahora')),h('div',{},h('b',{},String(st.hoy)),h('span',{},'Delitos hoy')),h('div',{},h('b',{},String(st.d30)),h('span',{},'Últimos 30 días'))),
     st.top.length?h('div',{class:'zrow'},'Más comunes: ',h('b',{},st.top.map(([c,n])=>cat(c).nombre.toLowerCase()+' ('+n+')').join(', '))):h('div',{class:'zrow'},'Sin delitos registrados en los últimos 30 días.'),
     st.turno?h('div',{class:'zrow'},'Turno con más delitos: ',h('b',{},st.turno.n+' ('+pct(st.turno.p)+')')):null,
+    h('div',{class:'zread'},h('b',{},'Lectura de la zona'),h('span',{},zoneRead(st))),
     h('div',{class:'zrow'},'Patrulla libre sugerida: ',h('b',{},st.u?st.u.id+' · '+secName(st.u.sector):'ninguna en turno')),
     h('div',{class:'zrow'},'Riesgo del próximo turno: ',h('b',{},(st.lv||'bajo')+' ('+secName(st.sid)+')')),
     !st.hasXY?h('div',{class:'zrow',style:'color:var(--dim)'},'El histórico de este cliente no trae coordenadas; solo se cuentan los reportes recibidos aquí.'):null,
-    h('div',{class:'row'},v?h('button',{class:'btn dan',onclick:()=>{write(()=>api.del('vigiladas/'+v.id));ZONE.vig=null;renderZone();toast('Zona dejó de vigilarse');}},'Dejar de vigilar')
-      :h('button',{class:'btn pri',onclick:()=>{const id='v'+Date.now().toString(36);const n=S.vigiladas.size+1;const d={id,nombre:'Zona '+n+' · '+secName(st.sid),x:+z.x.toFixed(2),y:+z.y.toFixed(2),r:+z.r.toFixed(2),creada:Date.now()};write(()=>api.set('vigiladas/'+id,d));ZONE.draft=null;ZONE.vig=id;S.vigiladas.set(id,d);renderZone();toast('Zona vigilada. Avisará a todos cuando entre un reporte.');}},'Vigilar esta zona'),
-      h('button',{class:'btn',onclick:()=>{flyTo(z.x,z.y,Math.max(1.6,Math.min(3.4,9/Math.max(1,z.r))));}},'Acercar')));
+    h('div',{class:'row'},v?h('button',{class:'btn dan',onclick:()=>{write(()=>api.del('vigiladas/'+v.id));S.vigiladas.delete(v.id);ZONE.vig=null;ZONE.vedit=null;renderZone();toast('Zona borrada');}},'Borrar zona')
+      :h('button',{class:'btn pri',title:'Guarda la zona para todos. Cada reporte nuevo que caiga dentro dispara un aviso y queda marcado con el nombre de la zona.',onclick:()=>{const id='v'+Date.now().toString(36);const n=S.vigiladas.size+1;const d={id,nombre:'Zona '+n+' · '+secName(st.sid),x:+z.x.toFixed(2),y:+z.y.toFixed(2),r:+z.r.toFixed(2),creada:Date.now()};write(()=>api.set('vigiladas/'+id,d));ZONE.draft=null;ZONE.vig=id;S.vigiladas.set(id,d);renderZone();toast('Listo: te avisaremos cuando entre un reporte en esta zona');}},'Avisarme de reportes aquí'),
+      !v?h('button',{class:'btn',onclick:()=>{ZONE.draft=null;renderZone();}},'Borrar círculo'):null),
+    !v?h('div',{class:'zhelp'},'"Avisarme" guarda el círculo para todos los operadores: cada reporte nuevo dentro de él lanza un aviso y se marca con el nombre de la zona. Mueve el círculo con ✥ y cambia su tamaño con ⇔.'):h('div',{class:'zhelp'},'Zona guardada: avisa cuando entra un reporte. Puedes moverla con ✥ o cambiar su tamaño con ⇔.'));
   host.replaceChildren(box);}
 let dragZone=false;function drag_zone_active(){return dragZone;}
 /* alerta en pantalla */
@@ -1141,11 +1186,29 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
   const rowsR=secs.map(sc=>{const o=md.out[sc.id];return {sc,ps:o?o.fc.map(f=>f.p):[0,0,0],tp:o&&o.tipos[0]&&o.tipos[0][0]?o.tipos[0][0].c.nombre:'',conf:o?o.conf:'Baja'};}).sort((a,b)=>b.ps[0]-a.ps[0]);
   const cell=p=>{const lv=level(p);const bg=lv==='alto'?'#E0364C':(lv==='medio'?'#F3B23A':'#DDF3E8');const fg=lv==='alto'?'#fff':(lv==='medio'?'#2E2200':'#0F6B4A');return '<td><span class="rc" style="background:'+bg+';color:'+fg+'">'+Math.round(p*100)+'%</span></td>';};
   const avg=[0,1,2].map(k=>rowsR.reduce((a,r)=>a+r.ps[k],0)/Math.max(1,rowsR.length));
+  const RV=lsGet('ms8.rv','g');document.querySelectorAll('#riskSw button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===RV)));$('#riskSw').dataset.v=RV;
+  if(RV==='t'){
   $('#chGauge').innerHTML='<table class="rtab"><thead><tr><th>Sector</th>'+slots.map((x,i)=>'<th>'+esc(x.t)+'<small>'+(i===0?'próximo':esc(x.d))+'</small></th>').join('')+'<th class="rtp">Delito más probable</th></tr></thead><tbody>'+
     rowsR.map(r=>'<tr data-s="'+r.sc.id+'"><td class="rs">'+esc(r.sc.nombre)+'</td>'+r.ps.map(cell).join('')+'<td class="rtp">'+esc(r.tp)+'</td></tr>').join('')+
     '</tbody><tfoot><tr><td class="rs">Promedio</td>'+avg.map(cell).join('')+'<td class="rtp"></td></tr></tfoot></table>';
   $('#chGauge').querySelectorAll('tr[data-s]').forEach(tr=>tr.onclick=()=>{const c=centroid(sec(tr.dataset.s).poly);flyTo(c.x,c.y,1.7);});
-  const bt=md.bt;$('#riskNote').textContent='Markov · próximos 3 turnos'+(bt&&bt.mejora>0?' · '+Math.round(bt.mejora*100)+'% mejor que el promedio':'');
+  }else{
+    const gs=[0,1,2].map(k=>{const p=avg[k];const top=rowsR.slice().sort((a,b)=>b.ps[k]-a.ps[k])[0];return {p,top,hi:rowsR.filter(r=>r.ps[k]>=.45).length,t:slots[k].t,d:k===0?'próximo turno':slots[k].d};});
+    const gk=gs.map(g=>Math.round(g.p*100)+(g.top?g.top.sc.id+Math.round(g.top.ps[0]*100):'')).join('|');
+    if(renderDash.gk!==gk||!$('#chGauge .gg2')){const prevA=renderDash.ga||[-90,-90,-90];renderDash.gk=gk;
+      $('#chGauge').innerHTML='<div class="gg2">'+gs.map((g,i)=>{const lv=level(g.p);const col=lv==='alto'?'#E0364C':(lv==='medio'?'#E9A116':'#12A06A');const cx=80,cy=78,r=60;
+        let ticks='';for(let j=0;j<=10;j++){const a=Math.PI*(1-j/10);const r1=r+9,r2=r+(j%5?13:16);ticks+='<line x1="'+(cx+r1*Math.cos(a)).toFixed(1)+'" y1="'+(cy-r1*Math.sin(a)).toFixed(1)+'" x2="'+(cx+r2*Math.cos(a)).toFixed(1)+'" y2="'+(cy-r2*Math.sin(a)).toFixed(1)+'" stroke="#B4BFCB" stroke-width="'+(j%5?1:1.6)+'"/>';}
+        const arc=(f0,f1,c,w)=>{const a0=Math.PI*(1-f0),a1=Math.PI*(1-f1);return '<path d="M'+(cx+r*Math.cos(a0)).toFixed(1)+' '+(cy-r*Math.sin(a0)).toFixed(1)+' A'+r+' '+r+' 0 '+(f1-f0>.5?1:0)+' 1 '+(cx+r*Math.cos(a1)).toFixed(1)+' '+(cy-r*Math.sin(a1)).toFixed(1)+'" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" fill="none"/>';};
+        const v=Math.min(1,g.p);const ang=-90+v*180;
+        return '<div class="gcell'+(i===0?' now':'')+'"><svg viewBox="0 0 160 96" aria-hidden="true"><defs><linearGradient id="gg'+i+'" gradientUnits="userSpaceOnUse" x1="'+(cx-r)+'" y1="0" x2="'+(cx+r)+'" y2="0"><stop offset="0" stop-color="#12A06A"/><stop offset=".45" stop-color="#E9C116"/><stop offset=".7" stop-color="#F08A24"/><stop offset="1" stop-color="#E0364C"/></linearGradient></defs>'+ticks+
+          arc(0,1,'#EEF1F5',14)+arc(0,1,'url(#gg'+i+')',14).replace('stroke-width="14"','stroke-width="14" opacity=".28"')+(v>0.005?arc(0,v,'url(#gg'+i+')',14):'')+
+          '<g class="ndl" data-a="'+ang.toFixed(1)+'" style="transform:rotate('+prevA[i]+'deg);transform-origin:'+cx+'px '+cy+'px"><path d="M'+(cx-4)+' '+cy+' L'+cx+' '+(cy-r+8)+' L'+(cx+4)+' '+cy+' Z" fill="#17212E"/></g><circle cx="'+cx+'" cy="'+cy+'" r="7" fill="#17212E"/><circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#fff"/></svg>'+
+          '<div class="gval" style="color:'+col+'">'+Math.round(g.p*100)+'<small>%</small></div><div class="glv" style="background:'+col+'">RIESGO '+lv.toUpperCase()+'</div><div class="gname">'+esc(g.t)+' <small>· '+esc(g.d)+'</small></div>'+
+          (g.top?'<div class="gtop">Más alto: <b>'+esc(g.top.sc.nombre)+'</b> '+Math.round(g.top.ps[i]*100)+'%</div>':'')+'</div>';}).join('')+'</div>';
+      renderDash.ga=gs.map(g=>-90+Math.min(1,g.p)*180);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#chGauge .ndl').forEach(n=>{n.style.transform='rotate('+n.dataset.a+'deg)';})));}
+  }
+  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito por sector, calculada con el modelo de Markov por turno'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
 }
 function renderAcc(){const box=$('#acc');if(!box)return;const min=lsGet('ms7.accmin',false);
   const L=[['patrullas','Patrullas','#1B2431'],['zonas','Zonas seguras','#12A06A'],['botones','Botones de pánico','#E0364C'],['vigiladas','Zonas vigiladas','#0E9384'],['riesgo','Riesgo por sector','#F0A21C'],['calor','Mapa de calor','#F58A4A']];
@@ -1577,6 +1640,7 @@ function wire(){
   $('#zZone').addEventListener('click',()=>setZoneMode(!ZONE.mode));
   const placeQ=()=>{const q=$('#qpanel');const narrow=matchMedia('(max-width:1019px)').matches;const side=document.querySelector('#v-mando .side');if(narrow&&q.parentNode!==side)side.insertBefore(q,side.children[1]||null);if(!narrow&&q.parentNode!==$('#mapwrap'))$('#mapwrap').append(q);};placeQ();
   if(lsGet('ms7.accmin',null)===null&&innerWidth<1020)lsSet('ms7.accmin',true);
+  document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;renderDash.gk='';renderDash(true);}));
   renderAcc();setTimeout(()=>renderDash(true),300);let rsT=0;
   try{new ResizeObserver(()=>{clearTimeout(rsT);rsT=setTimeout(()=>{placeQ();renderDash(true);if(map)map.resize();},150);}).observe(document.querySelector('#v-mando .side'));}catch(e){}
   addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{placeQ();renderDash(true);if(map)map.resize();},150);});
