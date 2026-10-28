@@ -2,6 +2,8 @@
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -772,6 +774,7 @@ body #v-mando .rgc.nx{border:2px solid #0E9384!important;background:#F3FAF8!impo
 body.dark #v-mando .rgc{background:#1D232B!important;border-color:#2A323D!important}body.dark #v-mando .rgc.nx{border-color:#0E9384!important;background:#16262A!important}
 body #v-mando .rnote{font-size:11px!important;cursor:help}
 @media (min-width:1020px) and (max-height:900px){body #v-mando .rgs{max-width:110px!important}}
+.login{position:fixed;inset:0;z-index:100;background:rgba(16,20,26,.92);display:flex;align-items:center;justify-content:center;padding:16px}.lbox{background:#fff;border-radius:16px;padding:24px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.4)}.lbox b{font-size:20px}.lbox span{font-size:13px;color:#5B6878}.lbox small{color:#C2343F;min-height:16px}
 </style>
 
 <div class="app">
@@ -954,6 +957,32 @@ function localApi(){
     lease:async()=>true
   };
 }
+function supaApi(sb,cliente){
+  const split=p=>{const i=p.lastIndexOf('/');return [p.slice(0,i),p.slice(i+1)];};
+  const T=()=>sb.from('docs');const cache={};const subs={};
+  const emit=c=>{const m=cache[c];if(!m)return;const arr=[...m].map(([id,data])=>({id,data}));(subs[c]||[]).forEach(cb=>cb(arr));};
+  const chk=({error})=>{if(error){console.warn('supabase',error);setConn('local','Error de conexión');throw error;}};
+  sb.channel('docs-'+cliente).on('postgres_changes',{event:'*',schema:'public',table:'docs',filter:'cliente=eq.'+cliente},ch=>{
+    const r=ch.eventType==='DELETE'?ch.old:ch.new;if(!r||!r.col)return;const m=cache[r.col];if(!m)return;
+    if(ch.eventType==='DELETE')m.delete(r.id);else m.set(r.id,r.data);emit(r.col);}).subscribe(st=>{if(st==='SUBSCRIBED')setConn('db','En vivo');if(st==='CHANNEL_ERROR'||st==='TIMED_OUT')setConn('local','Reconectando…');});
+  const local=(c,id,d)=>{if(cache[c]){if(d===null)cache[c].delete(id);else cache[c].set(id,d);emit(c);}};
+  return {
+    set:async(p,d)=>{const [c,id]=split(p);const data=JSON.parse(JSON.stringify(d));local(c,id,data);chk(await T().upsert({cliente,col:c,id,data,updated_at:new Date().toISOString()}));},
+    update:async(p,d)=>{const [c,id]=split(p);const cur=(cache[c]&&cache[c].get(id))||(await T().select('data').eq('cliente',cliente).eq('col',c).eq('id',id).maybeSingle()).data?.data;if(!cur)return;const data=Object.assign({},cur,JSON.parse(JSON.stringify(d)));local(c,id,data);chk(await T().update({data,updated_at:new Date().toISOString()}).eq('cliente',cliente).eq('col',c).eq('id',id));},
+    del:async p=>{const [c,id]=split(p);local(c,id,null);chk(await T().delete().eq('cliente',cliente).eq('col',c).eq('id',id));},
+    get:async p=>{const [c,id]=split(p);if(cache[c]&&cache[c].has(id))return cache[c].get(id);const r=await T().select('data').eq('cliente',cliente).eq('col',c).eq('id',id).maybeSingle();chk(r);return r.data?r.data.data:null;},
+    watch:(c,cb)=>{(subs[c]=subs[c]||[]).push(cb);if(cache[c]){emit(c);return;}cache[c]=new Map();
+      (async()=>{let from=0;for(;;){const r=await T().select('id,data').eq('cliente',cliente).eq('col',c).range(from,from+999);chk(r);r.data.forEach(x=>cache[c].set(x.id,x.data));if(r.data.length<1000)break;from+=1000;}emit(c);})();},
+    lease:async(path,ttl)=>{const r=await sb.rpc('acquire_lease',{p_cliente:cliente,p_name:path,p_holder:UI.chatId||'x',p_ttl_ms:ttl});return !r.error&&r.data===true;}
+  };
+}
+async function supaLogin(cfg){const sb=window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true}});
+  const ses=(await sb.auth.getSession()).data.session;if(ses)return sb;
+  return new Promise(res=>{const ov=h('div',{class:'login'},h('form',{class:'lbox'},h('b',{},'Macro Security'),h('span',{},'Inicia sesión para entrar al centro de mando'),
+      h('input',{class:'inp',type:'email',id:'lgE',placeholder:'Correo',autocomplete:'username',required:''}),h('input',{class:'inp',type:'password',id:'lgP',placeholder:'Contraseña',autocomplete:'current-password',required:''}),
+      h('button',{class:'btn pri',type:'submit'},'Entrar'),h('small',{id:'lgM'},'')));document.body.append(ov);
+    ov.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();$('#lgM').textContent='Entrando…';const r=await sb.auth.signInWithPassword({email:$('#lgE').value.trim(),password:$('#lgP').value});
+      if(r.error){$('#lgM').textContent='Correo o contraseña incorrectos.';return;}ov.remove();res(sb);});});}
 function dbApi(db){
   return {
     set:(p,d)=>db.doc(p).set(d),
@@ -2113,7 +2142,9 @@ window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
-  if(db){api=dbApi(db);S.mode='db';setConn('db','En vivo');}else{api=localApi();S.mode='local';setConn('local','Local');}
+  const SC=window.MS_SUPABASE;
+  if(SC&&SC.url&&SC.anonKey&&window.supabase){const sb=await supaLogin(SC);api=supaApi(sb,SC.cliente||'demo');S.mode='db';setConn('db','Conectando…');}
+  else if(db){api=dbApi(db);S.mode='db';setConn('db','En vivo');}else{api=localApi();S.mode='local';setConn('local','Local');}
   let c=await api.get('config/main').catch(()=>null);let firstRun=!c;
   if(!c){const ok=await api.lease('meta/seed',20000);if(ok){c=await api.get('config/main').catch(()=>null);if(!c){c=defaultConfig();await seedAll(c);}}else{await new Promise(r=>setTimeout(r,3500));c=await api.get('config/main').catch(()=>null)||defaultConfig();}}
   S.config=c;M=c.mpu||80;
@@ -2130,7 +2161,7 @@ async function boot(){
   setTab(['pron','anal','unid','conf'].includes(hash)?hash:'mando');
   initMap();requestAnimationFrame(tick);
   const CARTO='datos/puebla_sectores_colonias.geojson';
-  if(S.mode==='local'&&S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
+  if(S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
   if(firstRun&&S.mode==='local'){try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.0003&countrycodes=mx&limit=3&accept-language=es&q='+encodeURIComponent('Puebla, Puebla'));const js=await r.json();const p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type));if(p)await buildFromPlace(p);}catch(e){}}
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
