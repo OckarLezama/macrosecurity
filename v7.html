@@ -491,7 +491,7 @@ body.dark .pstrip .psh{background:rgba(26,32,40,.95)}body.dark .side .counters .
 body.dark .btn{background:#212833;color:#E6EBF0;border-color:#36404C}body.dark .x{color:#C9D1DA}
 body.dark .zs span,body.dark .vlab{background:#1A2028;color:#C9D1DA}
 /* v10: mapa 80/20, panel plegable, interfaz sutil */
-@media (min-width:1020px){.mando{grid-template-columns:minmax(0,1fr) clamp(440px,26vw,580px)!important;transition:grid-template-columns .3s}
+@media (min-width:1020px){.mando{grid-template-columns:minmax(0,1fr) clamp(460px,33vw,680px)!important;transition:grid-template-columns .3s}
   body.sidehide .mando{grid-template-columns:minmax(0,1fr) 0!important}body.sidehide #v-mando .side{display:none!important}}
 body[data-tab="mando"] .side{overflow-y:auto;overflow-x:hidden;padding:8px!important;gap:8px!important;background:#F4F6F9!important}
 .side .dcard{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:10px 12px 8px;border-radius:12px;box-shadow:none;border-color:#E6EAF0}
@@ -749,6 +749,16 @@ body #v-mando .side #counters .kviz.sev span:nth-child(1) i{background:#fff!impo
 body #v-mando .side #counters .kviz.qr{opacity:.55!important;background:repeating-linear-gradient(90deg,rgba(255,255,255,.7) 0 2px,transparent 2px 4px,rgba(255,255,255,.45) 4px 7px,transparent 7px 9px)!important}
 }
 @media (min-width:1020px){body #v-mando .side #counters .krow{flex-direction:row!important;align-items:center!important;justify-content:space-between!important}body #v-mando .side #counters .krow .kd{margin-left:4px!important}body #v-mando .side #counters .kviz.sev span:nth-child(n+2){display:none!important}}
+@media (min-width:1020px){
+body #v-mando .side #counters{gap:6px!important}
+body #v-mando .side #counters .kp{padding:10px 12px 10px!important;min-height:132px!important;justify-content:space-between!important;gap:3px!important;border-radius:12px!important}
+body #v-mando .side #counters .kl{font-size:10.5px!important;letter-spacing:.04em!important;font-weight:800!important}
+body #v-mando .side #counters .kv,body #v-mando .side #counters .kv.sm{font-size:46px!important;line-height:1!important}
+body #v-mando .side #counters .krow .kd{font-size:10.5px!important;padding:2px 7px!important}
+body #v-mando .side #counters .kviz{height:20px!important}
+body #v-mando .side #counters .ks{font-size:11px!important}
+}
+@media (min-width:1020px) and (max-width:1500px){body #v-mando .side #counters .kv,body #v-mando .side #counters .kv.sm{font-size:36px!important}body #v-mando .side #counters .kp{min-height:116px!important;padding:8px 9px!important}}
 </style>
 
 <div class="app">
