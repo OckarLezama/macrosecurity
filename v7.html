@@ -414,17 +414,6 @@ body[data-tab="mando"] .side{overflow-y:auto;gap:8px}
 .pstrip .urow{width:auto;flex:none;border:0;background:#fff;border-radius:999px;padding:6px 12px 6px 10px;box-shadow:0 4px 12px rgba(23,33,46,.18);gap:7px}
 .pstrip .urow .ut{display:none}.pstrip .urow .uid{width:auto}
 @media (max-width:1400px){.qpanel{width:290px}.acc{min-width:0;font-size:12px}.side .counters .kv{font-size:34px!important}}
-/* v13: KPIs en una sola línea */
-@media (min-width:1020px){
- .side .counters{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
- .side .counters .kp[data-k=prox]{grid-column:auto!important}
- .side .counters .kp{padding:8px 8px 8px!important;min-height:0!important}
- .side .counters .kl{font-size:9.5px!important;letter-spacing:.02em!important}
- .side .counters .krow{flex-direction:column;align-items:flex-start!important;gap:2px!important}
- .side .counters .kv,.side .counters .kv.sm{font-size:30px!important}
- .side .counters .krow .kd{margin-left:0!important;font-size:9.5px!important;padding:1px 5px!important}
- .side .counters .kviz{display:none!important}
- .side .counters .ks{font-size:10px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 /* v12: análisis de zona con el mismo estilo del panel */
 .acard{background:var(--panel)!important;border:1px solid #E6EAF0!important;border-radius:12px!important;padding:10px 12px 10px!important}
 .acard h3{font-size:12.5px!important;font-weight:700}
@@ -729,6 +718,18 @@ body:not(.an) .anonly{display:none}
 .urow .ut b{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .urow .ut span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .urow .ust{font-size:12px;font-weight:700;flex:none}
+/* v13: KPIs en una sola línea */
+@media (min-width:1020px){
+ body #v-mando .side #counters{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
+ body #v-mando .side #counters .kp[data-k=prox]{grid-column:auto!important}
+ body #v-mando .side #counters .kp{padding:8px 8px 8px!important;min-height:0!important}
+ body #v-mando .side #counters .kl{font-size:9.5px!important;letter-spacing:.02em!important}
+ body #v-mando .side #counters .krow{flex-direction:column;align-items:flex-start!important;gap:2px!important}
+ body #v-mando .side #counters .kv,body #v-mando .side #counters .kv.sm{font-size:30px!important}
+ body #v-mando .side #counters .krow .kd{margin-left:0!important;font-size:9.5px!important;padding:1px 5px!important}
+ body #v-mando .side #counters .kviz{display:none!important}
+ body #v-mando .side #counters .ks{font-size:10px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media (min-width:1020px){body #v-mando .side #counters .kl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15!important;min-height:22px!important;display:block!important}body #v-mando .side #counters .ks{white-space:normal!important;line-height:1.2}}
 </style>
 
 <div class="app">
