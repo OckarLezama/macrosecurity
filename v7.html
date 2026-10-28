@@ -2060,6 +2060,7 @@ function wire(){
   $('#z3d').addEventListener('click',()=>{UI.flat=!UI.flat;if(map){map.easeTo({pitch:UI.flat?0:58,bearing:UI.flat?0:map.getBearing(),duration:800});if(bldLayer&&map.getLayer(bldLayer))map.setLayoutProperty(bldLayer,'visibility',UI.flat?'none':'visible');}$('#z3d').setAttribute('aria-pressed',String(!UI.flat));$('#z3d').textContent=UI.flat?'2D':'3D';});
   setInterval(()=>{const d=new Date();$('#clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());document.querySelectorAll('.card .tm[data-t],#alertTm').forEach(el=>{el.textContent=ago(+el.dataset.t);});if(UI.tab==='mando')counters();},1000);
 }
+window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
