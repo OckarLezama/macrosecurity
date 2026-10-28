@@ -1353,7 +1353,7 @@ function renderAlert(){const host=$('#alertHost');const ev=ALERT.id&&S.eventos.g
   host.replaceChildren(h('div',{class:'alertcard'},
     h('div',{class:'row',style:'justify-content:space-between'},h('span',{class:'chip red',style:'font-size:12px;padding:4px 10px'},ev.sos?'SOS · PIDE AYUDA':'PATRULLA PIDE APOYO'),h('span',{class:'num',style:'font-size:26px;font-weight:700;color:#E0364C','data-t':ev.creado,id:'alertTm'},ago(ev.creado))),
     h('b',{style:'font-size:20px'},ev.sos?(ev.boton?'Alguien activó un botón de pánico':'Una persona pide ayuda por WhatsApp'):(ev.nota||'Patrulla pide apoyo')),
-    h('div',{class:'muted'},'Sector '+secNum(ev.sector)+' · '+secName(ev.sector)+(ev.sos?(ev.tracking?' · transmite su ubicación en vivo':''):'')),
+    h('div',{class:'muted'},secLabel(secName(ev.sector))+(ev.sos?(ev.tracking?' · transmite su ubicación en vivo':''):'')),
     pa?h('button',{class:'go red',style:'min-height:52px;font-size:16px',disabled:!!pa.dis,onclick:()=>{pa.fn&&pa.fn();}},pa.label):h('div',{style:'font-weight:700;color:#0E9384'},'Atendiéndose · '+(ev.unidad||'')),
     h('button',{class:'lnk',style:'flex:none',onclick:endAlert},'Volver a la vista general')));}
 
@@ -1570,7 +1570,7 @@ function renderPop(){const host=$('#popHost');const ev=UI.sel&&S.eventos.get(UI.
   const pa=abierto(ev)&&ev.estado==='nuevo'?primary(ev):null;
   const box=h('div',{class:'pop',id:'pop'},h('button',{class:'x',onclick:()=>{UI.sel=null;flyHome();renderPop();renderSide();},'aria-label':'Cerrar'},'✕'),
     h('b',{style:'font-size:15px;padding-right:24px'},evTitle(ev)),
-    h('div',{class:'meta',style:'font-size:12.5px;color:var(--muted)'},'Sector '+secNum(ev.sector)+' · '+secName(ev.sector)+' · '+hhmm(ev.creado)+' · '+ev.origen),
+    h('div',{class:'meta',style:'font-size:12.5px;color:var(--muted)'},secLabel(secName(ev.sector))+' · '+hhmm(ev.creado)+' · '+ev.origen),
     ev.nota?h('div',{style:'font-size:13px'},'“'+ev.nota+'”'):null,
     ev.unidad?h('div',{style:'font-size:13px'},(ev.estado==='asignado'?'En camino: ':'Atiende: ')+ev.unidad):null,
     ev.cierre?h('div',{style:'font-size:13px;color:var(--muted)'},(ev.cierre.encontrada?'Persona encontrada':'Persona no encontrada')+' · '+(ev.cierre.detenidos?'con detenidos':'sin detenidos')):null,
@@ -1843,7 +1843,7 @@ function parseKML(txt){const d=new DOMParser().parseFromString(txt,'text/xml');c
   d.querySelectorAll('Placemark').forEach(pm=>{const nm=(pm.querySelector('name')||{}).textContent||'';const capaEl=[...pm.querySelectorAll('Data')].find(x=>/capa|tipo|nivel/i.test(x.getAttribute('name')||''));const capa=capaEl?(capaEl.textContent||'').trim().toLowerCase():'';
     pm.querySelectorAll('Polygon').forEach(pg=>{const c=pg.querySelector('outerBoundaryIs coordinates');if(!c)return;const ring=c.textContent.trim().split(/\s+/).map(t=>t.split(',').map(Number)).filter(q=>q.length>=2&&!isNaN(q[0]));out.push({type:'Feature',properties:{nombre:nm.trim(),capa},geometry:{type:'Polygon',coordinates:[ring]}});});});
   return {type:'FeatureCollection',features:out};}
-async function importCarto(file){const msg=$('#cartoMsg');msg.textContent='Leyendo '+file.name+'…';
+async function importCarto(file){const msg=$('#cartoMsg')||{};msg.textContent='Leyendo '+file.name+'…';
   try{const txt=await file.text();const gj=/\.kml$/i.test(file.name)?parseKML(txt):JSON.parse(txt);
     const nameOf=p=>String(p.nombre||p.Nombre||p.NOMBRE||p.name||p.Name||p.COLONIA||p.colonia||p.SECTOR||p.sector||'').trim();
     const outer=g=>{if(!g)return null;if(g.type==='Polygon')return g.coordinates[0];if(g.type==='MultiPolygon'){let b=null,ba=0;for(const p of g.coordinates){const a=Math.abs(area(p[0]));if(a>ba){ba=a;b=p[0];}}return b;}return null;};
@@ -2052,7 +2052,7 @@ async function boot(){
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
   if(db){api=dbApi(db);S.mode='db';setConn('db','En vivo');}else{api=localApi();S.mode='local';setConn('local','Local');}
-  let c=await api.get('config/main').catch(()=>null);const firstRun=!c;
+  let c=await api.get('config/main').catch(()=>null);let firstRun=!c;
   if(!c){const ok=await api.lease('meta/seed',20000);if(ok){c=await api.get('config/main').catch(()=>null);if(!c){c=defaultConfig();await seedAll(c);}}else{await new Promise(r=>setTimeout(r,3500));c=await api.get('config/main').catch(()=>null)||defaultConfig();}}
   S.config=c;M=c.mpu||80;
   api.watch('config',docs=>{const d=docs.find(x=>x.id==='main');if(d){const secChanged=JSON.stringify(d.data.sectores)!==JSON.stringify(S.config&&S.config.sectores);const geoChanged=JSON.stringify(d.data.geo||null)!==JSON.stringify(S.config&&S.config.geo||null);if(geoChanged)setTimeout(()=>flyHome(),50);S.config=d.data;M=d.data.mpu||80;maybePreset();MODEL=null;if(secChanged){staticKey='';if(CITY)CITY.bld.forEach(b=>{b.sid=null;});}render();}});
@@ -2067,6 +2067,8 @@ async function boot(){
   renderLayers();if(!chat.length)menu(true);else renderChat();
   setTab(['pron','anal','unid','conf'].includes(hash)?hash:'mando');
   initMap();requestAnimationFrame(tick);
+  const CARTO='datos/puebla_sectores_colonias.geojson';
+  if(S.mode==='local'&&S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
   if(firstRun&&S.mode==='local'){try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.0003&countrycodes=mx&limit=3&accept-language=es&q='+encodeURIComponent('Puebla, Puebla'));const js=await r.json();const p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type));if(p)await buildFromPlace(p);}catch(e){}}
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
