@@ -920,6 +920,7 @@ function sectorAt(x,y){for(const sc of S.config.sectores)if(inPoly(x,y,sc.poly))
 function randIn(poly){const xs=poly.map(p=>p[0]),ys=poly.map(p=>p[1]);for(let i=0;i<200;i++){const x=rnd(Math.min(...xs)+1.5,Math.max(...xs)-1.5),y=rnd(Math.min(...ys)+1.5,Math.max(...ys)-1.5);if(inPoly(x,y,poly))return {x,y};}return centroid(poly);}
 const sec=id=>S.config.sectores.find(x=>x.id===id);
 const secNum=id=>{const i=S.config.sectores.findIndex(x=>x.id===id);return i<0?'?':i+1;};
+const secLabel=n=>/^sector\b/i.test(n||'')?n:'Sector '+n;
 const secName=id=>{const x=sec(id);return x?x.nombre:'Fuera de sector';};
 function cat(id){return SYS[id]||S.config.catalogo.find(c=>c.id===id)||{id,nombre:id,prioridad:'media',grupo:'delito'};}
 const T=()=>S.config.turnos.slice().sort((a,b)=>a.inicio-b.inicio);
@@ -959,13 +960,16 @@ function genHistorial(dias){
 function histMs(e){const today=new Date();today.setHours(0,0,0,0);return today.getTime()-e[0]*864e5+e[1]*36e5+e[2]*6e4;}
 
 /* ===== modelo: Markov entre turnos + día + tipo ===== */
+let SIDC={k:'',a:null,m:null};
+function coloniaAt(x,y){for(const c of (S.config&&S.config.colonias)||[])if(inPoly(x,y,c.poly))return c;return null;}
+function sidOf(e){if(e[7]==null)return e[3];const H=S.historial&&S.historial.entries;const k=S.config.sectores.map(s=>s.id+s.poly.length).join();if(SIDC.k!==k||SIDC.a!==H){SIDC={k,a:H,m:new Map()};}let v=SIDC.m.get(e);if(v===undefined){v=sectorAt(e[7],e[8]);SIDC.m.set(e,v);}return v;}
 function series(){
   const nT=T().length;const sets={},types={},counts={};
   for(const sc of S.config.sectores){sets[sc.id]=new Set();types[sc.id]=Array.from({length:nT},()=>({}));counts[sc.id]=0;}
   let minS=Infinity,maxHist=-Infinity;
   const add=(ms,sid,cid,isHist)=>{if(!sets[sid])return;if(cat(cid).grupo!=='delito')return;const sl=slotOf(ms);sets[sid].add(sl);const j=mod(sl,nT);types[sid][j][cid]=(types[sid][j][cid]||0)+1;counts[sid]++;if(sl<minS)minS=sl;if(isHist&&sl>maxHist)maxHist=sl;};
   const H=(S.historial&&S.historial.entries)||[];
-  for(const e of H)add(histMs(e),e[3],e[4],true);
+  for(const e of H)add(histMs(e),sidOf(e),e[4],true);
   const cur=slotOf(Date.now());const stale=maxHist>-Infinity&&(cur-maxHist)>14*nT;
   for(const ev of S.eventos.values()){if(ev.estado==='descartado'||cat(ev.cid).grupo!=='delito')continue;if(stale){if(sets[ev.sector])sets[ev.sector].add(slotOf(ev.creado));continue;}add(ev.creado,ev.sector,ev.cid,false);}
   const end=stale?maxHist:cur-1;if(minS===Infinity)minS=end-1;minS=Math.max(minS,end-6000);
@@ -975,7 +979,12 @@ function fit(sr,from,to){
   const nT=sr.nT;const P={},B={},C={};const dEv=Array.from({length:7},()=>Array(nT).fill(0)),dSl=Array.from({length:7},()=>Array(nT).fill(0));
   for(const sid in sr.sets){const set=sr.sets[sid];const c=Array.from({length:nT},()=>[[0,0],[0,0]]);const b=Array.from({length:nT},()=>[0,0]);
     for(let k=from+1;k<=to;k++){const j=mod(k,nT);const a=set.has(k-1)?1:0,y=set.has(k)?1:0;c[j][a][y]++;b[j][0]+=y;b[j][1]++;const dw=dowOfSlot(k);dEv[dw][j]+=y;dSl[dw][j]++;}
-    C[sid]=c;P[sid]=c.map(m=>[(m[0][1]+1)/(m[0][0]+m[0][1]+2),(m[1][1]+1)/(m[1][0]+m[1][1]+2)]);B[sid]=b.map(x=>(x[0]+1)/(x[1]+2));}
+    C[sid]=c;B[sid]=b;}
+  // modelo jerárquico: cada sector se apoya en el comportamiento de todo el municipio en proporción inversa a sus datos
+  const K=12;const CC=Array.from({length:nT},()=>[[0,0],[0,0]]),BB=Array.from({length:nT},()=>[0,0]);
+  for(const sid in C)for(let j=0;j<nT;j++){for(const a of [0,1])for(const y of [0,1])CC[j][a][y]+=C[sid][j][a][y];BB[j][0]+=B[sid][j][0];BB[j][1]+=B[sid][j][1];}
+  const PC=CC.map(m=>[(m[0][1]+1)/(m[0][0]+m[0][1]+2),(m[1][1]+1)/(m[1][0]+m[1][1]+2)]),BC=BB.map(x=>(x[0]+1)/(x[1]+2));
+  for(const sid in C){P[sid]=C[sid].map((m,j)=>[0,1].map(a=>(m[a][1]+K*PC[j][a])/(m[a][0]+m[a][1]+K)));B[sid]=B[sid].map((x,j)=>(x[0]+K*BC[j])/(x[1]+K));}
   const F=Array.from({length:7},()=>Array(nT).fill(1));
   for(let j=0;j<nT;j++){let e=0,sl=0;for(let d=0;d<7;d++){e+=dEv[d][j];sl+=dSl[d][j];}const r=(e+1)/(sl+2);for(let d=0;d<7;d++)F[d][j]=clamp(((dEv[d][j]+1)/(dSl[d][j]+2))/r,.5,2);}
   return {P,B,F,C};
@@ -1096,6 +1105,8 @@ function initMap(){
     else if(src){bldLayer='b3d';map.addLayer({id:'b3d',type:'fill-extrusion',source:src,'source-layer':'building',minzoom:13,layout:{visibility:UI.flat?'none':'visible'},paint:{'fill-extrusion-color':sat?['interpolate',['linear'],['coalesce',['get','render_height'],6],0,'#DCE6F2',40,'#F4F8FC']:['interpolate',['linear'],['coalesce',['get','render_height'],6],0,'#E4E9F0',30,'#CBD4E0',80,'#B4C0CF'],'fill-extrusion-height':['coalesce',['get','render_height'],6],'fill-extrusion-base':['coalesce',['get','render_min_height'],0],'fill-extrusion-opacity':sat?.72:.9}},firstSym);}
     add('hex',{id:'hex',type:'fill-extrusion',layout:{visibility:UI.layers.columnas===false?'none':'visible'},paint:{'fill-extrusion-color':['interpolate',['linear'],['get','k'],0,'#FFE08A',.45,'#F7923F',1,'#E0364C'],'fill-extrusion-height':['*',['get','h'],0],'fill-extrusion-base':0,'fill-extrusion-opacity':.88}},firstSym);
     add('vig',{id:'vig-fill',type:'fill',paint:{'fill-color':'#0E9384','fill-opacity':.08}});map.addLayer({id:'vig-line',type:'line',source:'vig',paint:{'line-color':'#0E9384','line-width':2.4,'line-dasharray':[2,1.5]}});
+    add('col',{id:'col-line',type:'line',minzoom:13,paint:{'line-color':sat?'#B9C4D0':'#7C8A9A','line-width':['interpolate',['linear'],['zoom'],13,.4,16,1.2],'line-opacity':.55}},firstSym);
+    map.addLayer({id:'col-lbl',type:'symbol',source:'col',minzoom:14.6,layout:{'text-field':['get','n'],'text-font':['Noto Sans Regular'],'text-size':11,'symbol-placement':'point','text-max-width':8},paint:{'text-color':sat?'#C9D1DA':'#5B6878','text-halo-color':sat?'#0D1116':'#FFFFFF','text-halo-width':1.3}});
     add('selsec',{id:'selsec-fill',type:'fill',paint:{'fill-color':'#0E9384','fill-opacity':.08}});map.addLayer({id:'selsec-line',type:'line',source:'selsec',paint:{'line-color':'#0E9384','line-width':4,'line-opacity':.9}});
     add('zd',{id:'zd-fill',type:'fill',paint:{'fill-color':'#0E9384','fill-opacity':.13}});map.addLayer({id:'zd-line',type:'line',source:'zd',paint:{'line-color':'#0E9384','line-width':2.8,'line-dasharray':[2,1.5]}});
     add('ruta',{id:'ruta',type:'line',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#E0364C','line-width':4,'line-dasharray':[1.5,1.2]}});
@@ -1140,7 +1151,7 @@ function flyTo(x,y,z){if(!map)return;map.flyTo({center:geo(x,y),zoom:zoomFor(z||
 function flyHome(instant){if(!map||!S.config)return;map.fitBounds(worldBounds(),{padding:{top:150,bottom:70,left:40,right:80},pitch:UI.flat?0:58,bearing:UI.flat?0:-18,duration:instant?0:1800});}
 /* sincronización de capas */
 function setData(id,data){const s=map&&map.getSource(id);if(s)s.setData(data);}
-function syncStatic(){if(!mapReady||!S.config)return;const L=UI.layers.riesgo?sectorLevels():{};
+function syncStatic(){if(!mapReady||!S.config)return;setData('col',fc((S.config.colonias||[]).map(c=>({type:'Feature',properties:{n:c.nombre},geometry:{type:'Polygon',coordinates:[ring(c.poly)]}}))));const L=UI.layers.riesgo?sectorLevels():{};
   setData('sect',fc(S.config.sectores.map(sc=>({type:'Feature',properties:{lv:UI.layers.riesgo?(L[sc.id]||'bajo'):'none'},geometry:{type:'Polygon',coordinates:[ring(sc.poly)]}}))));
   const lim=S.config.limite;if(lim&&lim.length){setData('limite',fc([{type:'Feature',properties:{},geometry:{type:'LineString',coordinates:ring(lim)}}]));
     setData('mask',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[[[-120,5],[-80,5],[-80,35],[-120,35],[-120,5]],ring(lim).slice().reverse()]}}]));}
@@ -1366,7 +1377,7 @@ function cardFor(ev){
   const el=h('div',{class:'card'+(crit?' sos':'')+(UI.sel===ev.id?' sel':''),'data-id':ev.id},
     h('div',{class:'hd'},h('div',{class:'tt'},crit?h('span',{class:'chip red'},ev.sos?'SOS':'APOYO'):h('i',{class:'dot',style:'background:'+colorOf(ev)}),h('span',{},evTitle(ev))),
       h('span',{class:'wait'+(late||crit?' late':'')},h('small',{},'espera'),h('b',{class:'tm','data-t':ev.creado},ago(ev.creado)))),
-    h('div',{class:'meta'},h('span',{},secName(ev.sector)),h('span',{class:'chip'},ev.origen),ev.foto?h('span',{class:'chip'},'Con foto'):null,(()=>{const vg=vigOf(ev);return vg?h('span',{class:'chip c5'},'En '+vg.nombre):null;})(),ev.c5?h('span',{class:'chip c5'},'En el 911'):null),
+    h('div',{class:'meta'},h('span',{},(ev.colonia?ev.colonia+' · ':'')+secName(ev.sector)),h('span',{class:'chip'},ev.origen),ev.foto?h('span',{class:'chip'},'Con foto'):null,(()=>{const vg=vigOf(ev);return vg?h('span',{class:'chip c5'},'En '+vg.nombre):null;})(),ev.c5?h('span',{class:'chip c5'},'En el 911'):null),
     h('div',{class:'row',style:'flex-wrap:nowrap'},h('button',{class:'go'+(pa.red?' red':''),style:'flex:1',disabled:!!pa.dis,onclick:e=>{e.stopPropagation();pa.fn&&pa.fn();}},pa.label),
       h('button',{class:'more','aria-label':'Más opciones','aria-expanded':String(UI.more===ev.id),onclick:e=>{e.stopPropagation();UI.more=UI.more===ev.id?null:ev.id;UI.otra=null;renderSide();}},'⋯')));
   if(UI.more===ev.id){const fu=cat(ev.cid).grupo!=='oficial'?freeUnits(ev):[];
@@ -1509,23 +1520,32 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
       DK.gv=gs.map(g=>Math.min(1,g.p/.7));
       requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#chGauge .rgv').forEach(n=>{n.style.strokeDashoffset=n.dataset.o;})));
     }}
-  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito, calculada con el modelo de Markov por turno'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
+  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito por sector · modelo de Markov por turno con ajuste jerárquico (los sectores con pocos datos se apoyan en el promedio del municipio)'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
 }
 function focusSector(sid){const sc=sec(sid);if(!sc||!map)return;UI.selSec=sid;const g=sc.poly.map(q=>geo(q[0],q[1]));const xs=g.map(q=>q[0]),ys=g.map(q=>q[1]);
   map.fitBounds([[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],{padding:{top:80,bottom:80,left:380,right:60},pitch:45,duration:1200,maxZoom:16});
   setData('selsec',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(sc.poly)]}}]));renderSecCard();ORB.last=Date.now();}
+function focusColonia(c){if(!map)return;const g=c.poly.map(q=>geo(q[0],q[1]));const xs=g.map(q=>q[0]),ys=g.map(q=>q[1]);UI.selSec=null;
+  map.fitBounds([[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],{padding:{top:90,bottom:90,left:380,right:60},pitch:40,duration:1100,maxZoom:16.5});
+  setData('selsec',fc([{type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring(c.poly)]}}]));
+  const P=crimePts(90).filter(q=>inPoly(q.x,q.y,c.poly));const by={};P.forEach(q=>by[q.cid]=(by[q.cid]||0)+1);const top=Object.entries(by).sort((a,b)=>b[1]-a[1])[0];const ce=centroid(c.poly);const sid=sectorAt(ce.x,ce.y);
+  const open=[...S.eventos.values()].filter(e=>abierto(e)&&inPoly(e.x,e.y,c.poly)).length;
+  $('#secHost').innerHTML='<div class="scard"><div class="sh"><b>'+esc(c.nombre)+'</b><button class="x" aria-label="Cerrar" id="scX">✕</button></div><div class="srow" style="color:var(--muted)">Colonia'+(c.cp?' · CP '+esc(c.cp):'')+' · '+esc(secLabel(secName(sid)))+'</div>'+
+    '<div class="sgrid"><div><b>'+open+'</b><span>Abiertos</span></div><div><b>'+P.filter(q=>q.d<=30).length+'</b><span>Delitos 30 días</span></div><div><b>'+P.length+'</b><span>Delitos 90 días</span></div></div>'+(top?'<div class="srow">Más frecuente: <b>'+esc(cat(top[0]).nombre)+'</b> ('+top[1]+')</div>':'<div class="srow">Sin delitos registrados en 90 días.</div>')+'</div>';
+  $('#scX').onclick=()=>{$('#secHost').replaceChildren();setData('selsec',fc([]));};ORB.last=Date.now();}
 function renderSecCard(){const host=$('#secHost');const sid=UI.selSec;if(!sid||!sec(sid)){host.replaceChildren();if(map)setData('selsec',fc([]));return;}
   const sc=sec(sid);const evs=[...S.eventos.values()];const T0=new Date().setHours(0,0,0,0);const open=evs.filter(e=>e.sector===sid&&abierto(e)).length;const hoy=evs.filter(e=>e.sector===sid&&e.creado>=T0&&cat(e.cid).grupo==='delito').length;
   const o=getModel().out[sid];const p=o?o.fc[0].p:0;const lv=level(p);const top=o&&o.tipos[0]&&o.tipos[0][0]?o.tipos[0][0].c.nombre:'';const hh=new Date().getHours();
   const us=[...S.unidades.values()].filter(u=>u.sector===sid).map(u=>({u,s:uState(u,hh)}));const zs=(S.config.zonas||[]).filter(z=>sectorAt(z.x,z.y)===sid).length;
-  host.innerHTML='<div class="scard"><div class="sh"><b>Sector '+esc(sc.nombre)+'</b><button class="x" aria-label="Cerrar" id="scX">✕</button></div>'+(sc.desc?'<div class="srow" style="color:var(--muted)">'+esc(sc.desc)+'</div>':'')+
+  host.innerHTML='<div class="scard"><div class="sh"><b>'+esc(secLabel(sc.nombre))+'</b><button class="x" aria-label="Cerrar" id="scX">✕</button></div>'+(sc.desc?'<div class="srow" style="color:var(--muted)">'+esc(sc.desc)+'</div>':'')+
     '<div class="sgrid"><div><b>'+open+'</b><span>Abiertos</span></div><div><b>'+hoy+'</b><span>Delitos hoy</span></div><div><b style="color:'+(lv==='alto'?'#E0364C':(lv==='medio'?'#E9A116':'#1E8A63'))+'">'+Math.round(p*100)+'%</b><span>Riesgo próx. turno</span></div></div>'+
     (top?'<div class="srow">Delito más probable: <b>'+esc(top)+'</b></div>':'')+'<div class="srow">Zonas seguras: <b>'+zs+'</b></div>'+
     '<div class="spat">'+(us.length?us.map(x=>'<span style="color:'+x.s.c+'">'+x.u.id+' · '+x.s.t+'</span>').join(''):'<span>Sin patrulla asignada</span>')+'</div></div>';
   $('#scX').onclick=()=>{UI.selSec=null;renderSecCard();};}
 function doSearch(q){const box=$('#sres');q=(q||'').trim().toLowerCase();if(!q){box.hidden=true;return;}
   const norm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const qq=norm(q);const out=[];
-  S.config.sectores.forEach((sc,i)=>{if(norm(sc.nombre).includes(qq)||norm(sc.desc).includes(qq)||String(i+1)===qq)out.push({k:'Sectores',t:'Sector '+sc.nombre,sub:sc.desc?sc.desc.slice(0,40):'',c:'#2B66B0',go:()=>focusSector(sc.id)});});
+  (S.config.colonias||[]).forEach(c=>{if(out.length<40&&qq.length>=3&&norm(c.nombre).includes(qq))out.push({k:'Colonias',t:c.nombre,sub:(c.cp?'CP '+c.cp+' · ':'')+secName(sectorAt(centroid(c.poly).x,centroid(c.poly).y)),c:'#5B6878',go:()=>focusColonia(c)});});
+  S.config.sectores.forEach((sc,i)=>{if(norm(sc.nombre).includes(qq)||norm(sc.desc).includes(qq)||String(i+1)===qq)out.push({k:'Sectores',t:secLabel(sc.nombre),sub:sc.desc?sc.desc.slice(0,40):'',c:'#2B66B0',go:()=>focusSector(sc.id)});});
   (S.config.zonas||[]).forEach(z=>{if(norm(z.nombre).includes(qq))out.push({k:'Zonas seguras',t:z.nombre,sub:secName(sectorAt(z.x,z.y)),c:'#12A06A',go:()=>flyTo(z.x,z.y,2.2)});});
   [...S.vigiladas.values()].forEach(v=>{if(norm(v.nombre).includes(qq))out.push({k:'Zonas con aviso',t:v.nombre,sub:fmtR(v.r),c:'#0E9384',go:()=>{ZONE.draft=null;ZONE.vig=v.id;renderZone();flyTo(v.x,v.y,2);}});});
   [...S.eventos.values()].filter(e=>norm(e.folio).includes(qq)||(qq.length>3&&norm(e.cat).includes(qq)&&abierto(e))).slice(0,6).forEach(e=>out.push({k:'Reportes',t:(e.folio||'')+' · '+evTitle(e),sub:secName(e.sector)+' · '+ago(e.creado),c:colorOf(e),go:()=>{UI.sel=e.id;flyTo(e.x,e.y,2.1);renderSide();renderPop();}}));
@@ -1562,7 +1582,7 @@ function positionPop(){const p=$('#pop');if(!p)return;const ev=S.eventos.get(UI.
 async function crearEvento(o){
   const c=cat(o.cid);const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   const pre=o.sos?'E':(c.grupo==='oficial'?'Q':(o.origen==='Oficial'?'P':'R'));
-  const ev={id,folio:folio(pre),cid:o.cid,cat:c.nombre,sub:o.sub||'',prioridad:c.prioridad,sector:sectorAt(o.x,o.y),x:+o.x.toFixed(2),y:+o.y.toFixed(2),origen:o.origen||'WhatsApp',estado:o.estado||'nuevo',unidad:o.unidad||null,creado:Date.now(),nota:o.nota||'',sos:!!o.sos,chatId:o.chatId||null,ruta:o.sos?[[+o.x.toFixed(2),+o.y.toFixed(2)]]:null,tracking:!!o.sos&&o.tracking!==false,c5:null,foto:false,origenUnidad:o.origenUnidad||null};
+  const ev={id,folio:folio(pre),cid:o.cid,cat:c.nombre,sub:o.sub||'',prioridad:c.prioridad,sector:sectorAt(o.x,o.y),colonia:(coloniaAt(o.x,o.y)||{}).nombre||'',x:+o.x.toFixed(2),y:+o.y.toFixed(2),origen:o.origen||'WhatsApp',estado:o.estado||'nuevo',unidad:o.unidad||null,creado:Date.now(),nota:o.nota||'',sos:!!o.sos,chatId:o.chatId||null,ruta:o.sos?[[+o.x.toFixed(2),+o.y.toFixed(2)]]:null,tracking:!!o.sos&&o.tracking!==false,c5:null,foto:false,origenUnidad:o.origenUnidad||null};
   if(o.estado==='cerrado'){ev.cerrado=ev.creado;ev.llegada=ev.creado;ev.cierre=o.cierre||null;}
   await write(()=>api.set('eventos/'+id,ev));return ev;
 }
@@ -1721,7 +1741,7 @@ function renderPron(){
 function analysis(){
   const P=UI.analP,SF=UI.analS;const H=S.historial||{entries:[],prox:{},alertas:{},dias:90};const now=Date.now();const crimes=S.config.catalogo.filter(c=>c.grupo==='delito');
   const by={};crimes.forEach(c=>by[c.id]={r:0,a:0});let total=0,att=0;const arr=[];const arrS={};const prox={};S.config.sectores.forEach(s=>{prox[s.id]=0;arrS[s.id]=[];});
-  for(const e of H.entries){if(e[0]>P)continue;if(SF!=='all'&&e[3]!==SF)continue;const c=cat(e[4]);total++;if(e[5])att++;if(c.grupo==='delito'&&by[e[4]]){by[e[4]].r++;if(e[5])by[e[4]].a++;}if(e[5]&&e[6]!=null){arr.push(e[6]);if(arrS[e[3]])arrS[e[3]].push(e[6]);}}
+  for(const e of H.entries){if(e[0]>P)continue;if(SF!=='all'&&sidOf(e)!==SF)continue;const c=cat(e[4]);total++;if(e[5])att++;if(c.grupo==='delito'&&by[e[4]]){by[e[4]].r++;if(e[5])by[e[4]].a++;}if(e[5]&&e[6]!=null){arr.push(e[6]);if(arrS[e[3]])arrS[e[3]].push(e[6]);}}
   for(const ev of S.eventos.values()){if(now-ev.creado>P*864e5)continue;if(SF!=='all'&&ev.sector!==SF)continue;const c=cat(ev.cid);if(c.grupo==='oficial'||c.grupo==='sistema')continue;total++;const done=!!ev.llegada||ev.estado==='cerrado';if(done)att++;if(by[ev.cid]){by[ev.cid].r++;if(done)by[ev.cid].a++;}if(ev.llegada){const m=(ev.llegada-ev.creado)/60e3;arr.push(m);if(arrS[ev.sector])arrS[ev.sector].push(m);}}
   const sc=P/(H.dias||90);for(const sid in H.prox)if(prox[sid]!=null)prox[sid]+=Math.round(H.prox[sid]*sc);
   for(const k2 of S.contactos.values()){if(now-k2.t>P*864e5)continue;if(k2.sector&&prox[k2.sector]!=null)prox[k2.sector]++;}
@@ -1819,6 +1839,36 @@ async function searchPlace(q){const box=$('#placeRes');box.replaceChildren(h('sp
     const ok=js.filter(x=>x.geojson&&/Polygon/.test(x.geojson.type));if(!ok.length){box.replaceChildren(h('span',{class:'muted'},'No encontré un límite para "'+q+'". Prueba con "municipio de …" o el nombre del estado.'));return;}
     box.replaceChildren(...ok.map(x=>h('button',{class:'place',onclick:()=>buildFromPlace(x)},h('b',{},x.name||x.display_name.split(',')[0]),h('span',{},x.display_name))));}
   catch(e){box.replaceChildren(h('span',{class:'muted'},'No pude conectar con el buscador de lugares. Revisa tu conexión a internet.'));}}
+function parseKML(txt){const d=new DOMParser().parseFromString(txt,'text/xml');const out=[];
+  d.querySelectorAll('Placemark').forEach(pm=>{const nm=(pm.querySelector('name')||{}).textContent||'';const capaEl=[...pm.querySelectorAll('Data')].find(x=>/capa|tipo|nivel/i.test(x.getAttribute('name')||''));const capa=capaEl?(capaEl.textContent||'').trim().toLowerCase():'';
+    pm.querySelectorAll('Polygon').forEach(pg=>{const c=pg.querySelector('outerBoundaryIs coordinates');if(!c)return;const ring=c.textContent.trim().split(/\s+/).map(t=>t.split(',').map(Number)).filter(q=>q.length>=2&&!isNaN(q[0]));out.push({type:'Feature',properties:{nombre:nm.trim(),capa},geometry:{type:'Polygon',coordinates:[ring]}});});});
+  return {type:'FeatureCollection',features:out};}
+async function importCarto(file){const msg=$('#cartoMsg');msg.textContent='Leyendo '+file.name+'…';
+  try{const txt=await file.text();const gj=/\.kml$/i.test(file.name)?parseKML(txt):JSON.parse(txt);
+    const nameOf=p=>String(p.nombre||p.Nombre||p.NOMBRE||p.name||p.Name||p.COLONIA||p.colonia||p.SECTOR||p.sector||'').trim();
+    const outer=g=>{if(!g)return null;if(g.type==='Polygon')return g.coordinates[0];if(g.type==='MultiPolygon'){let b=null,ba=0;for(const p of g.coordinates){const a=Math.abs(area(p[0]));if(a>ba){ba=a;b=p[0];}}return b;}return null;};
+    const secF=[],colF=[];let limR=null;
+    for(const f of gj.features||[]){const p=f.properties||{};const r=outer(f.geometry);if(!r||r.length<4)continue;const capa=String(p.capa||p.tipo||p.nivel||'').toLowerCase();
+      if(capa==='limite')limR=r;else if(capa.startsWith('colon')||p.COLONIA!=null||p.colonia!=null||/colon/i.test(file.name)&&!capa)colF.push({n:nameOf(p),cp:String(p.cp||p.COD_POS||p.CP||'').trim(),r});else secF.push({n:nameOf(p),r});}
+    if(!secF.length&&colF.length&&S.config.sectores.length){msg.textContent='Solo trae colonias; se agregan a los sectores actuales.';}
+    else if(!secF.length){msg.textContent='No encontré polígonos de sectores en el archivo.';return;}
+    const all=(secF.length?secF:colF).flatMap(x=>x.r);const lons=all.map(q=>q[0]),lats=all.map(q=>q[1]);const W0=Math.min(...lons),E0=Math.max(...lons),S0=Math.min(...lats),N0=Math.max(...lats);
+    let geoN,mpu;
+    if(secF.length){const latc=(S0+N0)/2;const kx=111320*Math.cos(latc*Math.PI/180),ky=111000;mpu=Math.max((E0-W0)*kx/96,(N0-S0)*ky/66,20);geoN={lat0:N0+2*mpu/ky,lng0:(W0+E0)/2,kx,ky};}else{geoN=G();mpu=M;}
+    const toW=(lng,lat)=>[+(50+(lng-geoN.lng0)*geoN.kx/mpu).toFixed(2),+((geoN.lat0-lat)*geoN.ky/mpu).toFixed(2)];
+    const thin=(r,max)=>{const st=Math.max(1,Math.ceil(r.length/max));const o=r.filter((_,i)=>i%st===0);return o.map(q=>toW(q[0],q[1]));};
+    const tc=s=>s.toLowerCase().replace(/(^|\s)\S/g,m=>m.toUpperCase());
+    const colonias=colF.map((c,i)=>({id:'c'+(i+1),nombre:c.n||('Colonia '+(i+1)),cp:c.cp,poly:thin(c.r,80)}));
+    if(!secF.length){const c=JSON.parse(JSON.stringify(S.config));c.colonias=colonias;await write(()=>api.set('config/main',c));S.config=c;staticKey='';syncAll();msg.textContent=colonias.length+' colonias agregadas.';cfg=null;renderConf();return;}
+    const sect=secF.map((x,i)=>({id:'s'+(i+1),nombre:tc(x.n||('Sector '+(i+1))).replace(/^Sector\s+/i,'Sector '),poly:thin(x.r,500)}));
+    const old=G(),oldM=M;const reW=(x,y)=>{const lng=old.lng0+(x-50)*oldM/old.kx,lat=old.lat0-y*oldM/old.ky;return toW(lng,lat);};
+    const zonas=(S.config.zonas||[]).map(z=>{const q=reW(z.x,z.y);return {...z,x:q[0],y:q[1]};});
+    const c=defaultConfig();Object.assign(c,{cliente:gj.cliente||S.config.cliente,preset:'archivo',presetDone:true,mpu:+mpu.toFixed(1),geo:geoN,limite:limR?thin(limR,800):null,sectores:sect,colonias,zonas,calles:true,metaLlegada:S.config.metaLlegada||10,turnos:S.config.turnos,catalogo:S.config.catalogo,demo:S.config.demo});
+    msg.textContent='Cargando '+sect.length+' sectores'+(colonias.length?' y '+colonias.length+' colonias':'')+'…';
+    await clearEvents();for(const u of [...S.unidades.keys()])await write(()=>api.del('unidades/'+u));for(const v of [...S.vigiladas.keys()])await write(()=>api.del('vigiladas/'+v));
+    M=c.mpu;TRK=null;await seedAll(c);cfg=null;staticKey='';UI.needHome=true;setTimeout(()=>{syncAll();},100);renderConf();
+    toast(sect.length+' sectores'+(colonias.length?' y '+colonias.length+' colonias':'')+' cargados. El modelo de riesgo ya usa los sectores nuevos.');}
+  catch(e){msg.textContent='No pude leer el archivo: '+e.message;}}
 async function buildFromPlace(r){
   const bb=r.boundingbox.map(Number);const S0=bb[0],N0=bb[1],W0=bb[2],E0=bb[3];const latc=(S0+N0)/2;const kx=111320*Math.cos(latc*Math.PI/180),ky=111000;
   const wM=(E0-W0)*kx,hM=(N0-S0)*ky;const mpu=Math.max(wM/96,hM/66,20);const lng0=(W0+E0)/2;const lat0=N0+2*mpu/ky;
@@ -1857,6 +1907,7 @@ function renderConf(){
   $('#conf').replaceChildren(h('div',{class:'row',style:'justify-content:space-between;margin-bottom:12px;gap:12px'},h('h1',{class:'h1'},'Configuración del cliente'),h('div',{class:'row'},h('button',{class:'btn',onclick:()=>{cfg=null;UI.draw=null;UI.zoneAdd=false;renderConf();}},'Descartar cambios'),h('button',{class:'btn pri',onclick:saveConf},'Guardar configuración'))),
     h('div',{class:'cgrid'},h('div',{style:'display:flex;flex-direction:column;gap:12px;min-width:0'},
       box('Lugar','Busca cualquier municipio o ciudad de México. La plataforma toma su límite real del mapa y arma los sectores dentro; después puedes renombrarlos o redibujarlos.',(()=>{const q=h('input',{class:'inp',id:'placeQ',placeholder:'Ej. Cholula, Puebla',style:'flex:1'});q.addEventListener('keydown',e=>{if(e.key==='Enter')searchPlace(q.value);});return h('div',{class:'row'},q,h('button',{class:'btn pri',onclick:()=>searchPlace($('#placeQ').value)},'Buscar'));})(),h('div',{class:'places',id:'placeRes'})),
+      box('Cartografía del cliente','Carga los sectores reales del cliente (y si los tiene, sus colonias o cuadrantes) desde un archivo GeoJSON o KML. Se aceptan cualquier número de sectores; el modelo de riesgo se recalcula solo.',(()=>{const f=h('input',{type:'file',accept:'.geojson,.json,.kml',id:'cartoF',style:'font-size:13px'});f.addEventListener('change',()=>{if(f.files[0])importCarto(f.files[0]);});return h('div',{class:'row'},f);})(),h('div',{class:'muted',id:'cartoMsg',style:'font-size:12px'},(S.config.colonias&&S.config.colonias.length?S.config.sectores.length+' sectores y '+S.config.colonias.length+' colonias cargados.':''))),
       box('Cliente',null,inp('cfgCli',D.cliente,v=>{D.cliente=v;},'Nombre del cliente')),
       box('Mapa: sectores y zonas seguras','Cada reporte se asigna solo al sector donde cae. Toca el mapa para dibujar un sector o una zona segura.',map,tools,...secs),
       box('Zonas seguras','El bot las ofrece al ciudadano y las manda durante un SOS.',...(zs.length?zs:[h('span',{class:'muted'},'Sin zonas. Agrégalas tocando el mapa.')]))),
@@ -1938,7 +1989,7 @@ function render(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;if(!S.config)r
   if(UI.tab==='mando')renderDash();if(mapReady){syncEvents();syncUnits();syncBotones();syncBeacons();if(Date.now()-(render.hh||0)>4000){render.hh=Date.now();syncHeat();syncSectorLabels();}if(Date.now()-hexT>20000){hexT=Date.now();syncHex(false);}}
   if(ZONE.vig||(ZONE.draft&&!dragZone))renderZone();
   chatUpdates();});}
-function setTab(t){UI.tab=t;document.body.dataset.tab=t;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===t)));
+function setTab(t){UI.tab=t;if(t==='mando'&&UI.needHome){UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},250);}document.body.dataset.tab=t;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===t)));
   if(t==='mando'){requestAnimationFrame(()=>{fitView($('#map'));});}
   if(t==='pron')renderPron();if(t==='anal')renderAnal();if(t==='unid')renderUnid();if(t==='conf'){cfg=null;renderConf();}
   try{history.replaceState(null,'',t==='mando'?location.pathname+location.search:'#'+t);}catch(e){}}
