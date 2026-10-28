@@ -1467,7 +1467,7 @@ function counters(){
   const prox=[...S.contactos.values()].filter(k=>k.t>=T0).length;
   const H=(S.historial&&S.historial.entries)||[];const nm=new Date().getHours()*60+new Date().getMinutes();
   const yRep=H.filter(e=>e[0]===1&&e[1]*60+e[2]<=nm&&!['oficial','sistema'].includes(cat(e[4]).grupo));const yAtt=yRep.filter(e=>e[5]).length;
-  const delta=(a,b,inv)=>{if(!b)return '';const d=Math.round((a-b)/b*100);if(!d)return '<span class="kd" title="Igual que ayer a esta hora">= ayer</span>';const up=d>0;return '<span class="kd '+((up!==!!inv)?'up':'dn')+'" title="Comparado con ayer a esta misma hora">'+(up?'▲':'▼')+Math.abs(d)+'%</span>';};
+  const delta=(a,b,inv)=>{if(!b||b<5&&a<5)return '';if(b<1&&a>1)return '';if(Math.abs((a-b)/b)>3)return '';const d=Math.round((a-b)/b*100);if(!d)return '<span class="kd" title="Igual que ayer a esta hora">= ayer</span>';const up=d>0;return '<span class="kd '+((up!==!!inv)?'up':'dn')+'" title="Comparado con ayer a esta misma hora">'+(up?'▲':'▼')+Math.abs(d)+'%</span>';};
   const hb=Array(12).fill(0);rep.forEach(e=>{const i=11-Math.floor((now-e.creado)/36e5);if(i>=0&&i<12)hb[i]++;});const hm=Math.max(1,...hb);
   const spark='<span class="kviz bars">'+hb.map(v=>'<i style="height:'+(8+v/hm*92)+'%"></i>').join('')+'</span>';
   const ap=rep.length?att.length/rep.length:0;const prog='<span class="kviz prog"><i style="width:'+Math.round(ap*100)+'%"></i></span>';
@@ -1478,7 +1478,7 @@ function counters(){
   const pAvg=(()=>{const hp=S.historial&&S.historial.prox;if(!hp)return 0;const tot=Object.values(hp).reduce((a,b)=>a+b,0);return Math.round(tot/((S.historial.dias)||90));})();
   const tile=(k,l,v,sub,viz,cls,dl)=>'<button class="kp'+(cls?' '+cls:'')+'" data-k="'+k+'" title="'+esc(l)+'"><span class="kl">'+l+'</span><span class="krow"><b class="kv" data-n="'+v+'">'+v+'</b>'+(dl||'')+'</span>'+viz+'<span class="ks">'+sub+'</span></button>';
   const html=tile('rep','Reportes hoy',rep.length,wa+' por WhatsApp',spark,'',delta(rep.length,yRep.length,true))+
-    tile('att','Atendidos',att.length,Math.round(ap*100)+'% de '+rep.length+' reportes',prog,'',delta(ap,yRep.length?yAtt/yRep.length:0))+
+    tile('att','Atendidos',att.length,Math.round(ap*100)+'% de '+rep.length+' reportes',prog,'',delta(att.length,yAtt))+
     tile('sin','Sin atender',pend.length,pend.length?'espera '+ago(oldest):'todo al día',sev,pend.length?'':'zero')+
     tile('pat','Patrullas libres',libres,'de '+enT+' en turno',cars)+
     tile('prox','Proximidad',prox,'verificaciones QR'+(pAvg?' · prom. '+pAvg+'/día':''),'<span class="kviz qr"></span>');
@@ -1986,7 +1986,13 @@ async function leaseLoop(){leader=await api.lease('meta/demo',12000);}
 function demoTick(){
   if(!S.config||!S.config.demo||!leader)return;const now=Date.now();
   const open=[...S.eventos.values()].filter(abierto).length;
-  const pendN=[...S.eventos.values()].filter(e=>e.estado==='nuevo').length;if(Math.random()<(pendN<2?.3:(pendN<4?.1:0))&&open<10){
+  // limpieza: la demo no acumula días anteriores ni reportes olvidados
+  const T0=new Date().setHours(0,0,0,0);
+  for(const ev of S.eventos.values()){if(ev.chatId)continue;
+    if(ev.creado<T0&&!abierto(ev)){write(()=>api.del('eventos/'+ev.id));continue;}
+    if(abierto(ev)&&now-ev.creado>(ev.creado<T0?0:25*60e3))closeEv(ev,'cerrado',{encontrada:false,detenidos:false,hechos:'Cerrado automáticamente (demostración)'});}
+  const recent10=[...S.eventos.values()].filter(e=>!e.chatId&&now-e.creado<10*60e3).length;
+  const pendN=[...S.eventos.values()].filter(e=>e.estado==='nuevo').length;if(recent10<2&&Math.random()<(pendN<2?.12:(pendN<4?.05:0))&&open<8){
     const recent=[...S.eventos.values()].filter(e=>now-e.creado<30*60e3&&cat(e.cid).grupo==='delito');let p;
     if(recent.length&&Math.random()<.35){const r=pick(recent);p={x:clamp(r.x+rnd(-3.5,3.5),1,99),y:clamp(r.y+rnd(-3.5,3.5),1,69)};}else p=randomHere();
     const c=wpick(S.config.catalogo,typeWeights(sectorAt(p.x,p.y)));
