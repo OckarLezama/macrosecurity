@@ -759,6 +759,19 @@ body #v-mando .side #counters .kviz{height:20px!important}
 body #v-mando .side #counters .ks{font-size:11px!important}
 }
 @media (min-width:1020px) and (max-width:1500px){body #v-mando .side #counters .kv,body #v-mando .side #counters .kv.sm{font-size:36px!important}body #v-mando .side #counters .kp{min-height:116px!important;padding:8px 9px!important}}
+/* pulido gráficas */
+body #v-mando .side .dcard.c-bars{flex:0 0 auto!important;min-height:0!important}
+body #v-mando .side .dcard.c-line{flex:1 1 auto!important}
+.brow2{grid-template-columns:20px minmax(0,1fr) auto 44px!important}
+.brow2 img{width:18px!important;height:18px!important;opacity:1!important}
+.bp2.okp{color:#5B6878!important;font-family:var(--f-num);font-size:14px!important;font-weight:700!important;text-align:right!important;padding:0!important}
+body.dark .bp2.okp{color:#97A3B2!important}
+body #v-mando .rgs{max-width:150px!important}
+body #v-mando .rgc{background:#FAFBFC!important;border:1px solid #E6EAF0!important;border-radius:12px!important;padding:6px 4px 8px!important}
+body #v-mando .rgc.nx{border:2px solid #0E9384!important;background:#F3FAF8!important}
+body.dark #v-mando .rgc{background:#1D232B!important;border-color:#2A323D!important}body.dark #v-mando .rgc.nx{border-color:#0E9384!important;background:#16262A!important}
+body #v-mando .rnote{font-size:11px!important;cursor:help}
+@media (min-width:1020px) and (max-height:900px){body #v-mando .rgs{max-width:110px!important}}
 </style>
 
 <div class="app">
@@ -1500,7 +1513,7 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
   if(DK.b!==kB){DK.b=kB;const dc=2*Math.PI*30;const pcol=v=>v>=.9?'#12A06A':(v>=.7?'#E9A116':'#E0364C');
     $('#chBars').innerHTML=rows.length?'<div class="bhead"><svg viewBox="0 0 80 80" class="bdn"><circle cx="40" cy="40" r="30" stroke="#EEF1F5" stroke-width="10" fill="none"/><circle class="dnv" cx="40" cy="40" r="30" stroke="'+pcol(pc)+'" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="'+dc.toFixed(1)+'" stroke-dashoffset="'+dc.toFixed(1)+'" data-o="'+(dc*(1-pc)).toFixed(1)+'" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="#17212E">'+Math.round(pc*100)+'%</text></svg>'+
       '<div class="bht"><b>'+A0+' de '+R0+'</b> reportes de delito atendidos<span>'+(A.lleg!=null?'Llegada típica: <b>'+A.lleg+' min</b>':'')+'</span></div></div>'+
-      rows.map(x=>{const k=x.a/x.r;return '<div class="brow2" title="'+esc(x.n)+': '+x.a+' de '+x.r+' atendidos"><img src="'+iconURL(ICON[x.id]||'alert',typeColor(x.id))+'" alt=""><span class="bn">'+esc(x.n)+'</span><span class="bt2"><i class="tr" data-w="'+(x.r/mx*100).toFixed(1)+'"></i><i class="fl" data-w="'+(x.a/mx*100).toFixed(1)+'"></i></span><span class="bc">'+x.a+'<small>/'+x.r+'</small></span><span class="bp2" style="background:'+pcol(k)+'">'+Math.round(k*100)+'%</span></div>';}).join(''):'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
+      rows.map(x=>{const k=x.a/x.r;return '<div class="brow2" title="'+esc(x.n)+': '+x.a+' de '+x.r+' atendidos"><img src="'+iconURL(ICON[x.id]||'alert',typeColor(x.id))+'" alt=""><span class="bn">'+esc(x.n)+'</span><span class="bt2"><i class="tr" data-w="'+(x.r/mx*100).toFixed(1)+'"></i><i class="fl" data-w="'+(x.a/mx*100).toFixed(1)+'"></i></span><span class="bc">'+x.a+'<small>/'+x.r+'</small></span><span class="bp2'+(k>=.9?' okp':'')+'" style="background:'+(k>=.9?'transparent':pcol(k))+'">'+Math.round(k*100)+'%</span></div>';}).join(''):'<span class="muted" style="font-size:12px">Sin reportes en el periodo.</span>';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('#chBars [data-w]').forEach(i=>i.style.width=i.dataset.w+'%');const d=$('#chBars .dnv');if(d)d.style.strokeDashoffset=d.dataset.o;}));}
   /* ---------- Línea: promedio por día y turno ---------- */
   const tt=T();const nT=tt.length;const C=Array.from({length:7},()=>Array(nT).fill(0));const now=new Date();
@@ -1510,11 +1523,11 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
   const kL=JSON.stringify([C,TD,W,H,UI.lnHide]);
   if(DK.l!==kL){DK.l=kL;
     const ord=[1,2,3,4,5,6,0],lab=W<330?['L','M','M','J','V','S','D']:['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'],full=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];const pl=30,pr=14,pt=14,pb=28;
-    const vis=[...Array(nT).keys()].filter(j=>!UI.lnHide[j]);const my=Math.max(1,...vis.flatMap(j=>ord.map(dw=>C[dw][j])))*1.2;
+    const vis=[...Array(nT).keys()].filter(j=>!UI.lnHide[j]);const mx0=Math.max(1,...vis.flatMap(j=>ord.map(dw=>C[dw][j])));const stp=mx0<=4?1:Math.ceil(mx0/4);const my=Math.ceil(mx0*1.1/stp)*stp;
     const X=i=>pl+i*(W-pl-pr)/6,Y=v=>pt+(H-pt-pb)*(1-v/my);const td=ord.indexOf(now.getDay());
     let g='<svg class="ln" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Delitos promedio por día y turno"><defs>'+tt.map((t,j)=>'<linearGradient id="lg'+j+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+TCOL[j%4]+'" stop-opacity=".28"/><stop offset="1" stop-color="'+TCOL[j%4]+'" stop-opacity="0"/></linearGradient>').join('')+'</defs>';
     g+='<rect x="'+(X(td)-22).toFixed(1)+'" y="'+pt+'" width="44" height="'+(H-pt-pb)+'" rx="10" fill="#EEF3FA"/>';
-    for(let q=0;q<=4;q++){const v=my*q/4;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="#EDF0F4" stroke-dasharray="'+(q?'3 4':'0')+'"/>'+(q?'<text x="'+(pl-8)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#9AA5B4">'+(Math.round(v*10)/10)+'</text>':'');}
+    for(let q=0;q<=my/stp;q++){const v=q*stp;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="#EDF0F4" stroke-dasharray="'+(q?'3 4':'0')+'"/>'+(q?'<text x="'+(pl-8)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#9AA5B4">'+v+'</text>':'');}
     ord.forEach((dw,i)=>{g+='<text x="'+X(i).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="11" font-weight="'+(i===td?800:600)+'" fill="'+(i===td?'#17212E':'#9AA5B4')+'">'+(i===td?'HOY':lab[i])+'</text>';});
     vis.forEach(j=>{const pts=ord.map((dw,i)=>[X(i),Y(C[dw][j])]);const d=smooth(pts);
       g+='<path class="la" d="'+d+' L'+pts[6][0].toFixed(1)+' '+Y(0).toFixed(1)+' L'+pts[0][0].toFixed(1)+' '+Y(0).toFixed(1)+'Z" fill="url(#lg'+j+')"/>';
@@ -1522,7 +1535,7 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
       g+=pts.map((q,i)=>'<circle class="ld" data-i="'+i+'" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="'+(i===td?5:3.2)+'" fill="'+(i===td?TCOL[j%4]:'#fff')+'" stroke="'+TCOL[j%4]+'" stroke-width="2.2"/>').join('');});
     g+='<line class="lx" x1="0" x2="0" y1="'+pt+'" y2="'+(H-pb)+'" stroke="#17212E" stroke-opacity=".25" stroke-dasharray="3 3" style="display:none"/><rect class="lh" x="'+pl+'" y="0" width="'+(W-pl-pr)+'" height="'+H+'" fill="transparent"/></svg><div class="ltip" hidden></div>';
     host.innerHTML=g;
-    $('#lnLeg').innerHTML=tt.map((t,j)=>'<button class="lchip'+(UI.lnHide[j]?' off':'')+'" data-j="'+j+'"><i style="background:'+TCOL[j%4]+'"></i>'+esc(t.nombre)+'<small>hoy '+TD[j]+'</small></button>').join('');
+    $('#lnLeg').innerHTML=tt.map((t,j)=>'<button class="lchip'+(UI.lnHide[j]?' off':'')+'" data-j="'+j+'"><i style="background:'+TCOL[j%4]+'"></i>'+esc(t.nombre)+(TD[j]?'<small>hoy '+TD[j]+'</small>':'')+'</button>').join('');
     $('#lnLeg').querySelectorAll('.lchip').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;if(!UI.lnHide[j]&&vis.length===1)return;UI.lnHide[j]=!UI.lnHide[j];renderDash(true);});
     const tip=host.querySelector('.ltip'),lx=host.querySelector('.lx');
     const showAt=cx=>{const i=Math.max(0,Math.min(6,Math.round((cx-pl)/((W-pl-pr)/6))));lx.setAttribute('x1',X(i));lx.setAttribute('x2',X(i));lx.style.display='';
@@ -1556,13 +1569,13 @@ function renderDash(force){if(!S.config||(!force&&Date.now()-dashT<6000))return;
           '<path d="'+arcD+'" stroke="#EEF1F5" stroke-width="13" fill="none" stroke-linecap="round"/>'+
           '<path class="rgv" d="'+arcD+'" stroke="url(#rgg'+i+')" stroke-width="13" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="'+(100-prevV[i]*100).toFixed(1)+'" data-o="'+(100-v*100).toFixed(1)+'" filter="url(#rgf'+i+')"/>'+mk(.25/.7)+mk(.45/.7)+
           '<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="36" font-weight="700" fill="'+col+'">'+Math.round(g.p*100)+'<tspan font-size="18">%</tspan></text>'+
-          '<text x="'+cx+'" y="'+(cy+22)+'" text-anchor="middle" font-size="9.5" font-weight="800" letter-spacing=".08em" fill="'+col+'">RIESGO '+lv.toUpperCase()+'</text>'+
+          '<text x="'+cx+'" y="'+(cy+22)+'" text-anchor="middle" font-size="11.5" font-weight="800" letter-spacing=".06em" fill="'+col+'">RIESGO '+lv.toUpperCase()+'</text>'+
           '<text x="'+cx+'" y="122" text-anchor="middle" font-size="13" font-weight="800" fill="#17212E">'+esc(g.t)+'</text></svg>'+
           '<div class="rgd">'+esc(g.d)+'</div>'+(g.top?'<div class="rgt">Más alto: <b>'+esc(g.top.sc.nombre)+'</b> '+Math.round(g.top.ps[i]*100)+'%</div>':'')+'</div>';}).join('')+'</div>';
       DK.gv=gs.map(g=>Math.min(1,g.p/.7));
       requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#chGauge .rgv').forEach(n=>{n.style.strokeDashoffset=n.dataset.o;})));
     }}
-  const bt=md.bt;$('#riskNote').textContent='Probabilidad de al menos un delito por sector · modelo de Markov por turno con ajuste jerárquico (los sectores con pocos datos se apoyan en el promedio del municipio)'+(bt&&bt.mejora>0?'. Acierta '+Math.round(bt.mejora*100)+'% mejor que usar solo el promedio histórico.':'.');
+  const bt=md.bt;$('#riskNote').textContent='Modelo de Markov'+(bt&&bt.mejora>0?' · acierta '+Math.round(bt.mejora*100)+'% más que el promedio':'');$('#riskNote').title='Probabilidad de al menos un delito por turno. Markov por turno con ajuste jerárquico: los sectores con pocos datos se apoyan en el promedio del municipio.';
 }
 function focusSector(sid){const sc=sec(sid);if(!sc||!map)return;UI.selSec=sid;const g=sc.poly.map(q=>geo(q[0],q[1]));const xs=g.map(q=>q[0]),ys=g.map(q=>q[1]);
   map.fitBounds([[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],{padding:{top:80,bottom:80,left:380,right:60},pitch:45,duration:1200,maxZoom:16});
