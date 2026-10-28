@@ -1144,7 +1144,7 @@ function initMap(){
   map.on('mousedown',start);map.on('touchstart',start);map.on('mousemove',move);map.on('touchmove',move);map.on('mouseup',end);map.on('touchend',end);
 }
 function intro(){if(!map||!S.config)return;const b=worldBounds();const c=[(b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2];map.jumpTo({center:c,zoom:map.getZoom()-2.2,pitch:0,bearing:30});setTimeout(()=>{const cam2=map.cameraForBounds(b,{padding:{top:150,bottom:70,left:40,right:80}});if(cam2)map.flyTo({center:cam2.center,zoom:cam2.zoom,pitch:UI.flat?0:60,bearing:UI.flat?0:-18,duration:4200,curve:1.2,essential:true});},400);}
-function setBase(b){if(!STYLES[b])return;UI.base=b;lsSet('ms6.base',b);document.body.classList.toggle('dark',b==='oscuro');if($('#dkbtn'))$('#dkbtn').setAttribute('aria-pressed',String(b==='oscuro'));if(map){if(b==='oscuro')buildDark().then(st=>{if(UI.base==='oscuro')map.setStyle(st);}).catch(()=>{toast('No se pudo cargar el modo oscuro');});else map.setStyle(STYLES[b]);}renderLayers();}
+function setBase(b){if(!STYLES[b])return;UI.base=b;lsSet('ms6.base',b);document.body.classList.toggle('dark',b==='oscuro');if($('#dkbtn'))$('#dkbtn').setAttribute('aria-pressed',String(b==='oscuro'));if(map){if(b==='oscuro')buildDark().then(st=>{if(UI.base==='oscuro')map.setStyle(st,{diff:false});}).catch(()=>{toast('No se pudo cargar el modo oscuro');});else map.setStyle(STYLES[b],{diff:false});}renderLayers();}
 let hexT=0;
 function syncHex(grow){if(!mapReady)return;const R=Math.max(.4,420/M);const w=Math.sqrt(3)*R,hg=1.5*R;const bins=new Map();const now=Date.now();
   const add=(x,y)=>{const row=Math.round(y/hg);const col=Math.round((x-(row&1?w/2:0))/w);const k=row+','+col;const o=bins.get(k)||{row,col,n:0};o.n++;bins.set(k,o);};
