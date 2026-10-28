@@ -730,6 +730,25 @@ body:not(.an) .anonly{display:none}
  body #v-mando .side #counters .kviz{display:none!important}
  body #v-mando .side #counters .ks{font-size:10px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media (min-width:1020px){body #v-mando .side #counters .kl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15!important;min-height:22px!important;display:block!important}body #v-mando .side #counters .ks{white-space:normal!important;line-height:1.2}}
+@media (min-width:1020px){
+body #v-mando .side #counters .kp{background:var(--kc)!important;color:#fff!important;border:0!important;border-radius:10px!important;box-shadow:0 4px 12px rgba(23,33,46,.14)!important;padding:9px 10px 9px!important}
+body #v-mando .side #counters .kp[data-k=rep]{--kc:linear-gradient(150deg,#D69A1C,#B97F0B)}
+body #v-mando .side #counters .kp[data-k=att]{--kc:linear-gradient(150deg,#F1DDA6,#E3C77F);color:#3A2E00!important}
+body #v-mando .side #counters .kp[data-k=sin]{--kc:linear-gradient(150deg,#D5404C,#B42C38)}
+body #v-mando .side #counters .kp[data-k=sin].zero{--kc:linear-gradient(150deg,#2E9E78,#1E7F5F)}
+body #v-mando .side #counters .kp[data-k=pat]{--kc:linear-gradient(150deg,#1D8A7C,#136A5F)}
+body #v-mando .side #counters .kp[data-k=prox]{--kc:linear-gradient(150deg,#3466A8,#244C85)}
+body #v-mando .side #counters .kl,body #v-mando .side #counters .ks,body #v-mando .side #counters .kv{color:inherit!important}
+body #v-mando .side #counters .kl{opacity:.92}body #v-mando .side #counters .ks{opacity:.85}
+body #v-mando .side #counters .krow .kd{background:rgba(255,255,255,.22)!important;color:inherit!important}
+body #v-mando .side #counters .kviz{display:flex!important;height:16px!important;margin:3px 0 3px!important}
+body #v-mando .side #counters .kviz.prog{height:6px!important;margin:7px 0 6px!important;background:rgba(0,0,0,.14)!important}
+body #v-mando .side #counters .kviz.bars i,body #v-mando .side #counters .kviz.prog i{background:currentColor!important}
+body #v-mando .side #counters .kviz.cars2 i{background:rgba(255,255,255,.35)!important}body #v-mando .side #counters .kviz.cars2 i.c-libre{background:#fff!important}body #v-mando .side #counters .kviz.cars2 i.c-camino{background:#F6D97E!important}body #v-mando .side #counters .kviz.cars2 i.c-lugar{background:#9CC3FF!important}
+body #v-mando .side #counters .kviz.sev span:nth-child(1) i{background:#fff!important}body #v-mando .side #counters .kviz.sev span:nth-child(2) i{background:#FFC7CC!important}body #v-mando .side #counters .kviz.sev span:nth-child(3) i{background:#FF97A2!important}
+body #v-mando .side #counters .kviz.qr{opacity:.55!important;background:repeating-linear-gradient(90deg,rgba(255,255,255,.7) 0 2px,transparent 2px 4px,rgba(255,255,255,.45) 4px 7px,transparent 7px 9px)!important}
+}
+@media (min-width:1020px){body #v-mando .side #counters .krow{flex-direction:row!important;align-items:center!important;justify-content:space-between!important}body #v-mando .side #counters .krow .kd{margin-left:4px!important}body #v-mando .side #counters .kviz.sev span:nth-child(n+2){display:none!important}}
 </style>
 
 <div class="app">
