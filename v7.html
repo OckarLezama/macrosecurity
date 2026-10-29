@@ -786,6 +786,40 @@ body #v-mando .rnote{font-size:11px!important;cursor:help}
 .cst{font-size:11px!important;font-weight:800;border-radius:999px;padding:3px 10px;height:fit-content}.cst.on{background:#E3F5EE;color:#1E8A63!important}.cst.off{background:#FDECEE;color:#C2343F!important}
 .ccs{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.ccs b{font-family:var(--f-num);font-size:18px;color:var(--fg)}
 .ccb{display:flex;gap:6px;flex-wrap:wrap}.ccb .btn{min-height:34px;font-size:12.5px}
+.cst.cfg{background:#FFF4DC;color:#9A6400!important}
+#clogo{height:30px;width:auto;border-radius:6px;background:#fff;padding:2px;margin-left:6px}
+.wz{position:fixed;inset:0;z-index:95;background:rgba(16,20,26,.55);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.wbox{background:var(--bg);border-radius:18px;width:min(1180px,100%);height:min(820px,100%);display:grid;grid-template-columns:270px 1fr;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.35)}
+.wnav{background:#2B3138;color:#DCE2E8;padding:18px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.wtt{padding:0 8px 12px}.wtt small{font-size:10px;font-weight:800;letter-spacing:.12em;color:#7FD3C3}.wtt b{display:block;font-size:17px;color:#fff}
+.wst{display:flex;align-items:center;gap:10px;background:none;border:0;color:#C9D1DA;text-align:left;border-radius:10px;padding:8px;font-size:13px;cursor:pointer}
+.wst:hover{background:rgba(255,255,255,.06)}.wst.on{background:rgba(255,255,255,.12);color:#fff}
+.wst i{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;font-weight:800;flex:none;background:#3A424C}
+.wst.ok i{background:#0E9384;color:#fff}.wst.warn i{background:#E9A116;color:#fff}.wst em{font-style:normal;font-size:10.5px;color:#8994A3}
+.wmain{display:flex;flex-direction:column;min-width:0;min-height:0}
+.whd{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 6px}.whd small{font-size:11px;color:var(--muted)}.whd h2{margin:2px 0 0;font-size:22px}
+.wbody{flex:1;overflow-y:auto;padding:8px 22px 16px;display:flex;flex-direction:column;gap:10px}
+.wfoot{display:flex;gap:8px;padding:12px 22px;border-top:1px solid var(--line);background:var(--panel)}.wfoot .sp{flex:1}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:800px){.wgrid{grid-template-columns:1fr}.wbox{grid-template-columns:1fr}.wnav{display:none}}
+.wf{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:600}.wf small{font-weight:400;color:var(--muted)}.wf textarea{resize:vertical;font:inherit;font-size:13px}
+.wlogo{height:44px;min-width:44px;border-radius:8px;border:1px dashed var(--line2);background:#fff}
+.wcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}.wcard small{color:var(--muted)}
+.wmsg{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13px}.wmsg.ok{background:#EEF6F4;border-color:#CFE7E1;color:#1F3B36}.wmsg.warn{background:#FFF7E6;border-color:#F3D9A4;color:#6B4A00}
+.wlist{display:flex;flex-direction:column;gap:6px}
+.wrow{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center}
+.wrow .wn{width:24px;height:24px;border-radius:50%;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.wrow.hd{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.wrow.cat,.wlist .wrow.hd:has(+.wrow.cat){grid-template-columns:52px 1fr 170px 120px}
+.wrow.ofi,.wlist .wrow.hd:has(+.wrow.ofi){grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr) 74px minmax(0,1fr) 84px 84px 92px}.wrow .inp{min-width:0;width:100%}
+.wrow.usr,.wlist .wrow.hd:has(+.wrow.usr){grid-template-columns:1fr 1.3fr 210px 44px}
+.wlist>.btn{align-self:flex-start}
+.wchips{display:flex;flex-wrap:wrap;gap:4px}.wchips span{font-size:11.5px;background:var(--panel2);border-radius:999px;padding:2px 8px}
+.wck{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;text-align:left;cursor:pointer;font-size:13.5px}
+.wck i{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:12px}
+.wck.ok i{background:#0E9384;color:#fff}.wck.pend i{background:#FDECEE;color:#C2343F}.wck.warn i{background:#FFF4DC;color:#9A6400}.wck.opt i{background:var(--panel2);color:var(--muted)}
+.wck small{color:var(--muted)}.wck.pend small{color:#C2343F;font-weight:700}
+.qrc{align-items:center;text-align:center}.qrimg{width:220px;height:220px}.qrimg svg{width:100%;height:100%}
+@media print{body>*:not(.login){display:none!important}.login{position:static;background:#fff}.login .row{display:none}}
 </style>
 
 <div class="app">
@@ -807,7 +841,7 @@ body #v-mando .rnote{font-size:11px!important;cursor:help}
     <span class="switch"><button id="demoSw" role="switch" aria-checked="false" aria-label="Modo demostración"></button>Reportes automáticos</span>
     <button class="fab" id="fab" aria-expanded="false" aria-controls="drawer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"></path></svg>Probar WhatsApp</button>
     <button class="dm" id="dmPanic">Simular botón de pánico</button>
-    <hr><button class="dm" data-go="unid">App del oficial</button><button class="dm" data-go="conf">Administración del cliente</button><hr><button class="dm" id="dmCons">Clientes (administrador general)</button>
+    <hr><button class="dm" data-go="unid">App del oficial</button><button class="dm" id="dmWz">Asistente de configuración</button><button class="dm" data-go="conf">Administración del cliente</button><hr><button class="dm" id="dmCons">Clientes (administrador general)</button>
     </div></div>
     <span class="pill" id="conn"><i></i>Conectando…</span>
     <span class="clock" id="clock"></span>
@@ -958,22 +992,151 @@ function regGet(){let r=lsGet('ms.clientes',null);if(!r||!r.length){r=[{slug:'pu
 function regSet(r){lsSet('ms.clientes',r);}
 const CUR=(()=>{const q=new URLSearchParams(location.search).get('c');const r=regGet();const s0=q&&r.find(x=>x.slug===q)?q:lsGet('ms.cur','puebla');return r.find(x=>x.slug===s0)?s0:r[0].slug;})();
 function dbKey(slug){return slug==='puebla'?'ms3.db':'ms3.db:'+slug;}
-function goClient(slug){lsSet('ms.cur',slug);const u=new URL(location.href);u.searchParams.set('c',slug);u.hash='';location.href=u.toString();}
+function goClient(slug,setup){lsSet('ms.cur',slug);const u=new URL(location.href);u.searchParams.set('c',slug);if(setup)u.searchParams.set('setup','1');else u.searchParams.delete('setup');u.hash='';location.href=u.toString();}
 function clientStats(slug){try{const raw=localStorage.getItem(dbKey(slug));if(!raw)return null;const m=new Map(JSON.parse(raw));const c=m.get('config/main');let ev=0,un=0;for(const k of m.keys()){if(k.startsWith('eventos/'))ev++;if(k.startsWith('unidades/'))un++;}return {sect:c&&c.sectores?c.sectores.length:0,col:c&&c.colonias?c.colonias.length:0,ev,un};}catch(e){return null;}}
 function openConsole(){let ov=$('#consola');if(!ov){ov=h('div',{class:'cons',id:'consola'});document.body.append(ov);}
-  const r=regGet();const card=c=>{const st=clientStats(c.slug);const act=c.estado==='activo';
-    return '<div class="ccard'+(c.slug===CUR?' cur':'')+'"><div class="cch"><div><b>'+esc(c.nombre)+'</b><span>'+esc(c.lugar||'')+' · '+(c.nivel==='estado'?'Estado':'Municipio')+'</span></div><span class="cst '+(act?'on':'off')+'">'+(act?'Habilitado':'Suspendido')+'</span></div>'+
+  const r=regGet();const card=c=>{const st=clientStats(c.slug);const act=c.estado==='activo',cfgg=c.estado==='configuracion';
+    return '<div class="ccard'+(c.slug===CUR?' cur':'')+'"><div class="cch"><div><b>'+esc(c.nombre)+'</b><span>'+esc(c.lugar||'')+' · '+(c.nivel==='estado'?'Estado':'Municipio')+'</span></div><span class="cst '+(act?'on':(cfgg?'cfg':'off'))+'">'+(act?'Habilitado':(cfgg?'En configuración':'Suspendido'))+'</span></div>'+
       '<div class="ccs">'+(st?'<span><b>'+st.sect+'</b> sectores</span><span><b>'+st.col+'</b> colonias</span><span><b>'+st.un+'</b> patrullas</span><span><b>'+st.ev+'</b> reportes</span>':'<span>Se prepara al entrar por primera vez</span>')+'</div>'+
-      '<div class="ccb">'+(act?'<button class="btn pri" data-a="go" data-s="'+c.slug+'">'+(c.slug===CUR?'Estás aquí':'Entrar')+'</button>':'')+'<button class="btn" data-a="tg" data-s="'+c.slug+'">'+(act?'Suspender':'Habilitar')+'</button>'+(c.slug!==CUR?'<button class="btn dan" data-a="del" data-s="'+c.slug+'">Eliminar</button>':'')+'</div></div>';};
+      '<div class="ccb">'+(act?'<button class="btn pri" data-a="go" data-s="'+c.slug+'">'+(c.slug===CUR?'Estás aquí':'Entrar')+'</button>':'')+'<button class="btn'+(cfgg?' pri':'')+'" data-a="cfg" data-s="'+c.slug+'">Configurar</button>'+(cfgg?'':'<button class="btn" data-a="tg" data-s="'+c.slug+'">'+(act?'Suspender':'Habilitar')+'</button>')+(c.slug!==CUR?'<button class="btn dan" data-a="del" data-s="'+c.slug+'">Eliminar</button>':'')+'</div></div>';};
   ov.innerHTML='<div class="cbox"><div class="chd"><div><small>ADMINISTRADOR GENERAL</small><h2>Clientes</h2></div><button class="x" id="cX" aria-label="Cerrar">✕</button></div>'+
     '<form class="cnew" id="cNew"><b>Nuevo cliente</b><div class="cfr"><input class="inp" id="cnN" placeholder="Nombre (ej. Tlaxcala)" required><input class="inp" id="cnL" placeholder="Lugar a delimitar (ej. Tlaxcala, Tlaxcala)" required><select class="inp" id="cnV"><option value="municipio">Municipio</option><option value="estado">Estado completo</option></select><button class="btn pri" type="submit">Crear y habilitar</button></div><small>La plataforma toma el límite oficial del lugar, arma sectores dentro y lo deja listo. Después, en "Administración del cliente", se cargan sus sectores reales, oficiales, turnos y zonas seguras.</small></form>'+
     '<div class="cgrid">'+r.map(card).join('')+'</div></div>';
   $('#cX').onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove();};
-  $('#cNew').onsubmit=e=>{e.preventDefault();const n=$('#cnN').value.trim(),l=$('#cnL').value.trim(),v=$('#cnV').value;let sl=slugify(n);const rr=regGet();let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v,estado:'activo',creado:Date.now()});regSet(rr);toast('Cliente '+n+' creado');openConsole();};
+  $('#cNew').onsubmit=e=>{e.preventDefault();const n=$('#cnN').value.trim(),l=$('#cnL').value.trim(),v=$('#cnV').value;let sl=slugify(n);const rr=regGet();let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v,tipo:v,estado:'configuracion',creado:Date.now()});regSet(rr);toast('Cliente '+n+' creado. Abriendo su configuración…');setTimeout(()=>goClient(sl,true),500);};
   ov.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const sl=b.dataset.s;const rr=regGet();const c=rr.find(x=>x.slug===sl);if(!c)return;
     if(b.dataset.a==='go'){if(sl!==CUR)goClient(sl);else ov.remove();}
+    if(b.dataset.a==='cfg'){if(sl!==CUR)goClient(sl,true);else{ov.remove();openWizard(0);}}
     if(b.dataset.a==='tg'){c.estado=c.estado==='activo'?'suspendido':'activo';regSet(rr);if(sl===CUR&&c.estado!=='activo')location.reload();else openConsole();}
     if(b.dataset.a==='del'){if(b.dataset.ok){regSet(rr.filter(x=>x.slug!==sl));try{localStorage.removeItem(dbKey(sl));}catch(e){}openConsole();}else{b.dataset.ok='1';b.textContent='¿Seguro? Toca otra vez';}}});}
+/* ===== asistente de configuración del cliente ===== */
+const WZ={i:0,open:false};
+const WSTEPS=[
+ {k:'datos',t:'Datos del cliente',req:true},{k:'terr',t:'Territorio',req:true},{k:'sect',t:'Sectores',req:true},{k:'col',t:'Colonias o cuadrantes'},
+ {k:'tur',t:'Turnos',req:true},{k:'cat',t:'Catálogo de reportes',req:true},{k:'ofi',t:'Oficiales y patrullas',req:true},{k:'usr',t:'Usuarios',req:true},
+ {k:'zon',t:'Zonas seguras y botones'},{k:'wa',t:'WhatsApp'},{k:'his',t:'Histórico'},{k:'rev',t:'Revisión y habilitar',req:true}];
+function regMe(){return regGet().find(x=>x.slug===CUR)||{slug:CUR,nombre:CUR};}
+function regPatch(p){const r=regGet();const i=r.findIndex(x=>x.slug===CUR);if(i>=0){Object.assign(r[i],p);regSet(r);}}
+async function cfgPatch(p){const c=JSON.parse(JSON.stringify(S.config));Object.assign(c,p);await write(()=>api.set('config/main',c));S.config=c;staticKey='';if(mapReady)syncAll();render();}
+function loadLib(src,test){return new Promise((res,rej)=>{if(test())return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('No se pudo cargar '+src));document.head.append(s);});}
+const realUnits=()=>[...S.unidades.values()].filter(u=>!u.demo);
+function coverage(){const C=S.config;const L=C.limite&&C.limite.length?C.limite:null;const pts=L||[].concat(...C.sectores.map(s=>s.poly));if(!pts.length)return null;
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);let tot=0,gap=0,ov=0;
+  for(let i=0;i<70;i++)for(let j=0;j<70;j++){const x=x0+(x1-x0)*(i+.5)/70,y=y0+(y1-y0)*(j+.5)/70;if(L&&!inPoly(x,y,L))continue;tot++;let n=0;for(const s of C.sectores)if(inPoly(x,y,s.poly))n++;if(!n)gap++;if(n>1)ov++;}
+  return tot?{gap:gap/tot,ov:ov/tot,tot}:null;}
+function wStatus(k){const C=S.config||{};const me=regMe();switch(k){
+  case 'datos':return me.nombre&&me.tipo&&me.responsable?'ok':'pend';
+  case 'terr':return C.limite&&C.limite.length?'ok':'pend';
+  case 'sect':{if(!C.sectores||!C.sectores.length)return 'pend';const cv=coverage();return cv&&(cv.gap>.03||cv.ov>.01)?'warn':'ok';}
+  case 'col':return C.colonias&&C.colonias.length?'ok':'opt';
+  case 'tur':return C.turnos&&C.turnos.length?'ok':'pend';
+  case 'cat':return (C.catalogo||[]).some(x=>x.activo!==false)?'ok':'pend';
+  case 'ofi':return realUnits().length?'ok':'pend';
+  case 'usr':return S.usuarios&&S.usuarios.size?'ok':'pend';
+  case 'zon':return (C.zonas||[]).length||(C.botones||[]).length?'ok':'opt';
+  case 'wa':return C.wa&&C.wa.numero?'ok':'opt';
+  case 'his':return S.historial&&S.historial.origen&&S.historial.origen!=='simulado'?'ok':'opt';
+  case 'rev':return me.estado==='activo'?'ok':'pend';}}
+function openWizard(i){WZ.open=true;if(i!=null)WZ.i=i;let ov=$('#wz');if(!ov){ov=h('div',{class:'wz',id:'wz'});document.body.append(ov);}renderWizard();}
+function closeWizard(){WZ.open=false;const o=$('#wz');if(o)o.remove();}
+function wField(lbl,el,help){return h('label',{class:'wf'},h('span',{},lbl),el,help?h('small',{},help):null);}
+function wInput(id,val,ph,type){const i=h('input',{class:'inp',id,placeholder:ph||'',type:type||'text'});i.value=val==null?'':val;return i;}
+function renderWizard(){const ov=$('#wz');if(!ov)return;const st=WSTEPS[WZ.i];const me=regMe();
+  const nav=h('div',{class:'wnav'},h('div',{class:'wtt'},h('small',{},'CONFIGURACIÓN'),h('b',{},me.nombre||CUR)),...WSTEPS.map((s,i)=>{const ss=wStatus(s.k);return h('button',{class:'wst '+ss+(i===WZ.i?' on':''),onclick:()=>{WZ.i=i;renderWizard();}},h('i',{},ss==='ok'?'✓':String(i+1)),h('span',{},s.t,s.req?null:h('em',{},' opcional')));}));
+  const body=h('div',{class:'wbody'});const foot=h('div',{class:'wfoot'});
+  const head=h('div',{class:'whd'},h('div',{},h('small',{},'Paso '+(WZ.i+1)+' de '+WSTEPS.length),h('h2',{},st.t)),h('button',{class:'x',onclick:closeWizard,'aria-label':'Cerrar'},'✕'));
+  const next=()=>{if(WZ.i<WSTEPS.length-1){WZ.i++;renderWizard();}};
+  const save=async fn=>{try{await fn();toast('Guardado');next();}catch(e){toast(e.message||'No se pudo guardar');}};
+  (WSTEP_UI[st.k]||(()=>h('div',{},'—')))(body,save,next);
+  foot.append(h('button',{class:'btn',disabled:WZ.i===0,onclick:()=>{WZ.i--;renderWizard();}},'Anterior'),h('span',{class:'sp'}),body._save?h('button',{class:'btn pri',onclick:()=>save(body._save)},'Guardar y continuar'):h('button',{class:'btn pri',onclick:next,disabled:WZ.i===WSTEPS.length-1},'Continuar'));
+  ov.replaceChildren(h('div',{class:'wbox'},nav,h('div',{class:'wmain'},head,body,foot)));}
+const PRIO=[['critica','Crítica'],['alta','Alta'],['media','Media'],['baja','Baja']];
+const WSTEP_UI={
+ datos(b){const me=regMe();const logo=h('img',{class:'wlogo',src:me.logo||'',alt:''});
+  const lf=h('input',{type:'file',accept:'image/*'});lf.onchange=()=>{const f=lf.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');const k=128/Math.max(im.width,im.height);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);logo.src=c.toDataURL('image/png');};im.src=r.result;};r.readAsDataURL(f);};
+  const tipo=h('select',{class:'inp',id:'wTipo'},...[['municipio','Municipio'],['estado','Estado'],['corporacion','Corporación o dependencia']].map(([v,l])=>h('option',{value:v},l)));tipo.value=me.tipo||me.nivel||'municipio';
+  const tz=h('select',{class:'inp',id:'wTz'},...[['America/Mexico_City','Centro (CDMX)'],['America/Cancun','Sureste (Quintana Roo)'],['America/Chihuahua','Chihuahua'],['America/Mazatlan','Pacífico (Sinaloa, Nayarit, BCS)'],['America/Hermosillo','Sonora'],['America/Tijuana','Noroeste (Baja California)']].map(([v,l])=>h('option',{value:v},l)));tz.value=me.tz||'America/Mexico_City';
+  b.append(h('div',{class:'wgrid'},wField('Nombre del cliente',wInput('wNom',me.nombre)),wField('Tipo',tipo),wField('Responsable',wInput('wResp',me.responsable,'Nombre de quien autoriza')),wField('Contacto',wInput('wCont',me.contacto,'Correo o teléfono')),wField('Zona horaria',tz),wField('Logo',h('div',{class:'row'},logo,lf),'Se muestra en la barra superior.')));
+  b._save=async()=>{const n=$('#wNom').value.trim();if(!n)throw new Error('Falta el nombre');regPatch({nombre:n,tipo:tipo.value,responsable:$('#wResp').value.trim(),contacto:$('#wCont').value.trim(),tz:tz.value,logo:logo.getAttribute('src')||''});await cfgPatch({cliente:n});};},
+ terr(b){const C=S.config;const has=C.limite&&C.limite.length;const km=has?Math.round(Math.abs(area(C.limite))*M*M/1e6):0;const me=regMe();
+  const q=wInput('wQ',me.lugar||'','Ej. Tlaxcala, Tlaxcala');const lvl=h('select',{class:'inp'},h('option',{value:'municipio'},'Municipio'),h('option',{value:'estado'},'Estado completo'));lvl.value=me.nivel||'municipio';
+  const msg=h('div',{class:'wmsg'},has?'Límite cargado: '+km.toLocaleString('es-MX')+' km². Cambiarlo reinicia sectores, patrullas y reportes de este cliente.':'Aún no hay límite.');
+  const go=h('button',{class:'btn pri',onclick:async()=>{msg.textContent='Buscando el límite oficial…';const L=q.value.trim();const base='https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.0005&countrycodes=mx&limit=5&accept-language=es';
+    const qs=lvl.value==='estado'?['&featuretype=state&q='+encodeURIComponent(L.replace(/^estado de\s+/i,'')),'&q='+encodeURIComponent(L)]:['&q='+encodeURIComponent(/^municipio/i.test(L)?L:'Municipio de '+L),'&q='+encodeURIComponent(L)];
+    let p=null;try{for(const s of qs){const js=await (await fetch(base+s)).json();p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type)&&(lvl.value==='estado'?x.addresstype==='state':x.addresstype!=='state'));if(p)break;await new Promise(r=>setTimeout(r,1100));}}catch(e){}
+    if(!p){msg.textContent='No encontré el límite de "'+L+'". Prueba con "Municipio, Estado" o sube un archivo.';return;}
+    regPatch({lugar:L,nivel:lvl.value});const nm=S.config.cliente;await buildFromPlace(p);await cfgPatch({cliente:regMe().nombre||nm});UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},600);renderWizard();}},'Buscar y aplicar');
+  const f=h('input',{type:'file',accept:'.geojson,.json,.kml'});f.onchange=async()=>{if(!f.files[0])return;msg.textContent='Leyendo archivo…';await importCarto(f.files[0]);const nw=regMe().estado==='configuracion';await cfgPatch(Object.assign({cliente:regMe().nombre||S.config.cliente},nw?{zonas:[],botones:[]}:{}));bpKey='';renderWizard();};
+  b.append(h('div',{class:'wcard'},h('b',{},'Opción 1 · Límite oficial'),h('div',{class:'row'},q,lvl,go)),h('div',{class:'wcard'},h('b',{},'Opción 2 · Archivo del cliente'),h('small',{},'GeoJSON o KML con el límite y, si los tiene, sus sectores y colonias. Si el cliente lo tiene en MapInfo o Shapefile, se convierte antes.'),f),msg);},
+ sect(b){const C=S.config;const cv=coverage();const rows=C.sectores.map((s,i)=>{const km=Math.abs(area(s.poly))*M*M/1e6;return h('div',{class:'wrow'},h('span',{class:'wn'},String(i+1)),wInput('wS'+i,s.nombre),h('small',{},(km<1?Math.round(km*100)+' ha':km.toFixed(1)+' km²')));});
+  const chk=cv?h('div',{class:'wmsg '+(cv.gap>.03||cv.ov>.01?'warn':'ok')},(cv.gap>.03?'Hay huecos: '+Math.round(cv.gap*100)+'% del territorio no pertenece a ningún sector. ':'Sin huecos. ')+(cv.ov>.01?'Hay sectores encimados ('+Math.round(cv.ov*100)+'%).':'Sin sectores encimados.')):null;
+  const f=h('input',{type:'file',accept:'.geojson,.json,.kml'});f.onchange=async()=>{if(f.files[0]){await importCarto(f.files[0]);await cfgPatch({cliente:regMe().nombre||S.config.cliente});renderWizard();}};
+  b.append(h('div',{class:'wmsg'},C.sectores.length+' sectores. Puedes renombrarlos aquí.'),chk,h('div',{class:'wlist'},...rows),h('div',{class:'wcard'},h('b',{},'¿Son otros sectores?'),h('div',{class:'row'},h('span',{},'Cargar desde archivo'),f,h('button',{class:'btn',onclick:()=>{closeWizard();setTab('conf');toast('Dibuja o ajusta los sectores. Regresa al asistente desde Demostración ▾');}},'Dibujar en el mapa'))));
+  b._save=async()=>{const sc=C.sectores.map((s,i)=>({...s,nombre:($('#wS'+i).value||s.nombre).trim()}));await cfgPatch({sectores:sc});};},
+ col(b){const C=S.config;const f=h('input',{type:'file',accept:'.geojson,.json,.kml'});f.onchange=async()=>{if(f.files[0]){await importCarto(f.files[0]);renderWizard();}};
+  b.append(h('div',{class:'wmsg'},(C.colonias||[]).length?C.colonias.length+' colonias cargadas.':'Sin colonias. Son opcionales: sirven para ubicar reportes por colonia y buscarlas en el mapa.'),h('div',{class:'wcard'},h('b',{},'Cargar colonias o cuadrantes'),h('small',{},'GeoJSON o KML con un polígono por colonia y su nombre.'),f));},
+ tur(b){let T2=(S.config.turnos||[]).map(t=>({...t}));const list=h('div',{class:'wlist'});
+  const draw=()=>list.replaceChildren(...T2.map((t,i)=>{const n=wInput('',t.nombre,'Nombre');n.oninput=()=>{t.nombre=n.value;};const hs=h('select',{class:'inp',style:'width:110px'},...Array.from({length:24},(_,k)=>h('option',{value:k},pad(k)+':00')));hs.value=t.inicio;hs.onchange=()=>{t.inicio=+hs.value;};
+    return h('div',{class:'wrow'},h('span',{class:'wn'},String(i+1)),n,h('span',{},'inicia'),hs,h('button',{class:'btn',onclick:()=>{T2.splice(i,1);draw();}},'Quitar'));}),h('button',{class:'btn',onclick:()=>{T2.push({nombre:'Turno '+(T2.length+1),inicio:0});draw();}},'+ Agregar turno'));draw();
+  b.append(h('div',{class:'wmsg'},'El modelo de riesgo calcula por turno. Cada turno termina cuando empieza el siguiente.'),list);
+  b._save=async()=>{if(!T2.length)throw new Error('Debe haber al menos un turno');const hs=T2.map(t=>t.inicio);if(new Set(hs).size!==hs.length)throw new Error('Dos turnos no pueden empezar a la misma hora');await cfgPatch({turnos:T2.slice().sort((a,c)=>a.inicio-c.inicio)});MODEL=null;};},
+ cat(b){let K=(S.config.catalogo||[]).map(c=>({...c}));const list=h('div',{class:'wlist'});
+  const draw=()=>list.replaceChildren(h('div',{class:'wrow hd'},h('span',{},'Activo'),h('span',{},'Tipo de reporte'),h('span',{},'Grupo'),h('span',{},'Prioridad')),...K.map(c=>{const a=h('input',{type:'checkbox'});a.checked=c.activo!==false;a.onchange=()=>{c.activo=a.checked;};const n=wInput('',c.nombre);n.oninput=()=>{c.nombre=n.value;};
+    const g=h('select',{class:'inp'},...[['delito','Delito'],['emergencia','Emergencia'],['servicio','Servicio público'],['oficial','Sobre un oficial'],['sistema','Sistema']].map(([v,l])=>h('option',{value:v},l)));g.value=c.grupo;g.onchange=()=>{c.grupo=g.value;};
+    const p=h('select',{class:'inp'},...PRIO.map(([v,l])=>h('option',{value:v},l)));p.value=c.prioridad||'media';p.onchange=()=>{c.prioridad=p.value;};return h('div',{class:'wrow cat'},a,n,g,p);}),
+    h('button',{class:'btn',onclick:()=>{K.push({id:'c'+Date.now().toString(36),nombre:'Nuevo tipo',grupo:'delito',prioridad:'media',subtipos:[],activo:true});draw();}},'+ Agregar tipo'));draw();
+  b.append(h('div',{class:'wmsg'},'Catálogo genérico de partida. Desactiva lo que no aplique, cambia prioridades o agrega tipos propios. Lo activo es lo que el ciudadano ve en WhatsApp.'),list);
+  b._save=async()=>{if(!K.some(c=>c.activo!==false))throw new Error('Activa al menos un tipo');await cfgPatch({catalogo:K});};},
+ ofi(b){const C=S.config;let U=realUnits().map(u=>({...u}));const list=h('div',{class:'wlist'});const secOpts=()=>C.sectores.map(s=>h('option',{value:s.id},s.nombre));
+  const draw=()=>list.replaceChildren(h('div',{class:'wrow hd'},h('span',{},'Oficial'),h('span',{},'Placa'),h('span',{},'Patrulla'),h('span',{},'Sector'),h('span',{},'Entra'),h('span',{},'Sale'),h('span',{})),...U.map((u,i)=>{
+    const f=(k,ph,w)=>{const x=wInput('',u[k],ph);if(w)x.style.width=w;x.oninput=()=>{u[k]=x.value;};return x;};const s=h('select',{class:'inp'},...secOpts());s.value=u.sector||C.sectores[0].id;s.onchange=()=>{u.sector=s.value;};u.sector=s.value;
+    const hr=k=>{const x=h('select',{class:'inp'},...Array.from({length:24},(_,q)=>h('option',{value:q},pad(q)+':00')));x.value=u[k]==null?(k==='horaIni'?7:15):u[k];u[k]=+x.value;x.onchange=()=>{u[k]=+x.value;};return x;};
+    return h('div',{class:'wrow ofi'},f('oficial','Nombre completo'),f('placa','Placa o ID'),f('id','P-01'),s,hr('horaIni'),hr('horaFin'),h('div',{class:'row',style:'gap:4px;flex-wrap:nowrap'},h('button',{class:'btn',title:'QR de identificación',onclick:()=>showQR(u)},'QR'),h('button',{class:'btn',onclick:()=>{U.splice(i,1);draw();}},'✕')));}),
+    h('button',{class:'btn',onclick:()=>{U.push({id:'P-'+pad(U.length+1),oficial:'',placa:'',sector:C.sectores[0].id,horaIni:7,horaFin:15});draw();}},'+ Agregar oficial'));draw();
+  const f=h('input',{type:'file',accept:'.xlsx,.xls,.csv'});f.onchange=async()=>{const fl=f.files[0];if(!fl)return;try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>!!window.XLSX);
+    const wb=XLSX.read(await fl.arrayBuffer());const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});const g=(r,...ks)=>{for(const k of Object.keys(r))if(ks.some(x=>norm(k).startsWith(x)))return String(r[k]).trim();return '';};
+    const hh=v=>{const m=String(v).match(/(\d{1,2})/);return m?Math.min(23,+m[1]):null;};let n=0;
+    for(const r of rows){const nm=g(r,'nombre','oficial');if(!nm)continue;const scn=norm(g(r,'sector'));const sc=C.sectores.find(s=>norm(s.nombre)===scn||norm(s.nombre).endsWith(' '+scn)||String(C.sectores.indexOf(s)+1)===scn)||C.sectores[0];
+      U.push({id:g(r,'patrulla','unidad')||'P-'+pad(U.length+1),oficial:nm,placa:g(r,'placa','id','identific'),sector:sc.id,horaIni:hh(g(r,'entra','inicio'))??7,horaFin:hh(g(r,'sale','fin'))??15});n++;}
+    draw();toast(n+' oficiales leídos del archivo. Revisa y guarda.');}catch(e){toast('No pude leer el archivo: '+e.message);}};
+  const tpl=h('button',{class:'btn',onclick:()=>{const csv='nombre,placa,patrulla,sector,entra,sale\nNombre Apellido,12345,P-01,'+(C.sectores[0]?C.sectores[0].nombre:'Sector 1')+',07:00,15:00\n';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='plantilla_oficiales.csv';a.click();}},'Descargar plantilla');
+  b.append(h('div',{class:'wcard'},h('b',{},'Cargar desde Excel'),h('div',{class:'row'},f,tpl),h('small',{},'Columnas: nombre, placa, patrulla, sector, entra, sale.')),list);
+  b._save=async()=>{const ok=U.filter(u=>String(u.oficial||'').trim());if(!ok.length)throw new Error('Agrega al menos un oficial');const ids=new Set();for(const u of ok){u.id=String(u.id||'').trim()||'P-'+pad(ids.size+1);if(ids.has(u.id))throw new Error('La patrulla '+u.id+' está repetida');ids.add(u.id);}
+    for(const u of S.unidades.values())if(u.demo||!ids.has(u.id))await write(()=>api.del('unidades/'+u.id));
+    for(const u of ok){const prev=S.unidades.get(u.id);const sc=sec(u.sector)||C.sectores[0];const p=prev&&!prev.demo?{x:prev.x,y:prev.y}:randIn(sc.poly);await write(()=>api.set('unidades/'+u.id,{id:u.id,oficial:u.oficial.trim(),placa:String(u.placa||'').trim(),sector:sc.id,horaIni:+u.horaIni,horaFin:+u.horaFin,x:+(+p.x).toFixed(2),y:+(+p.y).toFixed(2),estado:prev&&!prev.demo?prev.estado:'disponible',evento:prev&&!prev.demo?prev.evento:null}));}};},
+ usr(b){let L2=[...(S.usuarios||new Map()).values()].map(u=>({...u}));const list=h('div',{class:'wlist'});
+  const draw=()=>list.replaceChildren(h('div',{class:'wrow hd'},h('span',{},'Nombre'),h('span',{},'Correo'),h('span',{},'Rol'),h('span',{})),...L2.map((u,i)=>{const n=wInput('',u.nombre,'Nombre');n.oninput=()=>{u.nombre=n.value;};const e=wInput('',u.correo,'correo@dominio.gob.mx','email');e.oninput=()=>{u.correo=e.value;};
+    const r=h('select',{class:'inp'},...[['admin','Administrador del cliente'],['supervisor','Supervisor'],['operador','Operador']].map(([v,l])=>h('option',{value:v},l)));r.value=u.rol||'operador';r.onchange=()=>{u.rol=r.value;};return h('div',{class:'wrow usr'},n,e,r,h('button',{class:'btn',onclick:()=>{L2.splice(i,1);draw();}},'✕'));}),
+    h('button',{class:'btn',onclick:()=>{L2.push({id:'u'+Date.now().toString(36),nombre:'',correo:'',rol:L2.some(x=>x.rol==='admin')?'operador':'admin',estado:'pendiente'});draw();}},'+ Agregar usuario'));draw();
+  b.append(h('div',{class:'wmsg'},'Quién entra a este cliente y con qué permisos. Debe haber al menos un administrador. Las invitaciones por correo se envían cuando la plataforma esté conectada a la base de datos.'),list);
+  b._save=async()=>{const ok=L2.filter(u=>u.correo&&/@/.test(u.correo));if(!ok.some(u=>u.rol==='admin'))throw new Error('Falta un administrador con correo válido');for(const u of S.usuarios?S.usuarios.values():[])if(!ok.find(x=>x.id===u.id))await write(()=>api.del('usuarios/'+u.id));for(const u of ok)await write(()=>api.set('usuarios/'+u.id,{...u,correo:u.correo.trim().toLowerCase()}));};},
+ zon(b){const C=S.config;const parsePts=async f=>{const txt=await f.text();const out=[];if(/\.csv$/i.test(f.name)){const ln=txt.split(/\r?\n/).filter(x=>x.trim());const sep=ln[0].includes(';')?';':',';const hd=ln[0].split(sep).map(norm);const iN=hd.findIndex(x=>x.startsWith('nombre')),iLa=hd.findIndex(x=>x.startsWith('lat')),iLo=hd.findIndex(x=>x.startsWith('lon')||x.startsWith('lng'));
+      for(const l of ln.slice(1)){const c=l.split(sep);const la=parseFloat(c[iLa]),lo=parseFloat(c[iLo]);if(isNaN(la)||isNaN(lo))continue;out.push({nombre:(c[iN]||'').trim()||'Punto '+(out.length+1),lng:lo,lat:la});}}
+    else{const gj=/\.kml$/i.test(f.name)?(()=>{const d=new DOMParser().parseFromString(txt,'text/xml');return {features:[...d.querySelectorAll('Placemark')].map(pm=>{const c=pm.querySelector('Point coordinates');if(!c)return null;const q=c.textContent.trim().split(',').map(Number);return {properties:{nombre:(pm.querySelector('name')||{}).textContent},geometry:{type:'Point',coordinates:q}};}).filter(Boolean)};})():JSON.parse(txt);
+      for(const ft of gj.features||[])if(ft.geometry&&ft.geometry.type==='Point')out.push({nombre:String((ft.properties||{}).nombre||(ft.properties||{}).name||'Punto '+(out.length+1)),lng:ft.geometry.coordinates[0],lat:ft.geometry.coordinates[1]});}
+    return out.map(p=>{const q=xy(p.lng,p.lat);return {nombre:p.nombre,x:+q.x.toFixed(2),y:+q.y.toFixed(2)};});};
+  const box=(t,key,help)=>{const arr=C[key]||[];const f=h('input',{type:'file',accept:'.csv,.geojson,.json,.kml'});f.onchange=async()=>{if(!f.files[0])return;try{const pts=await parsePts(f.files[0]);if(!pts.length)throw new Error('sin puntos');
+      const v=key==='botones'?pts.map((p,i)=>({id:'BP-'+pad(i+1),nombre:p.nombre,x:p.x,y:p.y})):pts.map((p,i)=>({id:'z'+(i+1),nombre:p.nombre,x:p.x,y:p.y}));await cfgPatch({[key]:v});bpKey='';renderWizard();toast(v.length+' cargados');}catch(e){toast('No pude leer el archivo ('+e.message+')');}};
+    return h('div',{class:'wcard'},h('b',{},t+' · '+arr.length),h('small',{},help),h('div',{class:'row'},f,arr.length?h('button',{class:'btn',onclick:async()=>{await cfgPatch({[key]:[]});bpKey='';renderWizard();}},'Quitar todos'):null),arr.length?h('div',{class:'wchips'},...arr.slice(0,30).map(z=>h('span',{},z.nombre))):null);};
+  b.append(box('Zonas seguras','zonas','Farmacias 24 h, bases, tiendas aliadas. El bot las ofrece al ciudadano.'),box('Botones de pánico','botones','Postes del C5 o del municipio. Al activarse llegan como emergencia.'),h('div',{class:'wmsg'},'Archivo CSV con columnas nombre, lat, lng; o KML/GeoJSON de puntos. También puedes marcarlas a mano en Administración del cliente.'));},
+ wa(b){const w=S.config.wa||{};const me=regMe();const priv=w.privacidad||('Aviso de privacidad: '+(me.nombre||'el municipio')+' usa tu ubicación y la información que compartas solo para atender tu reporte de seguridad. Puedes consultar el aviso completo en [enlace].');
+  b.append(h('div',{class:'wgrid'},wField('Número de WhatsApp',wInput('wNum',w.numero,'+52 222 000 0000','tel'),'Debe ser un número que no esté usado en ningún WhatsApp.'),wField('Nombre del bot',wInput('wBot',w.bot||('Seguridad '+(me.nombre||'')),'Seguridad Puebla'))),
+    wField('Mensaje de bienvenida',(()=>{const t=h('textarea',{class:'inp',id:'wBien',rows:3});t.value=w.bienvenida||'Hola, soy el canal de seguridad de '+(me.nombre||'tu municipio')+'. ¿Qué necesitas reportar?';return t;})()),
+    wField('Aviso de privacidad',(()=>{const t=h('textarea',{class:'inp',id:'wPriv',rows:4});t.value=priv;return t;})(),'El bot lo muestra antes de pedir la ubicación. Lo exige la ley de protección de datos.'),
+    h('div',{class:'wmsg'},'La conexión con Meta se hace cuando el cliente tenga su cuenta de WhatsApp Business. Mientras, el emulador usa estos textos.'));
+  b._save=async()=>{await cfgPatch({wa:{numero:$('#wNum').value.trim(),bot:$('#wBot').value.trim(),bienvenida:$('#wBien').value.trim(),privacidad:$('#wPriv').value.trim()}});};},
+ his(b){const H=S.historial||{};const f=h('input',{type:'file',accept:'.csv'});f.onchange=()=>{if(f.files[0]){loadCSV(f.files[0]);setTimeout(renderWizard,2500);}};
+  b.append(h('div',{class:'wmsg '+(H.origen==='simulado'?'warn':'ok')},H.origen==='simulado'?'Usando un histórico simulado de 90 días. Sube el histórico real para que el pronóstico sea de este cliente.':((H.entries||[]).length+' registros cargados.')),
+    h('div',{class:'wcard'},h('b',{},'Subir histórico (CSV)'),h('small',{},'Columnas: FECHA, HORA, SECTOR, EVENTO. Opcional: LATITUD, LONGITUD. Sin datos de víctimas.'),f));},
+ rev(b){const me=regMe();const rows=WSTEPS.slice(0,-1).map((s,i)=>{const ss=wStatus(s.k);return h('button',{class:'wck '+ss,onclick:()=>{WZ.i=i;renderWizard();}},h('i',{},ss==='ok'?'✓':(ss==='opt'?'○':'!')),h('span',{},s.t),h('small',{},ss==='ok'?'Listo':(s.req?(ss==='warn'?'Revisar':'Falta'):'Opcional')));});
+  const miss=WSTEPS.filter(s=>s.req&&s.k!=='rev'&&wStatus(s.k)==='pend');
+  b.append(h('div',{class:'wlist'},...rows),me.estado==='activo'?h('div',{class:'wmsg ok'},'Este cliente está habilitado.'):h('div',{class:'row'},h('button',{class:'btn pri',disabled:!!miss.length,onclick:async()=>{regPatch({estado:'activo',habilitado:Date.now()});if(CUR!=='puebla')await cfgPatch({demo:false});toast('Cliente habilitado');renderWizard();}},'Habilitar cliente'),miss.length?h('small',{},'Falta: '+miss.map(s=>s.t).join(', ')):null));}
+};
+async function showQR(u){if(!u.placa){toast('Primero escribe la placa del oficial');return;}try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js',()=>!!window.qrcode);}catch(e){toast(e.message);return;}
+  const q=qrcode(0,'M');q.addData('MS:'+CUR+':'+u.placa);q.make();const me=regMe();
+  const ov=h('div',{class:'login',onclick:e=>{if(e.target===ov)ov.remove();}},h('div',{class:'lbox qrc'},me.logo?h('img',{src:me.logo,style:'height:40px;align-self:center'}):null,h('b',{},u.oficial||'Oficial'),h('span',{},'Placa '+u.placa+' · Patrulla '+(u.id||'')+' · '+secName(u.sector)),(()=>{const d=h('div',{class:'qrimg'});d.innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true});return d;})(),h('small',{style:'color:var(--muted)'},'El ciudadano escanea este código con WhatsApp para verificar al oficial.'),h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>window.print()},'Imprimir'),h('button',{class:'btn',onclick:()=>ov.remove()},'Cerrar'))));
+  document.body.append(ov);}
+
 function localApi(key){key=key||'ms3.db';
   let docs=new Map();try{const raw=localStorage.getItem(key);if(raw)docs=new Map(JSON.parse(raw));}catch(e){}
   let stT=null;const save=()=>{clearTimeout(stT);stT=setTimeout(()=>{try{localStorage.setItem(key,JSON.stringify([...docs]));}catch(e){}},600);};
@@ -1743,7 +1906,7 @@ let noidTimer=null;
 function act(a,v,label){
   if(label)userSay(label);const d=bot.draft;
   switch(a){
-    case 'report':bot.step='cat';botSay('¿Qué pasó?');botBtns(S.config.catalogo.map(c=>({label:c.nombre,a:'cat',v:c.id})));break;
+    case 'report':bot.step='cat';botSay('¿Qué pasó?');botBtns(S.config.catalogo.filter(c=>c.activo!==false).map(c=>({label:c.nombre,a:'cat',v:c.id})));break;
     case 'cat':{d.cid=v;const c=cat(v);if(c.subtipos&&c.subtipos.length){bot.step='sub';botSay('¿De qué tipo?');botBtns(c.subtipos.map(x=>({label:x,a:'sub',v:x})));}else act('askLoc');break;}
     case 'sub':d.sub=v;act('askLoc');break;
     case 'askLoc':bot.step='loc';botSay('¿Dónde ocurrió?');botBtns([{label:'Enviar mi ubicación actual',a:'locNow'},{label:'Fue en otro lugar · elegir en mapa',a:'locPick'}],true);break;
@@ -2070,7 +2233,7 @@ function demoTick(){
   const pendN=[...S.eventos.values()].filter(e=>e.estado==='nuevo').length;if(recent10<2&&Math.random()<(pendN<2?.12:(pendN<4?.05:0))&&open<8){
     const recent=[...S.eventos.values()].filter(e=>now-e.creado<30*60e3&&cat(e.cid).grupo==='delito');let p;
     if(recent.length&&Math.random()<.35){const r=pick(recent);p={x:clamp(r.x+rnd(-3.5,3.5),1,99),y:clamp(r.y+rnd(-3.5,3.5),1,69)};}else p=randomHere();
-    const c=wpick(S.config.catalogo,typeWeights(sectorAt(p.x,p.y)));
+    const c=wpick(S.config.catalogo,typeWeights(sectorAt(p.x,p.y)));if(c.activo===false)return;
     crearEvento({cid:c.id,sub:c.subtipos&&c.subtipos.length?pick(c.subtipos):'',x:p.x,y:p.y,origen:Math.random()<.65?'WhatsApp':(Math.random()<.6?'911':'Comercio')});}
   if(Math.random()<.006&&pendN<3)panic();
   const taken=new Set();
@@ -2098,12 +2261,12 @@ async function maybePreset(){const pr=S.presets&&S.presets.get('puebla');if(!pr|
 /* ===== arranque ===== */
 async function seedAll(c){
   await write(()=>api.set('config/main',c));S.config=c;
-  for(const [i,sc] of c.sectores.entries()){const ce=centroid(sc.poly);const uid='P-'+pad(i+1);const of=OFIC[i%OFIC.length];await write(()=>api.set('unidades/'+uid,{id:uid,oficial:of[0],horaIni:of[1],horaFin:of[2],placa:'MS-'+(1200+i),sector:sc.id,...(()=>{let p;do{p=randIn(sc.poly);}while(Math.hypot(p.x-ce.x,p.y-ce.y)<6&&Math.random()<.95);return {x:+p.x.toFixed(2),y:+p.y.toFixed(2)};})(),estado:'disponible',evento:null}));}
+  for(const [i,sc] of c.sectores.entries()){const ce=centroid(sc.poly);const uid='P-'+pad(i+1);const of=OFIC[i%OFIC.length];await write(()=>api.set('unidades/'+uid,{id:uid,oficial:of[0],horaIni:of[1],horaFin:of[2],placa:'MS-'+(1200+i),sector:sc.id,...(()=>{let p;do{p=randIn(sc.poly);}while(Math.hypot(p.x-ce.x,p.y-ce.y)<6&&Math.random()<.95);return {x:+p.x.toFixed(2),y:+p.y.toFixed(2)};})(),estado:'disponible',evento:null,demo:true}));}
   const g=genHistorial(90);await write(()=>api.set('historial/main',Object.assign(g,{origen:'simulado',generado:Date.now()})));
 }
 let rq=0;
 function render(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;if(!S.config)return;
-  $('#cliente').textContent=S.config.cliente;const ti=turnoIdx(new Date().getHours());$('#turnoNow').lastChild.textContent=T()[ti].nombre+' · '+pad(T()[ti].inicio)+':00–'+pad(T()[(ti+1)%T().length].inicio)+':00';
+  $('#cliente').textContent=S.config.cliente;{const me=regGet().find(x=>x.slug===CUR);let lg=$('#clogo');if(me&&me.logo){if(!lg){lg=h('img',{id:'clogo',alt:''});document.querySelector('.brand').append(lg);}lg.src=me.logo;}else if(lg)lg.remove();}const ti=turnoIdx(new Date().getHours());$('#turnoNow').lastChild.textContent=T()[ti].nombre+' · '+pad(T()[ti].inicio)+':00–'+pad(T()[(ti+1)%T().length].inicio)+':00';
   $('#demoSw').setAttribute('aria-checked',String(!!S.config.demo));
   const ae=document.activeElement;const typing=ae&&ae.matches&&ae.matches('input,textarea,select');
   if(!typing||UI.tab==='mando')renderSide();renderPop();
@@ -2142,6 +2305,7 @@ function wire(){
   const placeQ=()=>{const q=$('#qpanel');const narrow=matchMedia('(max-width:1019px)').matches;const side=document.querySelector('#v-mando .side');if(narrow&&q.parentNode!==side)side.insertBefore(q,side.children[1]||null);if(!narrow&&q.parentNode!==$('#mapwrap'))$('#mapwrap').append(q);};placeQ();
   if(lsGet('ms7.accmin',null)===null&&innerWidth<1020)lsSet('ms7.accmin',true);
   document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;DK.r='';renderDash(true);}));
+  $('#dmWz').onclick=()=>{$('#demoMenu').hidden=true;openWizard();};
   $('#dmCons').onclick=()=>{$('#demoMenu').hidden=true;openConsole();};
   $('#zRect').onclick=()=>setRectMode(!AREA.mode);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(AREA.mode)setRectMode(false);else if(AREA.p)clearArea();}});
@@ -2174,7 +2338,7 @@ function wire(){
 }
 window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
-  {const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado!=='activo'){document.body.append(h('div',{class:'login'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
+  {const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
   const SC=window.MS_SUPABASE;
@@ -2186,6 +2350,7 @@ async function boot(){
   api.watch('config',docs=>{const d=docs.find(x=>x.id==='main');if(d){const secChanged=JSON.stringify(d.data.sectores)!==JSON.stringify(S.config&&S.config.sectores);const geoChanged=JSON.stringify(d.data.geo||null)!==JSON.stringify(S.config&&S.config.geo||null);if(geoChanged)setTimeout(()=>flyHome(),50);S.config=d.data;M=d.data.mpu||80;maybePreset();MODEL=null;if(secChanged){staticKey='';if(CITY)CITY.bld.forEach(b=>{b.sid=null;});}render();}});
   let firstEv=true;const known=new Set();
   api.watch('eventos',docs=>{S.eventos=new Map(docs.map(x=>[x.id,x.data]));for(const d of docs){if(!known.has(d.id)){known.add(d.id);const ev=d.data;if(!firstEv&&(ev.sos||ev.cid==='apoyo')&&abierto(ev)&&Date.now()-ev.creado<30000)triggerAlert(ev);if(!firstEv&&abierto(ev)&&Date.now()-ev.creado<30000){const vg=vigOf(ev);if(vg)toast('Nuevo reporte en '+vg.nombre+': '+ev.cat);}}}firstEv=false;render();});
+  S.usuarios=new Map();api.watch('usuarios',docs=>{S.usuarios=new Map(docs.map(x=>[x.id,x.data]));if(WZ.open)renderWizard();});
   api.watch('unidades',docs=>{S.unidades=new Map(docs.map(x=>[x.id,x.data]));render();});
   api.watch('historial',docs=>{const d=docs.find(x=>x.id==='main');S.historial=d?d.data:null;MODEL=null;render();});
   api.watch('contactos',docs=>{S.contactos=new Map(docs.map(x=>[x.id,x.data]));});
@@ -2203,6 +2368,7 @@ async function boot(){
     let p=null;for(const q of qs){const js=await (await fetch(base+q)).json();p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type)&&(me.nivel==='estado'?x.addresstype==='state':x.addresstype!=='state'));if(p)break;await new Promise(r=>setTimeout(r,1100));}
     if(p){await buildFromPlace(p);const c2=JSON.parse(JSON.stringify(S.config));c2.cliente=me.nombre||c2.cliente;await write(()=>api.set('config/main',c2));S.config=c2;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1200);}else toast('No encontré el límite de "'+L+'". Cárgalo en Administración del cliente.');}catch(e){}}}
   {const me=regGet().find(x=>x.slug===CUR);if(me&&S.config&&S.config.cliente!==me.nombre&&S.config.cliente==='Municipio de ejemplo'){const c3=JSON.parse(JSON.stringify(S.config));c3.cliente=me.nombre;await write(()=>api.set('config/main',c3));S.config=c3;render();}}
+  {const me=regGet().find(x=>x.slug===CUR);if(new URLSearchParams(location.search).get('setup')||(me&&me.estado==='configuracion'))setTimeout(()=>openWizard(0),800);}
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
 }
