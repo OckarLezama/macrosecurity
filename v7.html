@@ -1,4 +1,5 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Macro Security Mando</title>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><script>(function(){try{var q=new URLSearchParams(location.search),r=JSON.parse(localStorage.getItem('ms.clientes')||'[]'),c=q.get('c')||JSON.parse(localStorage.getItem('ms.cur')||'"puebla"'),me=r.find(function(x){return x.slug===c}),ses=JSON.parse(localStorage.getItem('ms.ses')||'null');
+if(!ses)document.documentElement.classList.add('preentry');else if(q.get('home')==='1')document.body.classList.add('homemode');else if(q.get('setup')||(me&&me.estado==='configuracion'))document.body.classList.add('setupmode');}catch(e){}})();</script><title>Macro Security Mando</title>
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -871,6 +872,10 @@ body.setupmode .wz{top:var(--toph,48px);background:var(--bg);padding:0;z-index:5
 body.homemode header.top,body.setupmode header.top{position:relative;z-index:60}
 .demomenu .dmwho b{color:var(--fg)}
 body.homemode .demomenu>*:not(.dmwho):not(#dmCons):not(#dmOut){display:none!important}
+html.preentry .app{visibility:hidden}
+.wcol{width:44px;height:36px;padding:2px;border:1px solid var(--line2);border-radius:8px;background:#fff;cursor:pointer}.wcol:disabled{cursor:not-allowed;opacity:.7}
+.wcl{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}
+.wcolpv{display:flex;align-items:center;gap:6px;margin-left:6px}.wcolpv span{border-radius:8px;padding:7px 12px;font-weight:700;font-size:12.5px}.wcolpv b{border-radius:8px;padding:7px 12px;font-size:12.5px}
 </style>
 
 <div class="app">
@@ -1086,6 +1091,7 @@ function openConsole(){if(!ISHOME){goHome();return;}const sb=document.querySelec
       '<label>Contacto<input class="inp" id="cnC" placeholder="Correo o teléfono" required></label>'+
       '<label>Inicio del servicio<input class="inp" id="cnI" type="date" required></label>'+
       '<label>Término del servicio<input class="inp" id="cnF" type="date" required></label>'+
+      '<label>Colores institucionales<span class="row" style="gap:8px;align-items:center"><input type="color" class="wcol" id="cnP" value="#2B3138" title="Principal"><input type="color" class="wcol" id="cnS" value="#0E9384" title="Acento"><small>Principal y acento</small></span></label>'+
     '</div><div class="row"><small>Primero se registra el cliente. Su mapa, sectores y oficiales se configuran en el asistente; no opera hasta habilitarlo.</small><span class="sp" style="flex:1"></span><button class="btn pri" type="submit">Registrar y configurar</button></div></form>'+
     '<div class="cgrid">'+r.map(card).join('')+'</div></div>';
   const close=()=>{ov.remove();if(sb)sb.style.display='';};
@@ -1097,7 +1103,7 @@ function openConsole(){if(!ISHOME){goHome();return;}const sb=document.querySelec
     const dup=rr.find(x=>nl(x.nombre)===nl(n)||nl(x.lugar)===nl(v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l));
     if(dup){toast('Ya existe un cliente para ese nombre o lugar: '+dup.nombre);return;}
     let sl=slugify(n);let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);
-    rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v==='estado'?'estado':'municipio',tipo:v,responsable:$('#cnR').value.trim(),contacto:$('#cnC').value.trim(),estado:'configuracion',creado:Date.now(),servicio:{inicio:fi,fin:ff,meses:Math.max(1,Math.round((new Date(ff)-new Date(fi))/(30.44*DAY)))}});
+    rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v==='estado'?'estado':'municipio',tipo:v,responsable:$('#cnR').value.trim(),contacto:$('#cnC').value.trim(),estado:'configuracion',creado:Date.now(),colores:($('#cnP').value!=='#2b3138'||$('#cnS').value!=='#0e9384')?{pri:$('#cnP').value,sec:$('#cnS').value}:null,servicio:{inicio:fi,fin:ff,meses:Math.max(1,Math.round((new Date(ff)-new Date(fi))/(30.44*DAY)))}});
     regSet(rr);empresaLog('Registró cliente',n);toast('Cliente '+n+' registrado. Sigue con su territorio.');setTimeout(()=>goClient(sl,true),500);};
   ov.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const sl=b.dataset.s;const rr=regGet();const c=rr.find(x=>x.slug===sl);if(!c)return;const a=b.dataset.a;
     if(a==='go')goClient(sl);
@@ -1119,6 +1125,13 @@ const WSTEPS=[
  {k:'datos',t:'Datos del cliente',req:true},{k:'terr',t:'Territorio',req:true},{k:'sect',t:'Sectores',req:true},{k:'col',t:'Colonias o cuadrantes'},
  {k:'tur',t:'Turnos',req:true},{k:'cat',t:'Catálogo de reportes',req:true},{k:'ofi',t:'Oficiales y patrullas',req:true},{k:'usr',t:'Usuarios',req:true},
  {k:'zon',t:'Zonas seguras y botones'},{k:'wa',t:'WhatsApp'},{k:'his',t:'Histórico'},{k:'rev',t:'Revisión y habilitar',req:true}];
+function lum(hx){const n=parseInt(String(hx||'#000').slice(1),16);const c=[n>>16&255,n>>8&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function inkOn(hx){return lum(hx)>.45?'#17212E':'#FFFFFF';}
+function applyBrand(){let st=$('#brandcss');const me=regGet().find(x=>x.slug===CUR)||{};const k=me.colores;if(ISHOME||!k||!k.pri){if(st)st.remove();return;}
+  if(!st){st=document.createElement('style');st.id='brandcss';document.head.append(st);}const P=k.pri,A=k.sec||k.pri,ip=inkOn(P),ia=inkOn(A);
+  st.textContent=':root{--accent:'+A+';--accent-ink:'+ia+'}header.top{background:'+P+'!important;color:'+ip+'!important}header.top .brand b,header.top .clock,header.top .whochip{color:'+ip+'!important}'+
+   '.btn.pri,.wfoot .btn.pri,.ccb .btn.pri{background:'+A+'!important;border-color:'+A+'!important;color:'+ia+'!important}.wnav{background:'+P+'!important}.wnav,.wst{color:'+(ip==='#FFFFFF'?'#F1F3F5':'#17212E')+'}.wst.on{background:rgba(255,255,255,.16)}'+
+   '.tabs button[aria-selected=true]{background:'+A+'!important;color:'+ia+'!important}.wprog i{background:'+A+'!important}';}
 function regMe(){return regGet().find(x=>x.slug===CUR)||{slug:CUR,nombre:CUR};}
 function regPatch(p){const r=regGet();const i=r.findIndex(x=>x.slug===CUR);if(i>=0){Object.assign(r[i],p);regSet(r);}}
 async function cfgPatch(p){const c=JSON.parse(JSON.stringify(S.config));Object.assign(c,p);for(const [a,d] of cfgDiff(S.config,c))logChange(a,'Modificó',d);await write(()=>api.set('config/main',c));S.config=c;staticKey='';if(mapReady)syncAll();render();}
@@ -1143,14 +1156,14 @@ function wStatus(k){const C=S.config||{};const me=regMe();switch(k){
   case 'rev':return me.estado==='activo'?'ok':'pend';}}
 async function afterTerr(nm){logChange('Territorio','Cargó territorio',(S.config.sectores||[]).length+' sectores'+((S.config.colonias||[]).length?', '+S.config.colonias.length+' colonias':''));const nw=regMe().estado!=='activo';const p={cliente:regMe().nombre||nm,pendiente:false};if(nw){Object.assign(p,{demo:false,zonas:[],botones:[]});for(const u of [...S.unidades.values()])if(u.demo)await write(()=>api.del('unidades/'+u.id));await clearEvents();}await cfgPatch(p);}
 function openWizard(i){if(!can('cfg')){toast('Tu usuario no puede configurar');return;}WZ.open=true;if(i!=null)WZ.i=i;let ov=$('#wz');if(!ov){ov=h('div',{class:'wz',id:'wz'});document.body.append(ov);}renderWizard();setTimeout(()=>startTour('wizard'),400);}
-function closeWizard(){if(document.body.classList.contains('setupmode')){if(can('clientes'))goHome();return;}WZ.open=false;const o=$('#wz');if(o)o.remove();}
+function closeWizard(){if(document.body.classList.contains('setupmode')){if(regMe().estado==='activo')goClient(CUR);else if(can('clientes'))goHome();return;}WZ.open=false;const o=$('#wz');if(o)o.remove();}
 function wField(lbl,el,help){return h('label',{class:'wf'},h('span',{},lbl),el,help?h('small',{},help):null);}
 function wInput(id,val,ph,type){const i=h('input',{class:'inp',id,placeholder:ph||'',type:type||'text'});i.value=val==null?'':val;return i;}
 function renderWizard(){const ov=$('#wz');if(!ov)return;const st=WSTEPS[WZ.i];const me=regMe();
   const rq=WSTEPS.filter(s=>s.req&&s.k!=='rev');const dn=rq.filter(s=>wStatus(s.k)==='ok').length;const sm=document.body.classList.contains('setupmode');
   const nav=h('div',{class:'wnav'},h('div',{class:'wtt'},h('small',{},sm?'CONFIGURACIÓN':'AJUSTES'),h('b',{},me.nombre||CUR)),h('div',{class:'wprog'},h('div',{},h('i',{style:'width:'+Math.round(dn/rq.length*100)+'%'})),h('span',{},dn+' de '+rq.length+' obligatorios listos')),...WSTEPS.map((s,i)=>{const ss=wStatus(s.k);return h('button',{class:'wst '+ss+(i===WZ.i?' on':''),onclick:()=>{WZ.i=i;renderWizard();}},h('i',{},ss==='ok'?'✓':String(i+1)),h('span',{},s.t,s.req?null:h('em',{},' opcional')));}),can('bitacora')?h('button',{class:'wst wbit',onclick:openBitacora},h('i',{},'≡'),h('span',{},'Bitácora de cambios')):null);
   const body=h('div',{class:'wbody'});const foot=h('div',{class:'wfoot'});
-  const head=h('div',{class:'whd'},h('div',{},h('small',{},'Paso '+(WZ.i+1)+' de '+WSTEPS.length),h('h2',{},st.t)),sm?(can('clientes')?h('button',{class:'btn',onclick:closeWizard},'Volver a mis clientes'):null):h('button',{class:'x',onclick:closeWizard,'aria-label':'Cerrar'},'✕'));
+  const head=h('div',{class:'whd'},h('div',{},h('small',{},'Paso '+(WZ.i+1)+' de '+WSTEPS.length),h('h2',{},st.t)),sm?(me.estado==='activo'?h('button',{class:'btn',onclick:closeWizard},'Volver al centro de mando'):can('clientes')?h('button',{class:'btn',onclick:closeWizard},'Volver a mis clientes'):null):h('button',{class:'x',onclick:closeWizard,'aria-label':'Cerrar'},'✕'));
   if(WHELP[st.k])body.append(h('div',{class:'whelp'},h('b',{},'Qué hacer'),h('ol',{},...WHELP[st.k].map(t=>h('li',{},t)))));
   const next=()=>{if(WZ.i<WSTEPS.length-1){WZ.i++;renderWizard();}};
   const save=async fn=>{try{await fn();toast('Guardado');next();}catch(e){toast(e.message||'No se pudo guardar');}};
@@ -1177,8 +1190,12 @@ const WSTEP_UI={
   const lf=h('input',{type:'file',accept:'image/*'});lf.onchange=()=>{const f=lf.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');const k=128/Math.max(im.width,im.height);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);logo.src=c.toDataURL('image/png');};im.src=r.result;};r.readAsDataURL(f);};
   const tipo=h('select',{class:'inp',id:'wTipo'},...[['municipio','Municipio'],['estado','Estado'],['corporacion','Corporación o dependencia']].map(([v,l])=>h('option',{value:v},l)));tipo.value=me.tipo||me.nivel||'municipio';
   const tz=h('select',{class:'inp',id:'wTz'},...[['America/Mexico_City','Centro (CDMX)'],['America/Cancun','Sureste (Quintana Roo)'],['America/Chihuahua','Chihuahua'],['America/Mazatlan','Pacífico (Sinaloa, Nayarit, BCS)'],['America/Hermosillo','Sonora'],['America/Tijuana','Noroeste (Baja California)']].map(([v,l])=>h('option',{value:v},l)));tz.value=me.tz||'America/Mexico_City';
-  b.append(h('div',{class:'wgrid'},wField('Nombre del cliente',wInput('wNom',me.nombre)),wField('Tipo',tipo),wField('Responsable',wInput('wResp',me.responsable,'Nombre de quien autoriza')),wField('Contacto',wInput('wCont',me.contacto,'Correo o teléfono')),wField('Zona horaria',tz),wField('Logo',h('div',{class:'row'},logo,lf),'Se muestra en la barra superior.')),h('div',{class:'wcard'},h('b',{},'Servicio contratado'),h('div',{class:'row'},(()=>{const sp=h('span',{});sp.innerHTML=vigBadge(me);return sp;})(),can('servicio')?h('button',{class:'btn',onclick:()=>openService(CUR)},'Editar vigencia y renovaciones'):null),h('small',{},'Avisos 90, 60, 30 y 7 días antes. Si no se renueva, se suspende solo al día siguiente del vencimiento.')));
-  b._save=async()=>{const n=$('#wNom').value.trim();if(!n)throw new Error('Falta el nombre');regPatch({nombre:n,tipo:tipo.value,responsable:$('#wResp').value.trim(),contacto:$('#wCont').value.trim(),tz:tz.value,logo:logo.getAttribute('src')||''});await cfgPatch({cliente:n});};},
+  b.append(h('div',{class:'wgrid'},wField('Nombre del cliente',wInput('wNom',me.nombre)),wField('Tipo',tipo),wField('Responsable',wInput('wResp',me.responsable,'Nombre de quien autoriza')),wField('Contacto',wInput('wCont',me.contacto,'Correo o teléfono')),wField('Zona horaria',tz),wField('Logo',h('div',{class:'row'},logo,lf),'Se muestra en la barra superior.'),
+    (()=>{const k=me.colores||{};const cp=h('input',{type:'color',id:'wCp',class:'wcol',value:k.pri||'#2B3138',disabled:!can('clientes')}),cs=h('input',{type:'color',id:'wCs',class:'wcol',value:k.sec||'#0E9384',disabled:!can('clientes')});
+      const pv=h('div',{class:'wcolpv'});const upd=()=>{pv.replaceChildren(h('span',{style:'background:'+cp.value+';color:'+inkOn(cp.value)},me.nombre||'Cliente'),h('b',{style:'background:'+cs.value+';color:'+inkOn(cs.value)},'Botón'));};cp.oninput=upd;cs.oninput=upd;upd();
+      return wField('Colores institucionales',h('div',{class:'row'},h('label',{class:'wcl'},cp,'Principal'),h('label',{class:'wcl'},cs,'Acento'),pv,k.pri&&can('clientes')?h('button',{class:'btn',type:'button',onclick:()=>{cp.value='#2B3138';cs.value='#0E9384';cp.dataset.reset='1';upd();}},'Usar los de la plataforma'):null),can('clientes')?'Principal: barra superior y menú de pasos. Acento: botones. Los colores de riesgo y de las gráficas no cambian, porque tienen significado.':'Los define la empresa.');})()),h('div',{class:'wcard'},h('b',{},'Servicio contratado'),h('div',{class:'row'},(()=>{const sp=h('span',{});sp.innerHTML=vigBadge(me);return sp;})(),can('servicio')?h('button',{class:'btn',onclick:()=>openService(CUR)},'Editar vigencia y renovaciones'):null),h('small',{},'Avisos 90, 60, 30 y 7 días antes. Si no se renueva, se suspende solo al día siguiente del vencimiento.')));
+  b._save=async()=>{const n=$('#wNom').value.trim();if(!n)throw new Error('Falta el nombre');const pc=$('#wCp'),sc2=$('#wCs');const col=pc&&can('clientes')?(pc.dataset.reset?null:{pri:pc.value,sec:sc2.value}):me.colores;
+  regPatch({nombre:n,tipo:tipo.value,responsable:$('#wResp').value.trim(),contacto:$('#wCont').value.trim(),tz:tz.value,logo:logo.getAttribute('src')||'',colores:col||null});if(JSON.stringify(col||null)!==JSON.stringify(me.colores||null))logChange('Datos del cliente','Cambió colores',col?col.pri+' / '+col.sec:'colores de la plataforma');applyBrand();await cfgPatch({cliente:n});};},
  terr(b){const C=S.config;const has=C.limite&&C.limite.length;const km=has?Math.round(Math.abs(area(C.limite))*M*M/1e6):0;const me=regMe();
   const q=wInput('wQ',me.lugar||'','Ej. Tlaxcala, Tlaxcala');const lvl=h('select',{class:'inp'},h('option',{value:'municipio'},'Municipio'),h('option',{value:'estado'},'Estado completo'));lvl.value=me.nivel||'municipio';
   const msg=h('div',{class:'wmsg'},has?'Límite cargado: '+km.toLocaleString('es-MX')+' km². Cambiarlo reinicia sectores, patrullas y reportes de este cliente.':'Aún no hay límite.');
@@ -1269,7 +1286,7 @@ const ISHOME=new URLSearchParams(location.search).get('home')==='1';
 function goHome(){const u=new URL(location.href);u.search='?home=1';u.hash='';location.href=u.toString();}
 function usersOf(slug){try{const raw=JSON.parse(localStorage.getItem(dbKey(slug))||'[]');return raw.filter(([p])=>p.startsWith('usuarios/')).map(([,d])=>d);}catch(e){return [];}}
 function logout(){try{localStorage.removeItem('ms.ses');}catch(e){}const u=new URL(location.href);u.search='';u.hash='';location.href=u.toString();}
-function renderEntry(){const ov=h('div',{class:'entry',id:'entry'});document.body.append(ov);
+function renderEntry(){document.documentElement.classList.add('preentry');const ov=h('div',{class:'entry',id:'entry'});document.body.append(ov);
   const enter=(rol,nombre,cliente)=>{lsSet('ms.ses',{rol,nombre,cliente:cliente||null,t:Date.now()});lsSet('ms.role',rol);if(rol==='empresa')goHome();else goClient(cliente);};
   const shell=(...k)=>ov.replaceChildren(h('div',{class:'enbox'},h('div',{class:'enlogo'},h('span',{class:'enmark'},'✓'),h('b',{},'MACRO SECURITY')),...k,h('small',{class:'ennote'},'Versión de prueba. Con la base de datos conectada, aquí se entra con correo y contraseña.')));
   const step1=()=>shell(h('h1',{},'¿Quién entra?'),h('div',{class:'enopts'},
@@ -1317,7 +1334,7 @@ function startTour(name,force){if(document.querySelector('.tourlay'))return;cons
     Object.assign(tip.style,{left:Math.max(10,x)+'px',top:y+'px',width:tw+'px'});};
   addEventListener('resize',show);show();}
 /* ---- pantalla de configuración (sin mapa) ---- */
-function renderSetupHome(){let host=$('#setupHome');const me=regGet().find(x=>x.slug===CUR)||{};const on=me.estado==='configuracion';document.body.classList.toggle('setupmode',on);
+function renderSetupHome(){let host=$('#setupHome');const me=regGet().find(x=>x.slug===CUR)||{};const on=me.estado==='configuracion'||!!new URLSearchParams(location.search).get('setup');document.body.classList.toggle('setupmode',on);
   if(!on||can('cfg')){if(host)host.remove();return;}if(!host){host=h('div',{id:'setupHome'});document.querySelector('.app').append(host);}
   const req=WSTEPS.filter(s=>s.req&&s.k!=='rev');const done=req.filter(s=>wStatus(s.k)==='ok').length;
   host.innerHTML='';host.append(h('div',{class:'shbox'},h('div',{class:'shhd'},me.logo?h('img',{src:me.logo}):null,h('div',{},h('small',{},'CONFIGURACIÓN DEL SERVICIO'),h('h1',{},me.nombre||''),h('span',{},'El centro de mando se activa cuando la empresa habilita el servicio.'))),
@@ -1325,7 +1342,7 @@ function renderSetupHome(){let host=$('#setupHome');const me=regGet().find(x=>x.
     h('div',{class:'shlist'},...WSTEPS.map((s,i)=>{const ss=wStatus(s.k);return h('button',{class:'wck '+ss,onclick:()=>openWizard(i)},h('i',{},ss==='ok'?'✓':(ss==='opt'?'○':'!')),h('span',{},s.t),h('small',{},ss==='ok'?'Listo':(s.req?(ss==='warn'?'Revisar':'Pendiente'):'Opcional')));})),
     h('div',{class:'row'},can('cfg')?h('button',{class:'btn pri',onclick:()=>{const k=WSTEPS.findIndex(x=>x.req&&x.k!=='rev'&&wStatus(x.k)==='pend');openWizard(k<0?WSTEPS.length-1:k);}},'Continuar configuración'):h('div',{class:'wmsg'},'Tu usuario no puede configurar. Pide al administrador que complete estos pasos.'),
       h('button',{class:'btn',onclick:()=>startTour('wizard',true)},'¿Cómo se usa?'),can('clientes')?h('button',{class:'btn',onclick:openConsole},'Volver a clientes'):null)));}
-function applyRole(){const r=ROLE();{const tp=document.querySelector('header.top');if(tp)document.documentElement.style.setProperty('--toph',tp.getBoundingClientRect().bottom+'px');}document.body.dataset.role=r;const set=(sel,v)=>{const el=document.querySelector(sel);if(el)el.hidden=!v;};
+function applyRole(){applyBrand();const r=ROLE();{const tp=document.querySelector('header.top');if(tp&&!tp._ro){const f=()=>document.documentElement.style.setProperty('--toph',Math.max(0,tp.getBoundingClientRect().bottom)+'px');tp._ro=new ResizeObserver(f);tp._ro.observe(tp);addEventListener('resize',f);f();}}document.body.dataset.role=r;const set=(sel,v)=>{const el=document.querySelector(sel);if(el)el.hidden=!v;};
   set('#dmCons',can('clientes'));set('#dmWz',can('cfg'));
   {const w=whoAmI();const wh=$('#dmWho');if(wh)wh.replaceChildren(h('b',{},w.nombre),h('span',{},r==='empresa'?'Súper administrador':ROLE_S[r]+' · '+(regGet().find(x=>x.slug===CUR)||{}).nombre));
    let ch=$('#whoChip');if(!ch){ch=h('span',{class:'whochip',id:'whoChip'});const dw=document.querySelector('.dwrap');if(dw)dw.before(ch);}ch.textContent=w.nombre===ROLE_S[r]?ROLE_S[r]:w.nombre+' · '+ROLE_S[r];}
@@ -2504,7 +2521,7 @@ function wire(){
   $('#dmBit').onclick=()=>{$('#demoMenu').hidden=true;openBitacora();};
   $('#dmTour').onclick=()=>{$('#demoMenu').hidden=true;if(WZ.open)startTour('wizard',true);else startTour('mando',true);};
   applyRole();
-  $('#dmWz').onclick=()=>{$('#demoMenu').hidden=true;openWizard();};
+  $('#dmWz').onclick=()=>{$('#demoMenu').hidden=true;goClient(CUR,true);};
   $('#dmCons').onclick=()=>{$('#demoMenu').hidden=true;goHome();};
   $('#dmOut').onclick=logout;
   $('#zRect').onclick=()=>setRectMode(!AREA.mode);
@@ -2567,7 +2584,7 @@ async function boot(){
   const CARTO='datos/puebla_sectores_colonias.geojson';
   if(CUR==='puebla'&&S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
   {const me=regGet().find(x=>x.slug===CUR);if(me&&S.config&&S.config.cliente!==me.nombre&&S.config.cliente==='Municipio de ejemplo'){const c3=JSON.parse(JSON.stringify(S.config));c3.cliente=me.nombre;await write(()=>api.set('config/main',c3));S.config=c3;render();}}
-  if(ISHOME){openConsole();}else {const me=regGet().find(x=>x.slug===CUR);if(new URLSearchParams(location.search).get('setup')||(me&&me.estado==='configuracion'))setTimeout(()=>{renderSetupHome();if(!can('cfg'))return;const k=WSTEPS.findIndex(x=>x.req&&x.k!=='rev'&&wStatus(x.k)==='pend');openWizard(k<0?WSTEPS.length-1:k);},800);else setTimeout(()=>startTour('mando'),2500);}
+  if(ISHOME){openConsole();}else {const me=regGet().find(x=>x.slug===CUR);if(new URLSearchParams(location.search).get('setup')||(me&&me.estado==='configuracion'))setTimeout(()=>{renderSetupHome();if(!can('cfg'))return;if(regMe().estado==='activo'){openWizard(0);return;}const k=WSTEPS.findIndex(x=>x.req&&x.k!=='rev'&&wStatus(x.k)==='pend');openWizard(k<0?WSTEPS.length-1:k);},30);else setTimeout(()=>startTour('mando'),2500);}
   serviceBanner();setInterval(()=>{const me=regGet().find(x=>x.slug===CUR);regAuto();const m2=regGet().find(x=>x.slug===CUR);if(me&&m2&&me.estado==='activo'&&m2.estado==='suspendido')location.reload();serviceBanner();},60000);
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
