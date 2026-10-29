@@ -26,13 +26,16 @@ const PERM = {
   supervisor: ['mando'], operador: ['mando'], consulta: ['mando'],
 };
 
-export const ses = () => { const s = LS.get('ms.ses', null); if (!s || !PERM[s.rol]) return null; if (s.cliente && !Reg.get(s.cliente)) return null; return s; };
+// La sesión dura mientras la pestaña esté abierta: al abrir la plataforma siempre se pregunta quién entra.
+const SS = { get() { try { return JSON.parse(sessionStorage.getItem('ms.ses') || 'null'); } catch (e) { return null; } }, set(v) { try { sessionStorage.setItem('ms.ses', JSON.stringify(v)); } catch (e) {} }, del() { try { sessionStorage.removeItem('ms.ses'); } catch (e) {} } };
+LS.del('ms.ses'); // sesiones viejas guardadas de forma permanente
+export const ses = () => { const s = SS.get(); if (!s || !PERM[s.rol]) return null; if (s.cliente && !Reg.get(s.cliente)) return null; return s; };
 export function login(rol, nombre, cliente) {
-  LS.set('ms.ses', { rol, nombre, cliente: cliente || null, t: Date.now() });
+  SS.set({ rol, nombre, cliente: cliente || null, t: Date.now() });
   LS.set('ms.role', rol);
   if (cliente) LS.set('ms.cur', cliente);
 }
-export function logout() { LS.del('ms.ses'); }
+export function logout() { SS.del(); }
 export const role = () => (ses() || {}).rol || null;
 export const can = p => { const r = role(); return !!r && PERM[r].includes(p); };
 export const who = () => { const s = ses() || {}; return { nombre: s.nombre || ROLES[s.rol] || '', rol: s.rol }; };

@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><script>(function(){try{var q=new URLSearchParams(location.search),r=JSON.parse(localStorage.getItem('ms.clientes')||'[]'),c=q.get('c')||JSON.parse(localStorage.getItem('ms.cur')||'"puebla"'),me=r.find(function(x){return x.slug===c}),ses=JSON.parse(localStorage.getItem('ms.ses')||'null');
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><script>(function(){try{var q=new URLSearchParams(location.search),r=JSON.parse(localStorage.getItem('ms.clientes')||'[]'),c=q.get('c')||JSON.parse(localStorage.getItem('ms.cur')||'"puebla"'),me=r.find(function(x){return x.slug===c}),ses=JSON.parse(sessionStorage.getItem('ms.ses')||'null');
 if(!ses)document.documentElement.classList.add('preentry');else if(q.get('home')==='1')document.body.classList.add('homemode');else if(q.get('setup')||(me&&me.estado==='configuracion'))document.body.classList.add('setupmode');}catch(e){}})();</script><title>Macro Security Mando</title>
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -1279,13 +1279,13 @@ async function showQR(u){if(!u.placa){toast('Primero escribe la placa del oficia
 /* ===== roles, bitácora y guía ===== */
 const ROLES={empresa:'Empresa (súper administrador)','admin-responsable':'Administrador responsable','admin-respaldo':'Administrador de respaldo',configurador:'Configurador',supervisor:'Supervisor',operador:'Operador',consulta:'Consulta'};
 const PERM={empresa:['clientes','servicio','habilitar','cfg','usuarios','bitacora','mando'],'admin-responsable':['cfg','usuarios','bitacora','mando'],'admin-respaldo':['cfg','usuarios','bitacora','mando'],configurador:['cfg','bitacora','mando'],supervisor:['mando'],operador:['mando'],consulta:['mando']};
-const SES=()=>lsGet('ms.ses',null);
+const SES=()=>{try{return JSON.parse(sessionStorage.getItem('ms.ses')||'null');}catch(e){return null;}};
 const ROLE=()=>{const ss=SES();const r=ss?ss.rol:lsGet('ms.role','empresa');return PERM[r]?r:'empresa';};
 const ROLE_S={empresa:'Empresa','admin-responsable':'Administrador responsable','admin-respaldo':'Administrador de respaldo',configurador:'Configurador',supervisor:'Supervisor',operador:'Operador',consulta:'Consulta'};
 const ISHOME=new URLSearchParams(location.search).get('home')==='1';
 function goHome(){location.href='app/#/clientes';}
 function usersOf(slug){try{const raw=JSON.parse(localStorage.getItem(dbKey(slug))||'[]');return raw.filter(([p])=>p.startsWith('usuarios/')).map(([,d])=>d);}catch(e){return [];}}
-function logout(){try{localStorage.removeItem('ms.ses');}catch(e){}location.href='app/#/entrar';}
+function logout(){try{sessionStorage.removeItem('ms.ses');}catch(e){}location.href='app/#/entrar';}
 function renderEntry(){document.documentElement.classList.add('preentry');const ov=h('div',{class:'entry',id:'entry'});document.body.append(ov);
   const enter=(rol,nombre,cliente)=>{lsSet('ms.ses',{rol,nombre,cliente:cliente||null,t:Date.now()});lsSet('ms.role',rol);if(rol==='empresa')goHome();else goClient(cliente);};
   const shell=(...k)=>ov.replaceChildren(h('div',{class:'enbox'},h('div',{class:'enlogo'},h('span',{class:'enmark'},'✓'),h('b',{},'MACRO SECURITY')),...k,h('small',{class:'ennote'},'Versión de prueba. Con la base de datos conectada, aquí se entra con correo y contraseña.')));
