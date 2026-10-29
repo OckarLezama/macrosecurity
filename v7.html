@@ -1013,16 +1013,15 @@ function openService(slug){const r=regGet();const c=r.find(x=>x.slug===slug);if(
   const ov=h('div',{class:'login',style:'z-index:120',onclick:e=>{if(e.target===ov)ov.remove();}});const today=new Date().toISOString().slice(0,10);
   const i0=h('input',{class:'inp',type:'date',value:sv.inicio||today}),i1=h('input',{class:'inp',type:'date',value:sv.fin||new Date(Date.now()+365*DAY).toISOString().slice(0,10)});
   const per=h('select',{class:'inp'},...[[1,'Mensual'],[3,'Trimestral'],[6,'Semestral'],[12,'Anual']].map(([v,l])=>h('option',{value:v},l)));per.value=sv.meses||12;
-  const mon=h('input',{class:'inp',type:'number',min:0,step:'0.01',value:sv.monto||'',placeholder:'Monto por periodo (MXN)'});
-  const hist=(c.pagos||[]).slice().reverse().map(p=>'<li>'+fmtF(p.t)+' · renovado hasta '+fmtF(p.hasta+'T12:00')+(p.monto?' · $'+Number(p.monto).toLocaleString('es-MX'):'')+'</li>').join('');
+  const hist=(c.pagos||[]).slice().reverse().map(p=>'<li>'+fmtF(p.t)+' · renovado hasta '+fmtF(p.hasta+'T12:00')+'</li>').join('');
   const av=(c.avisos||[]).slice(-6).reverse().map(a=>'<li>'+fmtF(a.t)+' · '+esc(a.txt)+'</li>').join('');
-  const save=()=>{sv.inicio=i0.value;sv.fin=i1.value;sv.meses=+per.value;sv.monto=mon.value?+mon.value:null;regSet(r);};
+  const save=()=>{sv.inicio=i0.value;sv.fin=i1.value;sv.meses=+per.value;regSet(r);};
   ov.append(h('div',{class:'lbox',style:'width:min(520px,100%)'},h('b',{},'Servicio · '+c.nombre),
-    h('div',{class:'wgrid'},wField('Inicio',i0),wField('Vence',i1,'Al día siguiente se suspende solo si no se renueva.'),wField('Periodo de renovación',per),wField('Monto por periodo',mon)),
+    h('div',{class:'wgrid'},wField('Inicio',i0),wField('Vence',i1,'Al día siguiente se suspende solo si no se renueva.'),wField('Periodo de renovación',per)),
     h('small',{style:'color:var(--muted)'},'Avisos automáticos al cliente: 90, 60 y 30 días antes, y 7 días antes. Se muestran a sus usuarios dentro de la plataforma; por correo cuando esté conectada la base de datos.'),
     h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>{save();toast('Vigencia guardada');ov.remove();openConsole();}},'Guardar'),
       h('button',{class:'btn',onclick:()=>{save();const base=new Date(Math.max(Date.now(),new Date(sv.fin+'T12:00').getTime()));base.setMonth(base.getMonth()+sv.meses);sv.fin=base.toISOString().slice(0,10);
-        c.pagos=c.pagos||[];c.pagos.push({t:Date.now(),hasta:sv.fin,monto:sv.monto});if(c.estado==='suspendido'&&c.motivo==='vencido'){c.estado='activo';c.motivo=null;}regSet(r);toast('Renovado hasta '+fmtF(sv.fin+'T12:00'));ov.remove();openConsole();}},'Registrar pago y renovar')),
+        c.pagos=c.pagos||[];c.pagos.push({t:Date.now(),hasta:sv.fin});if(c.estado==='suspendido'&&c.motivo==='vencido'){c.estado='activo';c.motivo=null;}regSet(r);toast('Renovado hasta '+fmtF(sv.fin+'T12:00'));ov.remove();openConsole();}},'Registrar pago y renovar')),
     hist?h('div',{class:'wcard'},h('b',{},'Pagos'),(()=>{const u=h('ul',{class:'shist'});u.innerHTML=hist;return u;})()):null,
     av?h('div',{class:'wcard'},h('b',{},'Avisos enviados'),(()=>{const u=h('ul',{class:'shist'});u.innerHTML=av;return u;})()):null));
   document.body.append(ov);}
@@ -2385,7 +2384,7 @@ function wire(){
 }
 window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
-  {regAuto();const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login susp'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},me.motivo==='vencido'?'El servicio está suspendido porque venció el periodo contratado sin renovación. Comunícate con el administrador.':'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
+  {regAuto();const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login susp'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},me.motivo==='vencido'?'El servicio está suspendido porque venció el periodo contratado sin renovación. Comunícate con el administrador.':'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn pri',onclick:openConsole},'Abrir consola de clientes'),...regGet().filter(x=>x.slug!==CUR&&x.estado!=='suspendido').map(x=>h('button',{class:'btn',onclick:()=>goClient(x.slug)},'Ir a '+x.nombre)))));return;}}
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
   const SC=window.MS_SUPABASE;
