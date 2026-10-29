@@ -7,6 +7,7 @@ import { entrar } from './screens/entrar.js';
 import { clientes, nuevoCliente } from './screens/clientes.js';
 import { configurar } from './screens/configurar.js';
 import { bitacora } from './screens/bitacora.js';
+import { equipoScreen } from './screens/equipo.js';
 
 /* ---------- rutas ---------- */
 function route() {
@@ -16,6 +17,7 @@ function route() {
   if (parts[0] === 'entrar' || !s || !parts.length) { applyTheme(null); return entrar(); }
   const home = () => isEmpresa() ? '/clientes' : '/c/' + s.cliente;
 
+  if (parts[0] === 'equipo') return can('equipo') ? equipoScreen() : go(home());
   if (parts[0] === 'clientes') {
     if (!can('clientes')) return go(home());
     return parts[1] === 'nuevo' ? nuevoCliente() : clientes();

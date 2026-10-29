@@ -1,7 +1,7 @@
 // Empresa: Mis clientes y alta de cliente.
 import { h, field, input, select, modal, toast, norm, slugify, fmtDate, isoDay, DAY, readImage, inkOn } from '../core/ui.js';
 import { Reg, db, stats, vigencia, daysLeft, serviceTick, baseConfig, saveConfig, logChange, empresaLog, monthsBetween, today } from '../core/store.js';
-import { who } from '../core/session.js';
+import { who, can } from '../core/session.js';
 import { layout, go, MANDO_URL } from '../core/shell.js';
 import { progress } from './configurar.js';
 import { startTour } from '../core/tour.js';
@@ -44,7 +44,7 @@ function card(c) {
   } else if (c.estado === 'activo') {
     main = h('button', { class: 'btn pri lg', onclick: () => { location.href = MANDO_URL(c.slug); } }, 'Abrir centro de mando');
   } else {
-    main = c.motivo === 'vencido' ? h('button', { class: 'btn pri lg', onclick: () => vigenciaModal(c.slug) }, 'Renovar servicio')
+    main = !can('servicio') ? h('div', { class: 'note' }, 'Servicio suspendido. Lo reactiva el súper administrador.') : c.motivo === 'vencido' ? h('button', { class: 'btn pri lg', onclick: () => vigenciaModal(c.slug) }, 'Renovar servicio')
       : h('button', { class: 'btn pri lg', onclick: () => toggle(c.slug) }, 'Reactivar servicio');
   }
   const L = (t, fn, cls) => h('button', { class: cls || '', onclick: fn }, t);
@@ -57,10 +57,10 @@ function card(c) {
     main,
     h('div', { class: 'clinks' },
       L(c.estado === 'activo' ? 'Ajustes' : 'Configuración', () => go('/c/' + c.slug + '/configurar')),
-      L('Vigencia', () => vigenciaModal(c.slug)),
+      can('servicio') ? L('Vigencia', () => vigenciaModal(c.slug)) : null,
       L('Bitácora', () => go('/c/' + c.slug + '/bitacora')),
-      c.estado === 'activo' ? L('Suspender', () => toggle(c.slug)) : null,
-      L('Eliminar', () => eliminar(c.slug), 'dan')));
+      c.estado === 'activo' && can('servicio') ? L('Suspender', () => toggle(c.slug)) : null,
+      can('eliminar') ? L('Eliminar', () => eliminar(c.slug), 'dan') : null));
 }
 
 function toggle(slug) {

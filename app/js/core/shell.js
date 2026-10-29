@@ -32,10 +32,11 @@ function topbar(ctx) {
   const w = who();
   const menu = h('div', { class: 'umenu', hidden: true, role: 'menu' });
   const btn = h('button', { class: 'userbtn', 'aria-haspopup': 'menu', onclick: e => { e.stopPropagation(); menu.hidden = !menu.hidden; } },
-    h('span', { class: 'av' }, initials(w.nombre)), h('span', { class: 'ut' }, h('b', {}, w.nombre), (isEmpresa() || w.nombre !== ROLES[w.rol]) ? h('small', {}, isEmpresa() ? 'Súper administrador' : ROLES[w.rol]) : null));
+    h('span', { class: 'av' }, initials(w.nombre)), h('span', { class: 'ut' }, h('b', {}, w.nombre), w.nombre !== ROLES[w.rol] ? h('small', {}, ROLES[w.rol]) : null));
   const item = (label, fn) => h('button', { role: 'menuitem', onclick: () => { menu.hidden = true; fn(); } }, label);
   const items = [];
   if (isEmpresa()) items.push(item('Mis clientes', () => go('/clientes')));
+  if (can('equipo')) items.push(item('Equipo de la empresa', () => go('/equipo')));
   if (c && c.estado === 'activo' && can('mando')) items.push(item('Centro de mando', () => { location.href = MANDO_URL(c.slug); }));
   if (c && can('cfg')) items.push(item(c.estado === 'activo' ? 'Ajustes del cliente' : 'Configuración', () => go('/c/' + c.slug + '/configurar')));
   if (c && can('bitacora')) items.push(item('Bitácora de cambios', () => go('/c/' + c.slug + '/bitacora')));

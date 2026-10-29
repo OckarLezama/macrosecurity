@@ -3,7 +3,7 @@ import { h, $, SHIELD } from '../core/ui.js';
 import { ses, login, logout, autenticar, cambiarPassword, ROLES } from '../core/session.js';
 import { go } from '../core/shell.js';
 
-const home = s => s.rol === 'empresa' ? '/clientes' : '/c/' + s.cliente;
+const home = s => ['super', 'empresa'].includes(s.rol) ? '/clientes' : '/c/' + s.cliente;
 
 export function entrar() {
   document.title = 'Acceso · Macro Security';
@@ -27,7 +27,7 @@ export function entrar() {
       h('div', { class: 'encard' }, l1, l2, err, h('button', { class: 'btn pri lg', type: 'submit', onclick: async () => {
         if (p.value.length < 8) return fail('Debe tener al menos 8 caracteres.');
         if (p.value !== p2.value) return fail('Las contraseñas no coinciden.');
-        await cambiarPassword(a.cliente, a.id, a.correo, p.value); login(a.rol, a.nombre, a.cliente); go(home(a));
+        await cambiarPassword(a.cliente, a.equipo || a.cliente ? a.id : null, a.correo, p.value); login(a.rol, a.nombre, a.cliente); go(home(a));
       } }, 'Guardar y entrar')));
   };
 
@@ -48,7 +48,7 @@ export function entrar() {
 
   // Sesión abierta en esta pestaña: continuar o entrar con otra cuenta.
   const abierta = s => shell(h('h1', {}, 'Sesión abierta'), h('div', { class: 'encard' },
-    h('div', { class: 'enwho' }, h('b', {}, s.nombre), h('span', {}, s.rol === 'empresa' ? 'Súper administrador' : ROLES[s.rol])),
+    h('div', { class: 'enwho' }, h('b', {}, s.nombre), h('span', {}, ROLES[s.rol])),
     h('button', { class: 'btn pri lg', type: 'button', onclick: () => go(home(s)) }, 'Continuar'),
     h('button', { class: 'btn lg', type: 'button', onclick: () => { logout(); acceso(); } }, 'Entrar con otra cuenta')));
 

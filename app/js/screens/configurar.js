@@ -1,7 +1,7 @@
 // Configuración del cliente: un paso a la vez, con instrucciones concretas.
 import { h, field, input, select, modal, toast, norm, pad, fmtDate, fileBtn, loadLib, readImage, download } from '../core/ui.js';
 import { Reg, db, config, saveConfig, logChange, empresaLog } from '../core/store.js';
-import { who, can, isEmpresa, ROLES, ROLE_HELP, tempPassword, hashPw } from '../core/session.js';
+import { who, can, isEmpresa, ROLES, ROLE_HELP, tempPassword, hashPw, equipo } from '../core/session.js';
 import { layout, go } from '../core/shell.js';
 import { searchLimit, fromPlace, fromFile, pointsFromFile, coverage, preview, randIn, km2 } from '../core/geo.js';
 import { vigenciaModal, colorPicker } from './clientes.js';
@@ -289,7 +289,7 @@ const UI = {
   usr(ctx) {
     if (!can('usuarios')) return { body: h('div', { class: 'note' }, 'Tu usuario no puede administrar usuarios. Pídeselo al administrador responsable.') };
     const L2 = ctx.d.list('usuarios').map(u => ({ ...u }));
-    const roles = Object.entries(ROLES).filter(([k]) => k !== 'empresa');
+    const roles = Object.entries(ROLES).filter(([k]) => k !== 'empresa' && k !== 'super');
     const cols = 'grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 230px 150px 40px';
     const reset = async u => {
       const pw = tempPassword(); const cur = ctx.d.get('usuarios/' + u.id); if (!cur) return;
@@ -318,6 +318,7 @@ const UI = {
         if (!rb.length) throw new Error('Falta el administrador de respaldo');
         const taken = new Map(); for (const c2 of Reg.all()) if (c2.slug !== ctx.slug) for (const x of db(c2.slug).list('usuarios')) taken.set((x.correo || '').toLowerCase(), c2.nombre);
         for (const u of ok) if (taken.has(u.correo)) throw new Error(u.correo + ' ya es usuario de otro cliente');
+        for (const u of ok) if (equipo().some(e => e.correo === u.correo) || u.correo === 'superadmin@macrosecurity.mx') throw new Error(u.correo + ' es una cuenta de la empresa');
         const nuevos = [];
         for (const u of ok) if (!u.ph) { const pw = tempPassword(); u.ph = await hashPw(u.correo, pw); u.tmp = true; u.estado = 'pendiente'; nuevos.push({ nombre: u.nombre, correo: u.correo, pw }); }
         const prev = ctx.d.list('usuarios'); ctx.d.clear('usuarios'); for (const u of ok) ctx.d.set('usuarios/' + u.id, u);
@@ -419,7 +420,7 @@ async function showQR(ctx, u) {
 }
 
 // Contraseñas temporales: se muestran una sola vez para entregarlas a cada persona.
-function showPw(list) {
+export function showPw(list) {
   const txt = list.map(x => x.nombre + ' · ' + x.correo + ' · ' + x.pw).join('\n');
   modal({ kicker: 'CONTRASEÑAS TEMPORALES', title: list.length === 1 ? 'Contraseña de ' + list[0].nombre : list.length + ' contraseñas nuevas',
     body: [h('div', { class: 'note warn' }, 'Cópialas ahora: no se vuelven a mostrar. Cada persona crea su propia contraseña la primera vez que entra.'),
