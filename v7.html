@@ -820,6 +820,12 @@ body #v-mando .rnote{font-size:11px!important;cursor:help}
 .wck small{color:var(--muted)}.wck.pend small{color:#C2343F;font-weight:700}
 .qrc{align-items:center;text-align:center}.qrimg{width:220px;height:220px}.qrimg svg{width:100%;height:100%}
 @media print{body>*:not(.login){display:none!important}.login{position:static;background:#fff}.login .row{display:none}}
+.vg{display:inline-block;font-size:11.5px;font-weight:700;border-radius:8px;padding:4px 8px;align-self:flex-start}.vg.ok{background:#E3F5EE;color:#1E8A63}.vg.warn{background:#FFF4DC;color:#9A6400}.vg.bad{background:#FDECEE;color:#C2343F}.vg.none{background:var(--panel2);color:var(--muted)}
+.shist{margin:0;padding-left:18px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px;max-height:140px;overflow-y:auto}
+.vbanner{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:12px;background:#FFF4DC;border:1px solid #F3D9A4;color:#6B4A00;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;box-shadow:0 10px 26px rgba(23,33,46,.18);max-width:calc(100% - 32px)}
+.vbanner.bad{background:#FDECEE;border-color:#F5C2C8;color:#8E1F2A}
+.cons{z-index:110!important}
+.ccb .btn.dan{color:#C2343F!important;border-color:#F0B7BE!important;background:#fff!important;opacity:1!important}.lbox .wcard b{font-size:13px}
 </style>
 
 <div class="app">
@@ -994,21 +1000,62 @@ const CUR=(()=>{const q=new URLSearchParams(location.search).get('c');const r=re
 function dbKey(slug){return slug==='puebla'?'ms3.db':'ms3.db:'+slug;}
 function goClient(slug,setup){lsSet('ms.cur',slug);const u=new URL(location.href);u.searchParams.set('c',slug);if(setup)u.searchParams.set('setup','1');else u.searchParams.delete('setup');u.hash='';location.href=u.toString();}
 function clientStats(slug){try{const raw=localStorage.getItem(dbKey(slug));if(!raw)return null;const m=new Map(JSON.parse(raw));const c=m.get('config/main');let ev=0,un=0;for(const k of m.keys()){if(k.startsWith('eventos/'))ev++;if(k.startsWith('unidades/'))un++;}return {sect:c&&c.sectores?c.sectores.length:0,col:c&&c.colonias?c.colonias.length:0,ev,un};}catch(e){return null;}}
-function openConsole(){let ov=$('#consola');if(!ov){ov=h('div',{class:'cons',id:'consola'});document.body.append(ov);}
-  const r=regGet();const card=c=>{const st=clientStats(c.slug);const act=c.estado==='activo',cfgg=c.estado==='configuracion';
-    return '<div class="ccard'+(c.slug===CUR?' cur':'')+'"><div class="cch"><div><b>'+esc(c.nombre)+'</b><span>'+esc(c.lugar||'')+' · '+(c.nivel==='estado'?'Estado':'Municipio')+'</span></div><span class="cst '+(act?'on':(cfgg?'cfg':'off'))+'">'+(act?'Habilitado':(cfgg?'En configuración':'Suspendido'))+'</span></div>'+
+/* ---- vigencia del servicio ---- */
+const DAY=864e5;const fmtF=t=>new Date(t).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+function daysLeft(c){if(!c.servicio||!c.servicio.fin)return null;const fin=new Date(c.servicio.fin+'T23:59:59').getTime();return Math.ceil((fin-Date.now())/DAY);}
+function regAuto(){const r=regGet();let ch=false;for(const c of r){const d=daysLeft(c);if(d==null)continue;c.avisos=c.avisos||[];
+    {const m=[7,30,60,90].find(x=>d<=x);const key='v'+c.servicio.fin+'-'+m;if(m&&d>0&&!c.avisos.find(a=>a.k===key)){c.avisos.push({k:key,t:Date.now(),txt:'Aviso: el servicio vence en '+d+' días ('+fmtF(c.servicio.fin+'T12:00')+').'});ch=true;}}
+    if(d<=0&&c.estado==='activo'){c.estado='suspendido';c.motivo='vencido';c.avisos.push({k:'susp'+Date.now(),t:Date.now(),txt:'Suspendido automáticamente: venció el servicio sin renovación.'});ch=true;}}
+  if(ch)regSet(r);return r;}
+function vigBadge(c){const d=daysLeft(c);if(d==null)return '<span class="vg none">Sin vigencia definida</span>';if(d<=0)return '<span class="vg bad">Vencido desde '+fmtF(c.servicio.fin+'T12:00')+'</span>';
+  return '<span class="vg '+(d<=30?'bad':(d<=90?'warn':'ok'))+'">Vigente hasta '+fmtF(c.servicio.fin+'T12:00')+' · '+d+' días</span>';}
+function openService(slug){const r=regGet();const c=r.find(x=>x.slug===slug);if(!c)return;c.servicio=c.servicio||{};const sv=c.servicio;
+  const ov=h('div',{class:'login',style:'z-index:120',onclick:e=>{if(e.target===ov)ov.remove();}});const today=new Date().toISOString().slice(0,10);
+  const i0=h('input',{class:'inp',type:'date',value:sv.inicio||today}),i1=h('input',{class:'inp',type:'date',value:sv.fin||new Date(Date.now()+365*DAY).toISOString().slice(0,10)});
+  const per=h('select',{class:'inp'},...[[1,'Mensual'],[3,'Trimestral'],[6,'Semestral'],[12,'Anual']].map(([v,l])=>h('option',{value:v},l)));per.value=sv.meses||12;
+  const mon=h('input',{class:'inp',type:'number',min:0,step:'0.01',value:sv.monto||'',placeholder:'Monto por periodo (MXN)'});
+  const hist=(c.pagos||[]).slice().reverse().map(p=>'<li>'+fmtF(p.t)+' · renovado hasta '+fmtF(p.hasta+'T12:00')+(p.monto?' · $'+Number(p.monto).toLocaleString('es-MX'):'')+'</li>').join('');
+  const av=(c.avisos||[]).slice(-6).reverse().map(a=>'<li>'+fmtF(a.t)+' · '+esc(a.txt)+'</li>').join('');
+  const save=()=>{sv.inicio=i0.value;sv.fin=i1.value;sv.meses=+per.value;sv.monto=mon.value?+mon.value:null;regSet(r);};
+  ov.append(h('div',{class:'lbox',style:'width:min(520px,100%)'},h('b',{},'Servicio · '+c.nombre),
+    h('div',{class:'wgrid'},wField('Inicio',i0),wField('Vence',i1,'Al día siguiente se suspende solo si no se renueva.'),wField('Periodo de renovación',per),wField('Monto por periodo',mon)),
+    h('small',{style:'color:var(--muted)'},'Avisos automáticos al cliente: 90, 60 y 30 días antes, y 7 días antes. Se muestran a sus usuarios dentro de la plataforma; por correo cuando esté conectada la base de datos.'),
+    h('div',{class:'row'},h('button',{class:'btn pri',onclick:()=>{save();toast('Vigencia guardada');ov.remove();openConsole();}},'Guardar'),
+      h('button',{class:'btn',onclick:()=>{save();const base=new Date(Math.max(Date.now(),new Date(sv.fin+'T12:00').getTime()));base.setMonth(base.getMonth()+sv.meses);sv.fin=base.toISOString().slice(0,10);
+        c.pagos=c.pagos||[];c.pagos.push({t:Date.now(),hasta:sv.fin,monto:sv.monto});if(c.estado==='suspendido'&&c.motivo==='vencido'){c.estado='activo';c.motivo=null;}regSet(r);toast('Renovado hasta '+fmtF(sv.fin+'T12:00'));ov.remove();openConsole();}},'Registrar pago y renovar')),
+    hist?h('div',{class:'wcard'},h('b',{},'Pagos'),(()=>{const u=h('ul',{class:'shist'});u.innerHTML=hist;return u;})()):null,
+    av?h('div',{class:'wcard'},h('b',{},'Avisos enviados'),(()=>{const u=h('ul',{class:'shist'});u.innerHTML=av;return u;})()):null));
+  document.body.append(ov);}
+function openConsole(){const sb=document.querySelector('.login.susp');if(sb)sb.style.display='none';let ov=$('#consola');if(!ov){ov=h('div',{class:'cons',id:'consola'});document.body.append(ov);}
+  const r=regAuto();const card=c=>{const st=clientStats(c.slug);const act=c.estado==='activo',cfgg=c.estado==='configuracion',sus=c.estado==='suspendido';
+    return '<div class="ccard'+(c.slug===CUR?' cur':'')+'"><div class="cch"><div><b>'+esc(c.nombre)+'</b><span>'+esc(c.lugar||'')+' · '+({estado:'Estado',corporacion:'Corporación'}[c.tipo||c.nivel]||'Municipio')+'</span></div><span class="cst '+(act?'on':(cfgg?'cfg':'off'))+'">'+(act?'Habilitado':(cfgg?'En configuración':(c.motivo==='vencido'?'Suspendido · vencido':'Suspendido')))+'</span></div>'+
+      vigBadge(c)+
       '<div class="ccs">'+(st?'<span><b>'+st.sect+'</b> sectores</span><span><b>'+st.col+'</b> colonias</span><span><b>'+st.un+'</b> patrullas</span><span><b>'+st.ev+'</b> reportes</span>':'<span>Se prepara al entrar por primera vez</span>')+'</div>'+
-      '<div class="ccb">'+(act?'<button class="btn pri" data-a="go" data-s="'+c.slug+'">'+(c.slug===CUR?'Estás aquí':'Entrar')+'</button>':'')+'<button class="btn'+(cfgg?' pri':'')+'" data-a="cfg" data-s="'+c.slug+'">Configurar</button>'+(cfgg?'':'<button class="btn" data-a="tg" data-s="'+c.slug+'">'+(act?'Suspender':'Habilitar')+'</button>')+(c.slug!==CUR?'<button class="btn dan" data-a="del" data-s="'+c.slug+'">Eliminar</button>':'')+'</div></div>';};
+      '<div class="ccb">'+(act?'<button class="btn pri" data-a="go" data-s="'+c.slug+'">'+(c.slug===CUR?'Estás aquí':'Entrar')+'</button>':'')+
+      '<button class="btn'+(cfgg?' pri':'')+'" data-a="cfg" data-s="'+c.slug+'">Configurar</button><button class="btn" data-a="srv" data-s="'+c.slug+'">Servicio</button>'+
+      (cfgg?'':'<button class="btn'+(sus?' pri':'')+'" data-a="tg" data-s="'+c.slug+'">'+(act?'Suspender':'Reactivar')+'</button>')+
+      '<button class="btn dan" data-a="del" data-s="'+c.slug+'">Eliminar</button></div></div>';};
   ov.innerHTML='<div class="cbox"><div class="chd"><div><small>ADMINISTRADOR GENERAL</small><h2>Clientes</h2></div><button class="x" id="cX" aria-label="Cerrar">✕</button></div>'+
-    '<form class="cnew" id="cNew"><b>Nuevo cliente</b><div class="cfr"><input class="inp" id="cnN" placeholder="Nombre (ej. Tlaxcala)" required><input class="inp" id="cnL" placeholder="Lugar a delimitar (ej. Tlaxcala, Tlaxcala)" required><select class="inp" id="cnV"><option value="municipio">Municipio</option><option value="estado">Estado completo</option></select><button class="btn pri" type="submit">Crear y habilitar</button></div><small>La plataforma toma el límite oficial del lugar, arma sectores dentro y lo deja listo. Después, en "Administración del cliente", se cargan sus sectores reales, oficiales, turnos y zonas seguras.</small></form>'+
+    '<form class="cnew" id="cNew"><b>Nuevo cliente</b><div class="cfr"><input class="inp" id="cnN" placeholder="Nombre (ej. Tlaxcala)" required><input class="inp" id="cnL" placeholder="Lugar a delimitar (ej. Tlaxcala, Tlaxcala)" required><select class="inp" id="cnV"><option value="municipio">Municipio</option><option value="estado">Estado completo</option></select><button class="btn pri" type="submit">Crear y configurar</button></div><small>Se crea en configuración. El asistente guía la carga de territorio, sectores, oficiales y usuarios; al final se habilita.</small></form>'+
     '<div class="cgrid">'+r.map(card).join('')+'</div></div>';
-  $('#cX').onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove();};
-  $('#cNew').onsubmit=e=>{e.preventDefault();const n=$('#cnN').value.trim(),l=$('#cnL').value.trim(),v=$('#cnV').value;let sl=slugify(n);const rr=regGet();let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v,tipo:v,estado:'configuracion',creado:Date.now()});regSet(rr);toast('Cliente '+n+' creado. Abriendo su configuración…');setTimeout(()=>goClient(sl,true),500);};
-  ov.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const sl=b.dataset.s;const rr=regGet();const c=rr.find(x=>x.slug===sl);if(!c)return;
-    if(b.dataset.a==='go'){if(sl!==CUR)goClient(sl);else ov.remove();}
-    if(b.dataset.a==='cfg'){if(sl!==CUR)goClient(sl,true);else{ov.remove();openWizard(0);}}
-    if(b.dataset.a==='tg'){c.estado=c.estado==='activo'?'suspendido':'activo';regSet(rr);if(sl===CUR&&c.estado!=='activo')location.reload();else openConsole();}
-    if(b.dataset.a==='del'){if(b.dataset.ok){regSet(rr.filter(x=>x.slug!==sl));try{localStorage.removeItem(dbKey(sl));}catch(e){}openConsole();}else{b.dataset.ok='1';b.textContent='¿Seguro? Toca otra vez';}}});}
+  const close=()=>{ov.remove();if(sb)sb.style.display='';};
+  $('#cX').onclick=close;ov.onclick=e=>{if(e.target===ov)close();};
+  $('#cNew').onsubmit=e=>{e.preventDefault();const n=$('#cnN').value.trim(),l=$('#cnL').value.trim(),v=$('#cnV').value;let sl=slugify(n);const rr=regGet();let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);
+    const fin=new Date(Date.now()+365*DAY).toISOString().slice(0,10);rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v,tipo:v,estado:'configuracion',creado:Date.now(),servicio:{inicio:new Date().toISOString().slice(0,10),fin,meses:12}});regSet(rr);toast('Cliente '+n+' creado. Abriendo su configuración…');setTimeout(()=>goClient(sl,true),500);};
+  ov.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const sl=b.dataset.s;const rr=regGet();const c=rr.find(x=>x.slug===sl);if(!c)return;const a=b.dataset.a;
+    if(a==='go'){if(sl!==CUR)goClient(sl);else close();}
+    if(a==='cfg'){if(sl!==CUR)goClient(sl,true);else{close();openWizard(0);}}
+    if(a==='srv')openService(sl);
+    if(a==='tg'){if(c.estado==='activo'){c.estado='suspendido';c.motivo='manual';(c.avisos=c.avisos||[]).push({k:'m'+Date.now(),t:Date.now(),txt:'Suspendido manualmente por el administrador.'});}
+      else{const d=daysLeft(c);if(d!=null&&d<=0){toast('El servicio está vencido: registra la renovación en "Servicio" para reactivarlo');openService(sl);return;}c.estado='activo';c.motivo=null;}
+      regSet(rr);if(sl===CUR)location.reload();else openConsole();}
+    if(a==='del'){const box=h('div',{class:'login',style:'z-index:120'},h('div',{class:'lbox'},h('b',{},'Eliminar '+c.nombre),h('span',{},'Se borran su configuración, sectores, oficiales, usuarios y reportes. No se puede deshacer. Escribe el nombre del cliente para confirmar.'),
+        h('input',{class:'inp',id:'delN',placeholder:c.nombre}),h('div',{class:'row'},h('button',{class:'btn dan',onclick:()=>{if($('#delN').value.trim()!==c.nombre){toast('El nombre no coincide');return;}
+          const rest=rr.filter(x=>x.slug!==sl);if(!rest.length){toast('Debe quedar al menos un cliente');return;}regSet(rest);try{localStorage.removeItem(dbKey(sl));}catch(e){}box.remove();toast(c.nombre+' eliminado');if(sl===CUR)goClient(rest[0].slug);else openConsole();}},'Eliminar definitivamente'),h('button',{class:'btn',onclick:()=>box.remove()},'Cancelar'))));document.body.append(box);}});}
+function serviceBanner(){const me=regGet().find(x=>x.slug===CUR);const old=$('#vbanner');const d=me?daysLeft(me):null;if(d==null||d>90||d<=0||me.estado!=='activo'){if(old)old.remove();return;}
+  const ack=lsGet('ms.vack.'+CUR,'');const key=me.servicio.fin+'-'+(d<=7?7:d<=30?30:d<=60?60:90);if(ack===key){if(old)old.remove();return;}
+  if(old)return;const b=h('div',{class:'vbanner'+(d<=30?' bad':'')},h('span',{},'El servicio de '+me.nombre+' vence el '+fmtF(me.servicio.fin+'T12:00')+' (en '+d+' días). Si no se renueva, se suspenderá automáticamente.'),h('button',{class:'x',onclick:()=>{lsSet('ms.vack.'+CUR,key);b.remove();}},'✕'));document.body.append(b);}
+
 /* ===== asistente de configuración del cliente ===== */
 const WZ={i:0,open:false};
 const WSTEPS=[
@@ -1056,7 +1103,7 @@ const WSTEP_UI={
   const lf=h('input',{type:'file',accept:'image/*'});lf.onchange=()=>{const f=lf.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');const k=128/Math.max(im.width,im.height);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);logo.src=c.toDataURL('image/png');};im.src=r.result;};r.readAsDataURL(f);};
   const tipo=h('select',{class:'inp',id:'wTipo'},...[['municipio','Municipio'],['estado','Estado'],['corporacion','Corporación o dependencia']].map(([v,l])=>h('option',{value:v},l)));tipo.value=me.tipo||me.nivel||'municipio';
   const tz=h('select',{class:'inp',id:'wTz'},...[['America/Mexico_City','Centro (CDMX)'],['America/Cancun','Sureste (Quintana Roo)'],['America/Chihuahua','Chihuahua'],['America/Mazatlan','Pacífico (Sinaloa, Nayarit, BCS)'],['America/Hermosillo','Sonora'],['America/Tijuana','Noroeste (Baja California)']].map(([v,l])=>h('option',{value:v},l)));tz.value=me.tz||'America/Mexico_City';
-  b.append(h('div',{class:'wgrid'},wField('Nombre del cliente',wInput('wNom',me.nombre)),wField('Tipo',tipo),wField('Responsable',wInput('wResp',me.responsable,'Nombre de quien autoriza')),wField('Contacto',wInput('wCont',me.contacto,'Correo o teléfono')),wField('Zona horaria',tz),wField('Logo',h('div',{class:'row'},logo,lf),'Se muestra en la barra superior.')));
+  b.append(h('div',{class:'wgrid'},wField('Nombre del cliente',wInput('wNom',me.nombre)),wField('Tipo',tipo),wField('Responsable',wInput('wResp',me.responsable,'Nombre de quien autoriza')),wField('Contacto',wInput('wCont',me.contacto,'Correo o teléfono')),wField('Zona horaria',tz),wField('Logo',h('div',{class:'row'},logo,lf),'Se muestra en la barra superior.')),h('div',{class:'wcard'},h('b',{},'Servicio contratado'),h('div',{class:'row'},(()=>{const sp=h('span',{});sp.innerHTML=vigBadge(me);return sp;})(),h('button',{class:'btn',onclick:()=>openService(CUR)},'Editar vigencia y pagos')),h('small',{},'Avisos 90, 60, 30 y 7 días antes. Si no se renueva, se suspende solo al día siguiente del vencimiento.')));
   b._save=async()=>{const n=$('#wNom').value.trim();if(!n)throw new Error('Falta el nombre');regPatch({nombre:n,tipo:tipo.value,responsable:$('#wResp').value.trim(),contacto:$('#wCont').value.trim(),tz:tz.value,logo:logo.getAttribute('src')||''});await cfgPatch({cliente:n});};},
  terr(b){const C=S.config;const has=C.limite&&C.limite.length;const km=has?Math.round(Math.abs(area(C.limite))*M*M/1e6):0;const me=regMe();
   const q=wInput('wQ',me.lugar||'','Ej. Tlaxcala, Tlaxcala');const lvl=h('select',{class:'inp'},h('option',{value:'municipio'},'Municipio'),h('option',{value:'estado'},'Estado completo'));lvl.value=me.nivel||'municipio';
@@ -2338,7 +2385,7 @@ function wire(){
 }
 window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
-  {const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
+  {regAuto();const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login susp'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},me.motivo==='vencido'?'El servicio está suspendido porque venció el periodo contratado sin renovación. Comunícate con el administrador.':'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
   const SC=window.MS_SUPABASE;
@@ -2369,6 +2416,7 @@ async function boot(){
     if(p){await buildFromPlace(p);const c2=JSON.parse(JSON.stringify(S.config));c2.cliente=me.nombre||c2.cliente;await write(()=>api.set('config/main',c2));S.config=c2;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1200);}else toast('No encontré el límite de "'+L+'". Cárgalo en Administración del cliente.');}catch(e){}}}
   {const me=regGet().find(x=>x.slug===CUR);if(me&&S.config&&S.config.cliente!==me.nombre&&S.config.cliente==='Municipio de ejemplo'){const c3=JSON.parse(JSON.stringify(S.config));c3.cliente=me.nombre;await write(()=>api.set('config/main',c3));S.config=c3;render();}}
   {const me=regGet().find(x=>x.slug===CUR);if(new URLSearchParams(location.search).get('setup')||(me&&me.estado==='configuracion'))setTimeout(()=>openWizard(0),800);}
+  serviceBanner();setInterval(()=>{const me=regGet().find(x=>x.slug===CUR);regAuto();const m2=regGet().find(x=>x.slug===CUR);if(me&&m2&&me.estado==='activo'&&m2.estado==='suspendido')location.reload();serviceBanner();},60000);
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
 }
