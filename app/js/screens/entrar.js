@@ -1,6 +1,6 @@
 // Acceso: correo y contraseña. La cuenta decide a dónde entra cada quien.
 import { h, $, SHIELD } from '../core/ui.js';
-import { ses, login, logout, autenticar, empresaCuentas, crearEmpresa, cambiarPassword, ROLES } from '../core/session.js';
+import { ses, login, logout, autenticar, cambiarPassword, ROLES } from '../core/session.js';
 import { go } from '../core/shell.js';
 
 const home = s => s.rol === 'empresa' ? '/clientes' : '/c/' + s.cliente;
@@ -19,19 +19,6 @@ export function entrar() {
     lb.append(t); return [lb, i];
   };
   const fail = m => { err.textContent = m; err.hidden = false; };
-
-  // Primera vez: se crea la cuenta de la empresa.
-  const primera = () => {
-    const [l0, n] = fld('Nombre de la empresa', 'text', 'organization'), [l1, c] = fld('Correo', 'email', 'username'), [l2, p] = pwField('Contraseña', 'new-password'), [l3, p2] = pwField('Confirma la contraseña', 'new-password');
-    err.hidden = true;
-    shell(h('h1', {}, 'Crea la cuenta de la empresa'), h('p', { class: 'ensub' }, 'Es la cuenta de súper administrador: da de alta a los clientes y configura su servicio.'),
-      h('div', { class: 'encard' }, l0, l1, l2, l3, err, h('button', { class: 'btn pri lg', type: 'submit', onclick: async () => {
-        if (!n.value.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.value.trim())) return fail('Escribe el nombre y un correo válido.');
-        if (p.value.length < 8) return fail('La contraseña debe tener al menos 8 caracteres.');
-        if (p.value !== p2.value) return fail('Las contraseñas no coinciden.');
-        await crearEmpresa(n.value.trim(), c.value, p.value); login('empresa', n.value.trim(), null); go('/clientes');
-      } }, 'Crear cuenta y entrar')));
-  };
 
   // Contraseña temporal: la persona crea la suya al primer acceso.
   const nueva = a => {
@@ -66,7 +53,6 @@ export function entrar() {
     h('button', { class: 'btn lg', type: 'button', onclick: () => { logout(); acceso(); } }, 'Entrar con otra cuenta')));
 
   const s = ses();
-  if (!empresaCuentas().length) primera();
-  else if (s) abierta(s);
+  if (s) abierta(s);
   else acceso();
 }

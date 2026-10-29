@@ -46,14 +46,20 @@ export const canSee = slug => { const s = ses(); return !!s && (s.rol === 'empre
 
 /* ---------- cuentas (piloto: viven en este navegador hasta conectar la base de datos) ---------- */
 const hashPw = (correo, pw) => sha('ms|' + String(correo).trim().toLowerCase() + '|' + pw);
-export const empresaCuentas = () => LS.get('ms.empresa', []);
-export async function crearEmpresa(nombre, correo, pw) { LS.set('ms.empresa', [...empresaCuentas(), { nombre, correo: correo.trim().toLowerCase(), ph: await hashPw(correo, pw) }]); }
+// Súper administradores (la empresa). No se crean desde la plataforma: vienen definidos aquí.
+// La contraseña inicial es temporal; al primer acceso cada uno define la suya.
+const SUPER = [
+  { correo: 'superadmin@macrosecurity.mx', nombre: 'Macro Security', ph0: '44569efdbe4fb98bb4e84e631a8752ab125707f0f1412c10b2ffabedad85e350' },
+];
+LS.del('ms.empresa');
+const superOver = () => LS.get('ms.super', {});
+export const superCuentas = () => SUPER.map(s => { const o = superOver()[s.correo]; return { ...s, ph: o ? o.ph : s.ph0, tmp: !o }; });
 export function tempPassword() { const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; const r = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), x => A[x % A.length]).join(''); return 'Ms-' + r(4) + '-' + r(4); }
 export { hashPw };
 // Busca la cuenta por correo y contraseña. Devuelve {rol,nombre,cliente,tmp,id} o null.
 export async function autenticar(correo, pw) {
   correo = correo.trim().toLowerCase();
-  for (const e of empresaCuentas()) if (e.correo === correo && e.ph === await hashPw(correo, pw)) return { rol: 'empresa', nombre: e.nombre, cliente: null };
+  for (const e of superCuentas()) if (e.correo === correo && e.ph === await hashPw(correo, pw)) return { rol: 'empresa', nombre: e.nombre, cliente: null, tmp: e.tmp };
   for (const c of Reg.all()) {
     const u = db(c.slug).list('usuarios').find(x => (x.correo || '').toLowerCase() === correo);
     if (u && u.ph && u.ph === await hashPw(correo, pw)) return { rol: u.rol, nombre: u.nombre || u.correo, cliente: c.slug, tmp: !!u.tmp, id: u.id };
@@ -61,6 +67,7 @@ export async function autenticar(correo, pw) {
   return null;
 }
 export async function cambiarPassword(cliente, id, correo, pw) {
+  if (!cliente) { const o = superOver(); o[correo] = { ph: await hashPw(correo, pw), t: Date.now() }; LS.set('ms.super', o); return; }
   const d = db(cliente); const u = d.get('usuarios/' + id); if (!u) return;
   u.ph = await hashPw(correo, pw); u.tmp = false; u.estado = 'activo'; d.set('usuarios/' + id, u);
 }
