@@ -775,6 +775,17 @@ body.dark #v-mando .rgc{background:#1D232B!important;border-color:#2A323D!import
 body #v-mando .rnote{font-size:11px!important;cursor:help}
 @media (min-width:1020px) and (max-height:900px){body #v-mando .rgs{max-width:110px!important}}
 .login{position:fixed;inset:0;z-index:100;background:rgba(16,20,26,.92);display:flex;align-items:center;justify-content:center;padding:16px}.lbox{background:#fff;border-radius:16px;padding:24px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.4)}.lbox b{font-size:20px}.lbox span{font-size:13px;color:#5B6878}.lbox small{color:#C2343F;min-height:16px}
+.cons{position:fixed;inset:0;z-index:90;background:rgba(16,20,26,.55);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.cbox{background:var(--bg);border-radius:18px;width:min(1080px,100%);padding:20px 22px;box-shadow:0 30px 70px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px}
+.chd{display:flex;justify-content:space-between;align-items:flex-start}.chd small{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:#0E7A6C}.chd h2{margin:2px 0 0;font-size:22px}
+.cnew{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}.cnew small{color:var(--muted);font-size:11.5px}
+.cfr{display:grid;grid-template-columns:1fr 1.4fr 150px auto;gap:8px}@media(max-width:760px){.cfr{grid-template-columns:1fr}}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.ccard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}.ccard.cur{border:2px solid #0E9384}
+.cch{display:flex;justify-content:space-between;gap:8px}.cch b{display:block;font-size:16px}.cch span{font-size:12px;color:var(--muted)}
+.cst{font-size:11px!important;font-weight:800;border-radius:999px;padding:3px 10px;height:fit-content}.cst.on{background:#E3F5EE;color:#1E8A63!important}.cst.off{background:#FDECEE;color:#C2343F!important}
+.ccs{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.ccs b{font-family:var(--f-num);font-size:18px;color:var(--fg)}
+.ccb{display:flex;gap:6px;flex-wrap:wrap}.ccb .btn{min-height:34px;font-size:12.5px}
 </style>
 
 <div class="app">
@@ -796,7 +807,7 @@ body #v-mando .rnote{font-size:11px!important;cursor:help}
     <span class="switch"><button id="demoSw" role="switch" aria-checked="false" aria-label="Modo demostración"></button>Reportes automáticos</span>
     <button class="fab" id="fab" aria-expanded="false" aria-controls="drawer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"></path></svg>Probar WhatsApp</button>
     <button class="dm" id="dmPanic">Simular botón de pánico</button>
-    <hr><button class="dm" data-go="unid">App del oficial</button><button class="dm" data-go="conf">Configuración</button>
+    <hr><button class="dm" data-go="unid">App del oficial</button><button class="dm" data-go="conf">Administración del cliente</button><hr><button class="dm" id="dmCons">Clientes (administrador general)</button>
     </div></div>
     <span class="pill" id="conn"><i></i>Conectando…</span>
     <span class="clock" id="clock"></span>
@@ -941,9 +952,31 @@ if(!UI.chatId){UI.chatId='c'+Math.random().toString(36).slice(2,9);lsSet('ms2.ch
 
 /* ===== datos: compartidos o locales ===== */
 let api=null;
-function localApi(){
-  let docs=new Map();try{const raw=localStorage.getItem('ms3.db');if(raw)docs=new Map(JSON.parse(raw));}catch(e){}
-  let stT=null;const save=()=>{clearTimeout(stT);stT=setTimeout(()=>{try{localStorage.setItem('ms3.db',JSON.stringify([...docs]));}catch(e){}},600);};
+/* ===== consola de clientes (administrador general) ===== */
+const slugify=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'cliente';
+function regGet(){let r=lsGet('ms.clientes',null);if(!r||!r.length){r=[{slug:'puebla',nombre:'Puebla',lugar:'Puebla, Puebla',nivel:'municipio',estado:'activo',creado:Date.now()}];lsSet('ms.clientes',r);}return r;}
+function regSet(r){lsSet('ms.clientes',r);}
+const CUR=(()=>{const q=new URLSearchParams(location.search).get('c');const r=regGet();const s0=q&&r.find(x=>x.slug===q)?q:lsGet('ms.cur','puebla');return r.find(x=>x.slug===s0)?s0:r[0].slug;})();
+function dbKey(slug){return slug==='puebla'?'ms3.db':'ms3.db:'+slug;}
+function goClient(slug){lsSet('ms.cur',slug);const u=new URL(location.href);u.searchParams.set('c',slug);u.hash='';location.href=u.toString();}
+function clientStats(slug){try{const raw=localStorage.getItem(dbKey(slug));if(!raw)return null;const m=new Map(JSON.parse(raw));const c=m.get('config/main');let ev=0,un=0;for(const k of m.keys()){if(k.startsWith('eventos/'))ev++;if(k.startsWith('unidades/'))un++;}return {sect:c&&c.sectores?c.sectores.length:0,col:c&&c.colonias?c.colonias.length:0,ev,un};}catch(e){return null;}}
+function openConsole(){let ov=$('#consola');if(!ov){ov=h('div',{class:'cons',id:'consola'});document.body.append(ov);}
+  const r=regGet();const card=c=>{const st=clientStats(c.slug);const act=c.estado==='activo';
+    return '<div class="ccard'+(c.slug===CUR?' cur':'')+'"><div class="cch"><div><b>'+esc(c.nombre)+'</b><span>'+esc(c.lugar||'')+' · '+(c.nivel==='estado'?'Estado':'Municipio')+'</span></div><span class="cst '+(act?'on':'off')+'">'+(act?'Habilitado':'Suspendido')+'</span></div>'+
+      '<div class="ccs">'+(st?'<span><b>'+st.sect+'</b> sectores</span><span><b>'+st.col+'</b> colonias</span><span><b>'+st.un+'</b> patrullas</span><span><b>'+st.ev+'</b> reportes</span>':'<span>Se prepara al entrar por primera vez</span>')+'</div>'+
+      '<div class="ccb">'+(act?'<button class="btn pri" data-a="go" data-s="'+c.slug+'">'+(c.slug===CUR?'Estás aquí':'Entrar')+'</button>':'')+'<button class="btn" data-a="tg" data-s="'+c.slug+'">'+(act?'Suspender':'Habilitar')+'</button>'+(c.slug!==CUR?'<button class="btn dan" data-a="del" data-s="'+c.slug+'">Eliminar</button>':'')+'</div></div>';};
+  ov.innerHTML='<div class="cbox"><div class="chd"><div><small>ADMINISTRADOR GENERAL</small><h2>Clientes</h2></div><button class="x" id="cX" aria-label="Cerrar">✕</button></div>'+
+    '<form class="cnew" id="cNew"><b>Nuevo cliente</b><div class="cfr"><input class="inp" id="cnN" placeholder="Nombre (ej. Tlaxcala)" required><input class="inp" id="cnL" placeholder="Lugar a delimitar (ej. Tlaxcala, Tlaxcala)" required><select class="inp" id="cnV"><option value="municipio">Municipio</option><option value="estado">Estado completo</option></select><button class="btn pri" type="submit">Crear y habilitar</button></div><small>La plataforma toma el límite oficial del lugar, arma sectores dentro y lo deja listo. Después, en "Administración del cliente", se cargan sus sectores reales, oficiales, turnos y zonas seguras.</small></form>'+
+    '<div class="cgrid">'+r.map(card).join('')+'</div></div>';
+  $('#cX').onclick=()=>ov.remove();ov.onclick=e=>{if(e.target===ov)ov.remove();};
+  $('#cNew').onsubmit=e=>{e.preventDefault();const n=$('#cnN').value.trim(),l=$('#cnL').value.trim(),v=$('#cnV').value;let sl=slugify(n);const rr=regGet();let k=2;while(rr.find(x=>x.slug===sl))sl=slugify(n)+'-'+(k++);rr.push({slug:sl,nombre:n,lugar:v==='estado'&&!/estado/i.test(l)?'Estado de '+l:l,nivel:v,estado:'activo',creado:Date.now()});regSet(rr);toast('Cliente '+n+' creado');openConsole();};
+  ov.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const sl=b.dataset.s;const rr=regGet();const c=rr.find(x=>x.slug===sl);if(!c)return;
+    if(b.dataset.a==='go'){if(sl!==CUR)goClient(sl);else ov.remove();}
+    if(b.dataset.a==='tg'){c.estado=c.estado==='activo'?'suspendido':'activo';regSet(rr);if(sl===CUR&&c.estado!=='activo')location.reload();else openConsole();}
+    if(b.dataset.a==='del'){if(b.dataset.ok){regSet(rr.filter(x=>x.slug!==sl));try{localStorage.removeItem(dbKey(sl));}catch(e){}openConsole();}else{b.dataset.ok='1';b.textContent='¿Seguro? Toca otra vez';}}});}
+function localApi(key){key=key||'ms3.db';
+  let docs=new Map();try{const raw=localStorage.getItem(key);if(raw)docs=new Map(JSON.parse(raw));}catch(e){}
+  let stT=null;const save=()=>{clearTimeout(stT);stT=setTimeout(()=>{try{localStorage.setItem(key,JSON.stringify([...docs]));}catch(e){}},600);};
   const subs=[];
   const col=p=>p.slice(0,p.lastIndexOf('/'));
   const snap=c=>{const out=[];for(const [p,d] of docs){if(col(p)===c)out.push({id:p.slice(p.lastIndexOf('/')+1),data:d});}return out;};
@@ -2109,6 +2142,7 @@ function wire(){
   const placeQ=()=>{const q=$('#qpanel');const narrow=matchMedia('(max-width:1019px)').matches;const side=document.querySelector('#v-mando .side');if(narrow&&q.parentNode!==side)side.insertBefore(q,side.children[1]||null);if(!narrow&&q.parentNode!==$('#mapwrap'))$('#mapwrap').append(q);};placeQ();
   if(lsGet('ms7.accmin',null)===null&&innerWidth<1020)lsSet('ms7.accmin',true);
   document.querySelectorAll('#riskSw button').forEach(b=>b.addEventListener('click',()=>{lsSet('ms8.rv',b.dataset.v);$('#riskSw').dataset.v=b.dataset.v;DK.r='';renderDash(true);}));
+  $('#dmCons').onclick=()=>{$('#demoMenu').hidden=true;openConsole();};
   $('#zRect').onclick=()=>setRectMode(!AREA.mode);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(AREA.mode)setRectMode(false);else if(AREA.p)clearArea();}});
   $('#dkbtn').onclick=()=>{const on=UI.base!=='oscuro';if(on)lsSet('ms12.prevBase',UI.base);setBase(on?'oscuro':lsGet('ms12.prevBase','calles'));renderAcc();};
@@ -2140,11 +2174,12 @@ function wire(){
 }
 window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
+  {const me=regGet().find(x=>x.slug===CUR);if(me&&me.estado!=='activo'){document.body.append(h('div',{class:'login'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},'Este servicio está suspendido. Comunícate con el administrador.'),h('button',{class:'btn',onclick:openConsole},'Abrir consola de clientes'))));return;}}
   wire();const hash=(location.hash||'').slice(1);
   let db=null;try{if(window.claude&&window.claude.use)db=await window.claude.use('db');}catch(e){db=null;}
   const SC=window.MS_SUPABASE;
   if(SC&&SC.url&&SC.anonKey&&window.supabase){const sb=await supaLogin(SC);api=supaApi(sb,SC.cliente||'demo');S.mode='db';setConn('db','Conectando…');}
-  else if(db){api=dbApi(db);S.mode='db';setConn('db','En vivo');}else{api=localApi();S.mode='local';setConn('local','Local');}
+  else if(db){api=dbApi(db);S.mode='db';setConn('db','En vivo');}else{api=localApi(dbKey(CUR));S.mode='local';setConn('local','Local');}
   let c=await api.get('config/main').catch(()=>null);let firstRun=!c;
   if(!c){const ok=await api.lease('meta/seed',20000);if(ok){c=await api.get('config/main').catch(()=>null);if(!c){c=defaultConfig();await seedAll(c);}}else{await new Promise(r=>setTimeout(r,3500));c=await api.get('config/main').catch(()=>null)||defaultConfig();}}
   S.config=c;M=c.mpu||80;
@@ -2161,8 +2196,9 @@ async function boot(){
   setTab(['pron','anal','unid','conf'].includes(hash)?hash:'mando');
   initMap();requestAnimationFrame(tick);
   const CARTO='datos/puebla_sectores_colonias.geojson';
-  if(S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
-  if(firstRun&&S.mode==='local'){try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.0003&countrycodes=mx&limit=3&accept-language=es&q='+encodeURIComponent('Puebla, Puebla'));const js=await r.json();const p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type));if(p)await buildFromPlace(p);}catch(e){}}
+  if(CUR==='puebla'&&S.config.cartoSrc!==CARTO){try{const r=await fetch(CARTO,{cache:'no-cache'});if(r.ok){const txt=await r.text();await importCarto(new File([txt],'puebla_sectores_colonias.geojson'));const c2=JSON.parse(JSON.stringify(S.config));c2.cartoSrc=CARTO;await write(()=>api.set('config/main',c2));S.config=c2;firstRun=false;UI.needHome=false;setTimeout(()=>{if(map){map.resize();flyHome();}},1500);}}catch(e){}}
+  if(firstRun&&S.mode==='local'){try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.0003&countrycodes=mx&limit=3&accept-language=es&q='+encodeURIComponent((regGet().find(x=>x.slug===CUR)||{}).lugar||'Puebla, Puebla'));const js=await r.json();const me=regGet().find(x=>x.slug===CUR)||{};const p=js.find(x=>x.geojson&&/Polygon/.test(x.geojson.type)&&(me.nivel!=='estado'||/state|administrative/.test((x.addresstype||x.type||'')+'')));if(p){await buildFromPlace(p);const c2=JSON.parse(JSON.stringify(S.config));c2.cliente=me.nombre||c2.cliente;await write(()=>api.set('config/main',c2));S.config=c2;}}catch(e){}}
+  {const me=regGet().find(x=>x.slug===CUR);if(me&&S.config&&S.config.cliente!==me.nombre&&S.config.cliente==='Municipio de ejemplo'){const c3=JSON.parse(JSON.stringify(S.config));c3.cliente=me.nombre;await write(()=>api.set('config/main',c3));S.config=c3;render();}}
   await leaseLoop();setInterval(leaseLoop,5000);setInterval(demoTick,2500);
   render();
 }
