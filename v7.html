@@ -1283,9 +1283,9 @@ const SES=()=>lsGet('ms.ses',null);
 const ROLE=()=>{const ss=SES();const r=ss?ss.rol:lsGet('ms.role','empresa');return PERM[r]?r:'empresa';};
 const ROLE_S={empresa:'Empresa','admin-responsable':'Administrador responsable','admin-respaldo':'Administrador de respaldo',configurador:'Configurador',supervisor:'Supervisor',operador:'Operador',consulta:'Consulta'};
 const ISHOME=new URLSearchParams(location.search).get('home')==='1';
-function goHome(){const u=new URL(location.href);u.search='?home=1';u.hash='';location.href=u.toString();}
+function goHome(){location.href='app/#/clientes';}
 function usersOf(slug){try{const raw=JSON.parse(localStorage.getItem(dbKey(slug))||'[]');return raw.filter(([p])=>p.startsWith('usuarios/')).map(([,d])=>d);}catch(e){return [];}}
-function logout(){try{localStorage.removeItem('ms.ses');}catch(e){}const u=new URL(location.href);u.search='';u.hash='';location.href=u.toString();}
+function logout(){try{localStorage.removeItem('ms.ses');}catch(e){}location.href='app/#/entrar';}
 function renderEntry(){document.documentElement.classList.add('preentry');const ov=h('div',{class:'entry',id:'entry'});document.body.append(ov);
   const enter=(rol,nombre,cliente)=>{lsSet('ms.ses',{rol,nombre,cliente:cliente||null,t:Date.now()});lsSet('ms.role',rol);if(rol==='empresa')goHome();else goClient(cliente);};
   const shell=(...k)=>ov.replaceChildren(h('div',{class:'enbox'},h('div',{class:'enlogo'},h('span',{class:'enmark'},'✓'),h('b',{},'MACRO SECURITY')),...k,h('small',{class:'ennote'},'Versión de prueba. Con la base de datos conectada, aquí se entra con correo y contraseña.')));
@@ -2521,7 +2521,8 @@ function wire(){
   $('#dmBit').onclick=()=>{$('#demoMenu').hidden=true;openBitacora();};
   $('#dmTour').onclick=()=>{$('#demoMenu').hidden=true;if(WZ.open)startTour('wizard',true);else startTour('mando',true);};
   applyRole();
-  $('#dmWz').onclick=()=>{$('#demoMenu').hidden=true;goClient(CUR,true);};
+  $('#dmWz').onclick=()=>{$('#demoMenu').hidden=true;location.href='app/#/c/'+CUR+'/configurar';};
+  {const b=$('#dmBit');if(b&&can('bitacora')){b.hidden=false;b.onclick=()=>{location.href='app/#/c/'+CUR+'/bitacora';};}}
   $('#dmCons').onclick=()=>{$('#demoMenu').hidden=true;goHome();};
   $('#dmOut').onclick=logout;
   $('#zRect').onclick=()=>setRectMode(!AREA.mode);
@@ -2555,7 +2556,8 @@ function wire(){
 }
 window.__ms={get map(){return map},get S(){return S},get UI(){return UI}};
 async function boot(){
-  {const ss=SES();if(!ss||(ss.cliente&&!regGet().find(x=>x.slug===ss.cliente))){try{localStorage.removeItem('ms.ses');}catch(e){}renderEntry();return;}
+  {const ss=SES();const me=regGet().find(x=>x.slug===CUR);
+   if(!ss||(ss.cliente&&!regGet().find(x=>x.slug===ss.cliente))||ISHOME||new URLSearchParams(location.search).get('setup')||(me&&me.estado==='configuracion')){location.replace(!ss?'app/#/entrar':ISHOME?'app/#/clientes':'app/#/c/'+CUR+'/configurar');return;}
    if(ss.cliente&&ss.cliente!==CUR){goClient(ss.cliente);return;}
    if(ISHOME&&ROLE()!=='empresa'){goClient(ss.cliente);return;}}
   {regAuto();const me=regGet().find(x=>x.slug===CUR);if(!ISHOME&&me&&me.estado==='suspendido'){document.body.append(h('div',{class:'login susp'},h('div',{class:'lbox'},h('b',{},me.nombre),h('span',{},me.motivo==='vencido'?'El servicio está suspendido porque venció el periodo contratado sin renovación. Comunícate con el administrador.':'Este servicio está suspendido. Comunícate con el administrador.'),can('clientes')?h('button',{class:'btn pri',onclick:goHome},'Ir a mis clientes'):null,h('button',{class:'btn',onclick:logout},'Cambiar de usuario'))));return;}}
