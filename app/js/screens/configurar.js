@@ -1,7 +1,7 @@
 // Configuración del cliente: un paso a la vez, con instrucciones concretas.
 import { h, field, input, select, modal, toast, norm, pad, fmtDate, fileBtn, loadLib, readImage, download } from '../core/ui.js';
 import { Reg, db, config, saveConfig, logChange, empresaLog } from '../core/store.js';
-import { who, can, isEmpresa, ROLES, ROLE_HELP } from '../core/session.js';
+import { who, can, isEmpresa, ROLES, ROLE_HELP, tempPassword, hashPw } from '../core/session.js';
 import { layout, go } from '../core/shell.js';
 import { searchLimit, fromPlace, fromFile, pointsFromFile, coverage, preview, randIn, km2 } from '../core/geo.js';
 import { vigenciaModal, colorPicker } from './clientes.js';
@@ -290,12 +290,19 @@ const UI = {
     if (!can('usuarios')) return { body: h('div', { class: 'note' }, 'Tu usuario no puede administrar usuarios. Pídeselo al administrador responsable.') };
     const L2 = ctx.d.list('usuarios').map(u => ({ ...u }));
     const roles = Object.entries(ROLES).filter(([k]) => k !== 'empresa');
-    const cols = 'grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 240px 40px';
+    const cols = 'grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 230px 150px 40px';
+    const reset = async u => {
+      const pw = tempPassword(); const cur = ctx.d.get('usuarios/' + u.id); if (!cur) return;
+      cur.ph = await hashPw(cur.correo, pw); cur.tmp = true; cur.estado = 'pendiente'; ctx.d.set('usuarios/' + u.id, cur); Object.assign(u, { ph: cur.ph, tmp: true });
+      ctx.L('Usuarios', 'Asignó contraseña temporal', cur.nombre); showPw([{ nombre: cur.nombre, correo: cur.correo, pw }]); draw();
+    };
     const list = h('div', { class: 'card tbl' }); const help = h('div', { class: 'note' });
     const draw = () => {
-      list.replaceChildren(h('div', { class: 'tr th', style: cols }, h('span', {}, 'Nombre'), h('span', {}, 'Correo'), h('span', {}, 'Rol'), h('span')),
+      list.replaceChildren(h('div', { class: 'tr th', style: cols }, h('span', {}, 'Nombre'), h('span', {}, 'Correo'), h('span', {}, 'Rol'), h('span', {}, 'Acceso'), h('span')),
         ...L2.map((u, j) => h('div', { class: 'tr', style: cols }, input(u.nombre, { ph: 'Nombre', on: v => { u.nombre = v; } }), input(u.correo, { ph: 'correo@dominio.gob.mx', type: 'email', on: v => { u.correo = v; } }),
-          select(roles, u.rol, v => { u.rol = v; draw(); }), h('button', { class: 'xbtn', title: 'Quitar', onclick: () => { L2.splice(j, 1); dirty = true; draw(); } }, '✕'))),
+          select(roles, u.rol, v => { u.rol = v; draw(); }),
+          !u.ph ? h('span', { class: 'muted', style: 'font-size:12.5px' }, 'Se crea al guardar') : h('button', { class: 'btn sm', title: u.tmp ? 'Aún no entra por primera vez' : 'Ya tiene su contraseña', onclick: () => reset(u) }, u.tmp ? 'Aún no entra · nueva' : 'Nueva contraseña'),
+          h('button', { class: 'xbtn', title: 'Quitar', onclick: () => { L2.splice(j, 1); dirty = true; draw(); } }, '✕'))),
         h('button', { class: 'btn', onclick: () => { L2.push({ id: 'u' + Date.now().toString(36), nombre: '', correo: '', rol: !L2.some(x => x.rol === 'admin-responsable') ? 'admin-responsable' : !L2.some(x => x.rol === 'admin-respaldo') ? 'admin-respaldo' : 'operador', estado: 'pendiente' }); dirty = true; draw(); } }, '+ Agregar usuario'));
       help.replaceChildren(h('b', {}, 'Qué puede hacer cada rol'), h('ul', { style: 'margin:6px 0 0;padding-left:18px' }, ...Object.entries(ROLE_HELP).map(([k, t]) => h('li', {}, h('b', {}, ROLES[k] + ': '), t))));
     };
@@ -309,7 +316,12 @@ const UI = {
         const rs = ok.filter(u => u.rol === 'admin-responsable'), rb = ok.filter(u => u.rol === 'admin-respaldo');
         if (rs.length !== 1) throw new Error('Debe haber exactamente un administrador responsable');
         if (!rb.length) throw new Error('Falta el administrador de respaldo');
+        const taken = new Map(); for (const c2 of Reg.all()) if (c2.slug !== ctx.slug) for (const x of db(c2.slug).list('usuarios')) taken.set((x.correo || '').toLowerCase(), c2.nombre);
+        for (const u of ok) if (taken.has(u.correo)) throw new Error(u.correo + ' ya es usuario de otro cliente');
+        const nuevos = [];
+        for (const u of ok) if (!u.ph) { const pw = tempPassword(); u.ph = await hashPw(u.correo, pw); u.tmp = true; u.estado = 'pendiente'; nuevos.push({ nombre: u.nombre, correo: u.correo, pw }); }
         const prev = ctx.d.list('usuarios'); ctx.d.clear('usuarios'); for (const u of ok) ctx.d.set('usuarios/' + u.id, u);
+        if (nuevos.length) showPw(nuevos);
         const nw = ok.filter(u => !prev.find(p => p.id === u.id)).length, rm = prev.filter(p => !ok.find(u => u.id === p.id)).length;
         ctx.L('Usuarios', 'Actualizó', ok.length + ' usuarios' + (nw ? ' · ' + nw + ' altas' : '') + (rm ? ' · ' + rm + ' bajas' : ''));
       },
@@ -404,4 +416,13 @@ async function showQR(ctx, u) {
   const sec = (ctx.cfg.sectores.find(s => s.id === u.sector) || {}).nombre || '';
   modal({ kicker: 'CREDENCIAL', title: u.oficial || 'Oficial', body: [ctx.c.logo ? h('img', { src: ctx.c.logo, style: 'height:44px;align-self:center' }) : null, img, h('p', { style: 'margin:0;text-align:center' }, 'Placa ' + u.placa + ' · Patrulla ' + u.id + ' · ' + sec), h('p', { class: 'muted', style: 'margin:0;text-align:center;font-size:12.5px' }, 'El ciudadano lo escanea para confirmar que el oficial es de ' + ctx.c.nombre + '.')],
     actions: [{ label: 'Imprimir', kind: 'pri', onClick: () => window.print() }] });
+}
+
+// Contraseñas temporales: se muestran una sola vez para entregarlas a cada persona.
+function showPw(list) {
+  const txt = list.map(x => x.nombre + ' · ' + x.correo + ' · ' + x.pw).join('\n');
+  modal({ kicker: 'CONTRASEÑAS TEMPORALES', title: list.length === 1 ? 'Contraseña de ' + list[0].nombre : list.length + ' contraseñas nuevas',
+    body: [h('div', { class: 'note warn' }, 'Cópialas ahora: no se vuelven a mostrar. Cada persona crea su propia contraseña la primera vez que entra.'),
+      h('div', { class: 'pwlist' }, ...list.map(x => h('div', { class: 'pwrow' }, h('div', {}, h('b', {}, x.nombre), h('small', {}, x.correo)), h('code', {}, x.pw))))],
+    actions: [{ label: 'Copiar todas', onClick: () => { navigator.clipboard && navigator.clipboard.writeText(txt); toast('Copiadas'); } }, { label: 'Listo', kind: 'pri' }] });
 }

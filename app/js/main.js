@@ -13,9 +13,8 @@ function route() {
   serviceTick();
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const s = ses();
-  if (parts[0] === 'entrar' || !s) { applyTheme(null); return entrar(parts.slice(1)); }
+  if (parts[0] === 'entrar' || !s || !parts.length) { applyTheme(null); return entrar(); }
   const home = () => isEmpresa() ? '/clientes' : '/c/' + s.cliente;
-  if (!parts.length) return go(home());
 
   if (parts[0] === 'clientes') {
     if (!can('clientes')) return go(home());

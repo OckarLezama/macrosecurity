@@ -1,5 +1,6 @@
 // Sesión, roles y permisos. Un solo lugar decide quién puede qué.
-import { LS, Reg } from './store.js';
+import { LS, Reg, db } from './store.js';
+import { sha } from './ui.js';
 
 export const ROLES = {
   empresa: 'Empresa',
@@ -42,3 +43,24 @@ export const who = () => { const s = ses() || {}; return { nombre: s.nombre || R
 export const isEmpresa = () => role() === 'empresa';
 // ¿Puede ver este cliente? La empresa ve todos; el cliente solo el suyo.
 export const canSee = slug => { const s = ses(); return !!s && (s.rol === 'empresa' || s.cliente === slug); };
+
+/* ---------- cuentas (piloto: viven en este navegador hasta conectar la base de datos) ---------- */
+const hashPw = (correo, pw) => sha('ms|' + String(correo).trim().toLowerCase() + '|' + pw);
+export const empresaCuentas = () => LS.get('ms.empresa', []);
+export async function crearEmpresa(nombre, correo, pw) { LS.set('ms.empresa', [...empresaCuentas(), { nombre, correo: correo.trim().toLowerCase(), ph: await hashPw(correo, pw) }]); }
+export function tempPassword() { const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; const r = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), x => A[x % A.length]).join(''); return 'Ms-' + r(4) + '-' + r(4); }
+export { hashPw };
+// Busca la cuenta por correo y contraseña. Devuelve {rol,nombre,cliente,tmp,id} o null.
+export async function autenticar(correo, pw) {
+  correo = correo.trim().toLowerCase();
+  for (const e of empresaCuentas()) if (e.correo === correo && e.ph === await hashPw(correo, pw)) return { rol: 'empresa', nombre: e.nombre, cliente: null };
+  for (const c of Reg.all()) {
+    const u = db(c.slug).list('usuarios').find(x => (x.correo || '').toLowerCase() === correo);
+    if (u && u.ph && u.ph === await hashPw(correo, pw)) return { rol: u.rol, nombre: u.nombre || u.correo, cliente: c.slug, tmp: !!u.tmp, id: u.id };
+  }
+  return null;
+}
+export async function cambiarPassword(cliente, id, correo, pw) {
+  const d = db(cliente); const u = d.get('usuarios/' + id); if (!u) return;
+  u.ph = await hashPw(correo, pw); u.tmp = false; u.estado = 'activo'; d.set('usuarios/' + id, u);
+}
